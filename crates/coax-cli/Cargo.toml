@@ -1,0 +1,39 @@
+[package]
+name = "coax-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "CLI for coaxing secrets and vulnerabilities out of your codebases"
+keywords = ["security", "scanner", "secrets", "cli"]
+categories = ["development-tools", "security", "command-line-utilities"]
+
+[[bin]]
+name = "coax"
+path = "src/main.rs"
+
+[dependencies]
+# Internal crates
+coax-scanner = { workspace = true }
+
+# CLI framework
+clap = { version = "4.5", features = ["derive"] }
+
+# Core dependencies
+serde = { workspace = true }
+serde_json = { workspace = true }
+serde_yaml = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = "0.3"
+
+# File operations
+walkdir = { workspace = true }
+ignore = { workspace = true }
+
+# Error handling
+anyhow = "1.0"
+
+# Output formatting
+colored = "2.1"
+indicatif = "0.17"

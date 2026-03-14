@@ -1,0 +1,10 @@
+{
+    "name": "Config 9",
+    "aws_access_key": "AKIAIOSFODNN7EXAMPLE9",
+    "github_token": "ghp_1234567890abcdefghij1234567890abcdefghij",
+    "stripe_key": "sk_live_1234567890abcdefghij123456",
+    "settings": {
+        "debug": false,
+        "log_level": "info"
+    }
+}
