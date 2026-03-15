@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "crates/coax-scanner",
     "crates/coax-cli",
+    "crates/coax-tui",
 ]
 
 [workspace.package]
@@ -19,6 +20,7 @@ description = "Coax secrets and vulnerabilities out of your codebases"
 [workspace.dependencies]
 # Internal crates
 coax-scanner = { path = "crates/coax-scanner", version = "0.2.0" }
+coax-tui = { path = "crates/coax-tui", version = "0.2.0" }
 
 # Core dependencies
 regex = "1.10"
@@ -47,6 +49,11 @@ base64 = "0.21"
 
 # Lazy static initialization
 lazy_static = "1.4"
+
+# TUI dependencies
+ratatui = "0.29"
+crossterm = "0.28"
+unicode-width = "0.2"
 
 [profile.bench]
 opt-level = 3

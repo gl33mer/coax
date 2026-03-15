@@ -89,6 +89,17 @@ enum Commands {
 
     /// Show version information
     Version,
+    
+    /// Launch TUI dashboard
+    Tui {
+        /// Path to scan
+        #[arg(short, long, default_value = ".")]
+        path: PathBuf,
+        
+        /// Auto-scan on startup
+        #[arg(long, default_value = "true")]
+        auto_scan: bool,
+    },
 }
 
 #[derive(Subcommand, Debug)]
@@ -204,6 +215,7 @@ fn main() -> Result<()> {
             PreCommitAction::Uninstall => run_precommit_uninstall(),
             PreCommitAction::Run => run_precommit_run(),
         },
+        Commands::Tui { path, auto_scan } => run_tui(path, auto_scan),
         Commands::Version => {
             println!("coax {}", env!("CARGO_PKG_VERSION"));
             Ok(())
@@ -765,4 +777,54 @@ fn run_precommit_run() -> Result<()> {
 fn cli_quiet() -> bool {
     // This would need to be passed from main, but for now we'll check env var
     std::env::var("COAX_QUIET").is_ok()
+}
+
+/// Run the TUI dashboard
+/// Run the TUI dashboard
+fn run_tui(path: PathBuf, auto_scan: bool) -> Result<()> {
+    use coax_tui::App;
+    use crossterm::{
+        terminal::{self, EnterAlternateScreen, LeaveAlternateScreen},
+        ExecutableCommand,
+    };
+    use ratatui::Terminal;
+    use std::io;
+
+    // Setup terminal
+    terminal::enable_raw_mode()?;
+    let mut stdout = io::stdout();
+    stdout.execute(EnterAlternateScreen)?;
+    let mut terminal = Terminal::new(ratatui::backend::CrosstermBackend::new(stdout))?;
+
+    // Create app and optionally scan
+    let mut app = App::new(path);
+    if auto_scan {
+        app.scan();
+    }
+
+    // Main loop
+    let result = loop {
+        // Draw UI
+        terminal.draw(|frame| coax_tui::ui::render(frame, &mut app))?;
+
+        // Handle events
+        use crossterm::event::{self, Event, KeyEventKind};
+        if event::poll(std::time::Duration::from_millis(100))? {
+            if let Event::Key(key) = event::read()? {
+                if key.kind == KeyEventKind::Press {
+                    match coax_tui::events::handle_key_event(&mut app, key) {
+                        coax_tui::events::EventResult::Quit => break Ok(()),
+                        coax_tui::events::EventResult::Handled => {}
+                        coax_tui::events::EventResult::NotHandled => {}
+                    }
+                }
+            }
+        }
+    };
+
+    // Restore terminal
+    terminal::disable_raw_mode()?;
+    terminal.backend_mut().execute(LeaveAlternateScreen)?;
+
+    result
 }

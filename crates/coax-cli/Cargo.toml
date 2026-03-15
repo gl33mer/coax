@@ -15,6 +15,7 @@ path = "src/main.rs"
 [dependencies]
 # Internal crates
 coax-scanner = { workspace = true }
+coax-tui = { workspace = true }
 
 # CLI framework
 clap = { version = "4.5", features = ["derive"] }
@@ -37,3 +38,7 @@ anyhow = "1.0"
 # Output formatting
 colored = "2.1"
 indicatif = "0.17"
+
+# TUI support (for coax tui command)
+crossterm = { workspace = true }
+ratatui = { workspace = true }
