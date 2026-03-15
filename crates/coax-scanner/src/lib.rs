@@ -4,12 +4,22 @@
 //! - Pattern compilation caching (compile once, use many times)
 //! - Parallel file scanning using rayon
 //! - Configurable thread pool for optimal performance
+//! - Token efficiency filtering (BPE-based, from Betterleaks)
+//! - Word filter using Aho-Corasick algorithm (from Betterleaks)
 //!
 //! # Performance
 //!
 //! Benchmarks show 3-5x speedup compared to naive implementation:
 //! - scan_100_files: <100ms (target), ~300ms (baseline)
 //! - scan_regex_only: <100ms (target), ~270ms (baseline)
+//!
+//! # Betterleaks Integration
+//!
+//! This scanner incorporates detection algorithms from Betterleaks:
+//! - **Token Efficiency Filter**: Uses BPE tokenization to distinguish real secrets
+//!   from natural language. Real secrets have high token efficiency (>2.5).
+//! - **Word Filter**: Uses Aho-Corasick algorithm for multi-pattern matching
+//!   to filter out common English words and programming keywords.
 //!
 //! # Example
 //!
@@ -35,12 +45,18 @@ mod scanner;
 mod secrets;
 mod result;
 mod context;
+pub mod pattern_loader;
+pub mod token_efficiency;
+pub mod word_filter;
 
 pub use pattern_cache::{PatternCache, CompiledPattern, PatternConfig};
 pub use scanner::{Scanner, ScannerConfig};
 pub use result::{ScanResult, ScanSummary, SeverityCounts, PatternCount, OutputFormat, FindingContext};
 pub use secrets::SecretPattern;
 pub use context::{ContextAnalyzer, ExclusionPatterns};
+pub use pattern_loader::{PatternLoader, PatternLoaderError, PatternValidationResult, ValidationResult, PatternsFile, PatternEntry};
+pub use token_efficiency::{TokenEfficiencyConfig, calculate_token_efficiency, is_likely_secret, fails_token_efficiency_filter};
+pub use word_filter::{WordFilter, WordFilterConfig, WordFilterResult};
 
 /// Crate version
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -86,7 +102,13 @@ mod tests {
 
     #[test]
     fn test_scan_file_with_secrets() {
-        let scanner = Scanner::with_default_patterns();
+        // Disable filters and context detection for this test
+        let scanner = Scanner::with_config(
+            ScannerConfig::default()
+                .with_token_efficiency(false)
+                .with_word_filter(false)
+                .with_context_detection(false)
+        );
         let content = r#"
             AWS_KEY=AKIAIOSFODNN7EXAMPLE
             GITHUB_TOKEN=ghp_1234567890abcdefghij1234567890abcdefghij
@@ -114,7 +136,13 @@ mod tests {
     #[test]
     fn test_parallel_scanning() {
         let temp_dir = TempDir::new().unwrap();
-        let scanner = Scanner::with_default_patterns();
+        // Disable filters and context detection for this test
+        let scanner = Scanner::with_config(
+            ScannerConfig::default()
+                .with_token_efficiency(false)
+                .with_word_filter(false)
+                .with_context_detection(false)
+        );
 
         // Create test files
         for i in 0..10 {
@@ -135,12 +163,12 @@ mod tests {
     #[test]
     fn test_pattern_cache_caching() {
         let patterns = vec![
-            PatternConfig {
-                name: "TEST_PATTERN",
-                pattern: r"test\d+",
-                severity: "high",
-                recommendation: "Test recommendation",
-            },
+            PatternConfig::new(
+                "TEST_PATTERN",
+                r"test\d+",
+                "high",
+                "Test recommendation",
+            ),
         ];
 
         let cache = PatternCache::new(&patterns);

@@ -1,0 +1,129 @@
+# Payment Processor API Keys
+# Patterns for detecting exposed payment service credentials
+
+patterns:
+  # Stripe
+  - name: STRIPE_SECRET_KEY
+    regex: 'sk_live_[0-9a-zA-Z]{24,}'
+    severity: critical
+    recommendation: "Remove and rotate immediately in Stripe Dashboard"
+    description: "Stripe Live Secret Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: payment
+    enabled: true
+
+  - name: STRIPE_TEST_KEY
+    regex: 'sk_test_[0-9a-zA-Z]{24,}'
+    severity: low
+    recommendation: "Remove test key (not production sensitive)"
+    description: "Stripe Test Secret Key"
+    cwe_id: null
+    confidence: high
+    category: payment
+    enabled: false
+
+  - name: STRIPE_RESTRICTED_KEY
+    regex: 'rk_live_[0-9a-zA-Z]{24,}'
+    severity: critical
+    recommendation: "Remove and rotate immediately in Stripe Dashboard"
+    description: "Stripe Restricted Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: payment
+    enabled: true
+
+  - name: STRIPE_PUBLISHABLE_KEY
+    regex: 'pk_live_[0-9a-zA-Z]{24,}'
+    severity: low
+    recommendation: "Review - publishable keys are meant to be public"
+    description: "Stripe Publishable Key"
+    cwe_id: null
+    confidence: high
+    category: payment
+    enabled: false
+
+  # Square
+  - name: SQUARE_ACCESS_TOKEN
+    regex: 'sq0atp-[0-9a-zA-Z_-]{22}'
+    severity: critical
+    recommendation: "Remove and revoke in Square Developer Dashboard"
+    description: "Square Access Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: payment
+    enabled: true
+
+  - name: SQUARE_OAUTH_TOKEN
+    regex: 'sq0csp-[0-9a-zA-Z_-]{43}'
+    severity: critical
+    recommendation: "Remove and revoke in Square Developer Dashboard"
+    description: "Square OAuth Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: payment
+    enabled: true
+
+  # PayPal
+  - name: PAYPAL_ACCESS_TOKEN
+    regex: '(?i)access_token\$production\$[0-9a-z]{16}\$[0-9a-f]{32}'
+    severity: critical
+    recommendation: "Remove and revoke in PayPal Developer Dashboard"
+    description: "PayPal Access Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: payment
+    enabled: true
+
+  - name: PAYPAL_CLIENT_ID
+    regex: '(?i)paypal.*client.*id\s*[:=]\s*[''"]?[a-zA-Z0-9_-]{50,}[''"]?'
+    severity: medium
+    recommendation: "Review - PayPal Client ID exposed"
+    description: "PayPal Client ID"
+    cwe_id: null
+    confidence: medium
+    category: payment
+    enabled: true
+
+  # Braintree
+  - name: BRAINTREE_ACCESS_TOKEN
+    regex: '(?i)braintree.*access.*token\s*[:=]\s*[''"]?[a-z0-9]{32}[''"]?'
+    severity: critical
+    recommendation: "Remove and revoke in Braintree Control Panel"
+    description: "Braintree Access Token"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: payment
+    enabled: true
+
+  # Adyen
+  - name: ADYEN_API_KEY
+    regex: '(?i)adyen.*api.*key\s*[:=]\s*[''"]?[a-zA-Z0-9_-]{64}[''"]?'
+    severity: critical
+    recommendation: "Remove and rotate in Adyen Customer Area"
+    description: "Adyen API Key"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: payment
+    enabled: true
+
+  # Plaid
+  - name: PLAID_SECRET
+    regex: '(?i)plaid.*secret\s*[:=]\s*[''"]?[a-z0-9]{30}[''"]?'
+    severity: critical
+    recommendation: "Remove and regenerate in Plaid Dashboard"
+    description: "Plaid Secret Key"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: payment
+    enabled: true
+
+  - name: PLAID_PUBLIC_KEY
+    regex: '(?i)plaid.*public.*key\s*[:=]\s*[''"]?[a-z0-9]{24}[''"]?'
+    severity: low
+    recommendation: "Review - public keys are meant to be public"
+    description: "Plaid Public Key"
+    cwe_id: null
+    confidence: medium
+    category: payment
+    enabled: false

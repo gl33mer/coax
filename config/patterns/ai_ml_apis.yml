@@ -1,0 +1,142 @@
+# AI/ML Service API Keys
+# Patterns for detecting exposed AI and ML service credentials
+
+patterns:
+  # OpenAI
+  - name: OPENAI_API_KEY
+    regex: 'sk-proj-[a-zA-Z0-9]{48}'
+    severity: critical
+    recommendation: "Remove and revoke in OpenAI Platform immediately"
+    description: "OpenAI API Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: ai_ml
+    enabled: true
+
+  - name: OPENAI_LEGACY_API_KEY
+    regex: 'sk-[a-zA-Z0-9]{48}'
+    severity: critical
+    recommendation: "Remove and revoke in OpenAI Platform immediately"
+    description: "OpenAI Legacy API Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: ai_ml
+    enabled: true
+
+  - name: OPENAI_SESSION_TOKEN
+    regex: '(?i)openai.*session.*token\s*[:=]\s*[''"]?[a-zA-Z0-9_-]{40,}[''"]?'
+    severity: high
+    recommendation: "Remove and invalidate OpenAI session token"
+    description: "OpenAI Session Token"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: ai_ml
+    enabled: true
+
+  # Anthropic
+  - name: ANTHROPIC_API_KEY
+    regex: 'sk-ant-api[0-9]{2}-[a-zA-Z0-9_-]{49}'
+    severity: critical
+    recommendation: "Remove and revoke in Anthropic Console immediately"
+    description: "Anthropic API Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: ai_ml
+    enabled: true
+
+  - name: ANTHROPIC_SESSION_KEY
+    regex: 'sk-ant-s-[a-zA-Z0-9_-]{90,}'
+    severity: critical
+    recommendation: "Remove and revoke Anthropic session key"
+    description: "Anthropic Session Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: ai_ml
+    enabled: true
+
+  # Hugging Face
+  - name: HUGGINGFACE_TOKEN
+    regex: 'hf_[a-zA-Z0-9]{34}'
+    severity: critical
+    recommendation: "Remove and delete in Hugging Face Settings immediately"
+    description: "Hugging Face Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: ai_ml
+    enabled: true
+
+  - name: HUGGINGFACE_API_KEY
+    regex: '(?i)huggingface.*api.*key\s*[:=]\s*[''"]?hf_[a-zA-Z0-9]{34}[''"]?'
+    severity: critical
+    recommendation: "Remove and delete in Hugging Face Settings"
+    description: "Hugging Face API Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: ai_ml
+    enabled: true
+
+  # Cohere
+  - name: COHERE_API_KEY
+    regex: '(?i)cohere.*api.*key\s*[:=]\s*[''"]?[a-zA-Z0-9]{32,}[''"]?'
+    severity: critical
+    recommendation: "Remove and regenerate in Cohere Dashboard"
+    description: "Cohere API Key"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: ai_ml
+    enabled: true
+
+  # AI21
+  - name: AI21_API_KEY
+    regex: '(?i)ai21.*api.*key\s*[:=]\s*[''"]?[a-zA-Z0-9_-]{32,}[''"]?'
+    severity: critical
+    recommendation: "Remove and regenerate in AI21 Studio"
+    description: "AI21 API Key"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: ai_ml
+    enabled: true
+
+  # Replicate
+  - name: REPLICATE_API_TOKEN
+    regex: 'r8_[a-zA-Z0-9]{37}'
+    severity: critical
+    recommendation: "Remove and revoke in Replicate Dashboard"
+    description: "Replicate API Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: ai_ml
+    enabled: true
+
+  # Stability AI
+  - name: STABILITY_AI_KEY
+    regex: '(?i)stability.*api.*key\s*[:=]\s*[''"]?[a-zA-Z0-9_-]{32,}[''"]?'
+    severity: critical
+    recommendation: "Remove and regenerate in Stability AI Platform"
+    description: "Stability AI API Key"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: ai_ml
+    enabled: true
+
+  # Together AI
+  - name: TOGETHER_AI_KEY
+    regex: '(?i)together.*api.*key\s*[:=]\s*[''"]?[a-zA-Z0-9_-]{40,}[''"]?'
+    severity: critical
+    recommendation: "Remove and regenerate in Together AI Dashboard"
+    description: "Together AI API Key"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: ai_ml
+    enabled: true
+
+  # Perplexity
+  - name: PERPLEXITY_API_KEY
+    regex: '(?i)perplexity.*api.*key\s*[:=]\s*[''"]?[a-zA-Z0-9_-]{32,}[''"]?'
+    severity: critical
+    recommendation: "Remove and regenerate in Perplexity Dashboard"
+    description: "Perplexity API Key"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: ai_ml
+    enabled: true

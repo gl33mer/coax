@@ -15,21 +15,40 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
 /// Configuration for a single pattern
+///
+/// This struct supports both static patterns (using &'static str) and
+/// dynamically loaded patterns (using String). For static patterns,
+/// the String fields will contain the same data as the static references.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PatternConfig {
     /// Unique identifier for the pattern
-    pub name: &'static str,
+    pub name: String,
     /// Regex pattern string
-    pub pattern: &'static str,
+    pub pattern: String,
     /// Severity level: critical, high, medium, low
-    pub severity: &'static str,
+    pub severity: String,
     /// Recommendation for remediation
-    pub recommendation: &'static str,
+    pub recommendation: String,
     /// Whether to extract the matched secret string (default: true)
     #[serde(default = "default_true")]
     pub extract_secret: bool,
     /// Minimum entropy threshold for this pattern (optional, for high-entropy patterns)
     pub min_entropy: Option<f64>,
+    /// Optional description of the pattern
+    #[serde(default)]
+    pub description: Option<String>,
+    /// Optional CWE ID
+    #[serde(default)]
+    pub cwe_id: Option<String>,
+    /// Optional confidence level (high, medium, low)
+    #[serde(default)]
+    pub confidence: Option<String>,
+    /// Optional category for grouping patterns
+    #[serde(default)]
+    pub category: Option<String>,
+    /// Whether this pattern is enabled (default: true)
+    #[serde(default = "default_true")]
+    pub enabled: bool,
 }
 
 fn default_true() -> bool {
@@ -39,13 +58,106 @@ fn default_true() -> bool {
 impl Default for PatternConfig {
     fn default() -> Self {
         Self {
-            name: "UNKNOWN",
-            pattern: r".*",
-            severity: "low",
-            recommendation: "Review this finding".into(),
+            name: "UNKNOWN".to_string(),
+            pattern: r".*".to_string(),
+            severity: "low".to_string(),
+            recommendation: "Review this finding".to_string(),
             extract_secret: true,
             min_entropy: None,
+            description: None,
+            cwe_id: None,
+            confidence: None,
+            category: None,
+            enabled: true,
         }
+    }
+}
+
+impl PatternConfig {
+    /// Create a new PatternConfig with static strings (convenience for backward compatibility)
+    pub fn new(
+        name: &'static str,
+        pattern: &'static str,
+        severity: &'static str,
+        recommendation: &'static str,
+    ) -> Self {
+        Self {
+            name: name.to_string(),
+            pattern: pattern.to_string(),
+            severity: severity.to_string(),
+            recommendation: recommendation.to_string(),
+            extract_secret: true,
+            min_entropy: None,
+            description: None,
+            cwe_id: None,
+            confidence: None,
+            category: None,
+            enabled: true,
+        }
+    }
+
+    /// Create a new PatternConfig with owned strings
+    pub fn new_owned(
+        name: String,
+        pattern: String,
+        severity: String,
+        recommendation: String,
+    ) -> Self {
+        Self {
+            name,
+            pattern,
+            severity,
+            recommendation,
+            extract_secret: true,
+            min_entropy: None,
+            description: None,
+            cwe_id: None,
+            confidence: None,
+            category: None,
+            enabled: true,
+        }
+    }
+
+    /// Set the description
+    pub fn with_description(mut self, description: impl Into<String>) -> Self {
+        self.description = Some(description.into());
+        self
+    }
+
+    /// Set the CWE ID
+    pub fn with_cwe_id(mut self, cwe_id: impl Into<String>) -> Self {
+        self.cwe_id = Some(cwe_id.into());
+        self
+    }
+
+    /// Set the confidence level
+    pub fn with_confidence(mut self, confidence: impl Into<String>) -> Self {
+        self.confidence = Some(confidence.into());
+        self
+    }
+
+    /// Set the category
+    pub fn with_category(mut self, category: impl Into<String>) -> Self {
+        self.category = Some(category.into());
+        self
+    }
+
+    /// Set whether the pattern is enabled
+    pub fn with_enabled(mut self, enabled: bool) -> Self {
+        self.enabled = enabled;
+        self
+    }
+
+    /// Set the minimum entropy threshold
+    pub fn with_min_entropy(mut self, min_entropy: f64) -> Self {
+        self.min_entropy = Some(min_entropy);
+        self
+    }
+
+    /// Set whether to extract the secret value
+    pub fn with_extract_secret(mut self, extract_secret: bool) -> Self {
+        self.extract_secret = extract_secret;
+        self
     }
 }
 
@@ -67,6 +179,14 @@ pub struct CompiledPattern {
     pub extract_secret: bool,
     /// Minimum entropy threshold for this pattern
     pub min_entropy: Option<f64>,
+    /// Optional description of the pattern
+    pub description: Option<Arc<str>>,
+    /// Optional CWE ID
+    pub cwe_id: Option<Arc<str>>,
+    /// Optional confidence level
+    pub confidence: Option<Arc<str>>,
+    /// Optional category
+    pub category: Option<Arc<str>>,
 }
 
 impl CompiledPattern {
@@ -77,13 +197,17 @@ impl CompiledPattern {
     /// Panics if the regex pattern is invalid. Use `try_from_config` for fallible construction.
     pub fn from_config(config: &PatternConfig) -> Self {
         Self {
-            name: config.name.into(),
-            regex: Regex::new(config.pattern)
+            name: config.name.clone().into(),
+            regex: Regex::new(&config.pattern)
                 .unwrap_or_else(|e| panic!("Invalid regex pattern '{}': {}", config.name, e)),
-            severity: config.severity.into(),
-            recommendation: config.recommendation.into(),
+            severity: config.severity.clone().into(),
+            recommendation: config.recommendation.clone().into(),
             extract_secret: config.extract_secret,
             min_entropy: config.min_entropy,
+            description: config.description.as_ref().map(|s| s.clone().into()),
+            cwe_id: config.cwe_id.as_ref().map(|s| s.clone().into()),
+            confidence: config.confidence.as_ref().map(|s| s.clone().into()),
+            category: config.category.as_ref().map(|s| s.clone().into()),
         }
     }
 
@@ -92,12 +216,16 @@ impl CompiledPattern {
     /// Returns an error if the regex pattern is invalid.
     pub fn try_from_config(config: &PatternConfig) -> Result<Self, regex::Error> {
         Ok(Self {
-            name: config.name.into(),
-            regex: Regex::new(config.pattern)?,
-            severity: config.severity.into(),
-            recommendation: config.recommendation.into(),
+            name: config.name.clone().into(),
+            regex: Regex::new(&config.pattern)?,
+            severity: config.severity.clone().into(),
+            recommendation: config.recommendation.clone().into(),
             extract_secret: config.extract_secret,
             min_entropy: config.min_entropy,
+            description: config.description.as_ref().map(|s| s.clone().into()),
+            cwe_id: config.cwe_id.as_ref().map(|s| s.clone().into()),
+            confidence: config.confidence.as_ref().map(|s| s.clone().into()),
+            category: config.category.as_ref().map(|s| s.clone().into()),
         })
     }
 
@@ -234,251 +362,217 @@ impl PatternCache {
 pub fn default_patterns() -> Vec<PatternConfig> {
     vec![
         // AWS Credentials
-        PatternConfig {
-            name: "AWS_ACCESS_KEY",
-            pattern: r"AKIA[0-9A-Z]{16}",
-            severity: "critical",
-            recommendation: "Remove immediately and rotate the key via AWS IAM Console",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "AWS_SECRET_KEY",
-            pattern: r"(?i)(aws_secret_access_key|aws_secret_key)\s*[:=]\s*[\x27\x22]?[0-9a-zA-Z\/+]{40}[\x27\x22]?",
-            severity: "critical",
-            recommendation: "Remove immediately and rotate the secret via AWS IAM Console",
-            ..Default::default()
-        },
+        PatternConfig::new(
+            "AWS_ACCESS_KEY",
+            r"AKIA[0-9A-Z]{16}",
+            "critical",
+            "Remove immediately and rotate the key via AWS IAM Console",
+        ),
+        PatternConfig::new(
+            "AWS_SECRET_KEY",
+            r#"(?i)(aws_secret_access_key|aws_secret_key)\s*[:=]\s*['"]?[0-9a-zA-Z/+=]{40}['"]?"#,
+            "critical",
+            "Remove immediately and rotate the secret via AWS IAM Console",
+        ),
         // GitHub Tokens
-        PatternConfig {
-            name: "GITHUB_PAT",
-            pattern: r"ghp_[a-zA-Z0-9]{36}",
-            severity: "critical",
-            recommendation: "Remove and regenerate the token in GitHub Settings",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "GITHUB_OAUTH",
-            pattern: r"gho_[a-zA-Z0-9]{36}",
-            severity: "critical",
-            recommendation: "Remove and revoke the OAuth token",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "GITLAB_PAT",
-            pattern: r"glpat-[a-zA-Z0-9_-]{20}",
-            severity: "critical",
-            recommendation: "Remove and revoke the GitLab token",
-            ..Default::default()
-        },
+        PatternConfig::new(
+            "GITHUB_PAT",
+            r"ghp_[a-zA-Z0-9]{36}",
+            "critical",
+            "Remove and regenerate the token in GitHub Settings",
+        ),
+        PatternConfig::new(
+            "GITHUB_OAUTH",
+            r"gho_[a-zA-Z0-9]{36}",
+            "critical",
+            "Remove and revoke the OAuth token",
+        ),
+        PatternConfig::new(
+            "GITLAB_PAT",
+            r"glpat-[a-zA-Z0-9_-]{20}",
+            "critical",
+            "Remove and revoke the GitLab token",
+        ),
         // Google Cloud
-        PatternConfig {
-            name: "GOOGLE_API_KEY",
-            pattern: r"AIza[0-9A-Za-z\\-_]{35}",
-            severity: "high",
-            recommendation: "Remove and restrict API key usage in Google Cloud Console",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "GCP_SERVICE_ACCOUNT",
-            pattern: r#"(?i)"type"\s*:\s*"service_account""#,
-            severity: "high",
-            recommendation: "Remove and revoke service account credentials",
-            ..Default::default()
-        },
+        PatternConfig::new(
+            "GOOGLE_API_KEY",
+            r"AIza[0-9A-Za-z\\-_]{35}",
+            "high",
+            "Remove and restrict API key usage in Google Cloud Console",
+        ),
+        PatternConfig::new(
+            "GCP_SERVICE_ACCOUNT",
+            r#"(?i)"type"\s*:\s*"service_account""#,
+            "high",
+            "Remove and revoke service account credentials",
+        ),
         // Payment Processors
-        PatternConfig {
-            name: "STRIPE_SECRET_KEY",
-            pattern: r"sk_live_[0-9a-zA-Z]{24,}",
-            severity: "critical",
-            recommendation: "Remove and rotate immediately in Stripe Dashboard",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "SQUARE_ACCESS_TOKEN",
-            pattern: r"sq0atp-[0-9a-zA-Z_-]{22}",
-            severity: "critical",
-            recommendation: "Remove and revoke in Square Developer Dashboard",
-            ..Default::default()
-        },
+        PatternConfig::new(
+            "STRIPE_SECRET_KEY",
+            r"sk_live_[0-9a-zA-Z]{24,}",
+            "critical",
+            "Remove and rotate immediately in Stripe Dashboard",
+        ),
+        PatternConfig::new(
+            "SQUARE_ACCESS_TOKEN",
+            r"sq0atp-[0-9a-zA-Z_-]{22}",
+            "critical",
+            "Remove and revoke in Square Developer Dashboard",
+        ),
         // Communication APIs
-        PatternConfig {
-            name: "SLACK_TOKEN",
-            pattern: r"xox[baprs]-[0-9a-zA-Z]{10,48}",
-            severity: "high",
-            recommendation: "Remove and revoke the token in Slack Admin",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "SENDGRID_API_KEY",
-            pattern: r"SG\.[a-zA-Z0-9_-]{22}\.[a-zA-Z0-9_-]{43}",
-            severity: "critical",
-            recommendation: "Remove and regenerate in SendGrid Settings",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "TWILIO_API_KEY",
-            pattern: r"SK[0-9a-fA-F]{32}",
-            severity: "critical",
-            recommendation: "Remove and revoke in Twilio Console",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "MAILGUN_API_KEY",
-            pattern: r"key-[0-9a-zA-Z]{32}",
-            severity: "critical",
-            recommendation: "Remove and rotate in Mailgun Dashboard",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "DISCORD_BOT_TOKEN",
-            pattern: r"MT[a-zA-Z0-9_-]{23}\.[a-zA-Z0-9_-]{6}\.[a-zA-Z0-9_-]{27}",
-            severity: "critical",
-            recommendation: "Remove and regenerate in Discord Developer Portal",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "TELEGRAM_BOT_TOKEN",
-            pattern: r"[0-9]{9,10}:[a-zA-Z0-9_-]{35}",
-            severity: "high",
-            recommendation: "Remove and revoke bot via @BotFather",
-            ..Default::default()
-        },
+        PatternConfig::new(
+            "SLACK_TOKEN",
+            r"xox[baprs]-[0-9a-zA-Z]{10,48}",
+            "high",
+            "Remove and revoke the token in Slack Admin",
+        ),
+        PatternConfig::new(
+            "SENDGRID_API_KEY",
+            r"SG\.[a-zA-Z0-9_-]{22}\.[a-zA-Z0-9_-]{43}",
+            "critical",
+            "Remove and regenerate in SendGrid Settings",
+        ),
+        PatternConfig::new(
+            "TWILIO_API_KEY",
+            r"SK[0-9a-fA-F]{32}",
+            "critical",
+            "Remove and revoke in Twilio Console",
+        ),
+        PatternConfig::new(
+            "MAILGUN_API_KEY",
+            r"key-[0-9a-zA-Z]{32}",
+            "critical",
+            "Remove and rotate in Mailgun Dashboard",
+        ),
+        PatternConfig::new(
+            "DISCORD_BOT_TOKEN",
+            r"MT[a-zA-Z0-9_-]{23}\.[a-zA-Z0-9_-]{6}\.[a-zA-Z0-9_-]{27}",
+            "critical",
+            "Remove and regenerate in Discord Developer Portal",
+        ),
+        PatternConfig::new(
+            "TELEGRAM_BOT_TOKEN",
+            r"[0-9]{9,10}:[a-zA-Z0-9_-]{35}",
+            "high",
+            "Remove and revoke bot via @BotFather",
+        ),
         // Database Connection Strings
-        PatternConfig {
-            name: "POSTGRESQL_CONNECTION_STRING",
-            pattern: r"(?i)postgresql://[^:]+:[^@]+@[^/]+/[a-zA-Z0-9_-]+",
-            severity: "critical",
-            recommendation: "Remove and rotate database credentials",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "MONGODB_CONNECTION_STRING",
-            pattern: r"(?i)mongodb(\+srv)?://[^:]+:[^@]+@[^/]+/?",
-            severity: "critical",
-            recommendation: "Remove and rotate MongoDB credentials",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "MYSQL_CONNECTION_STRING",
-            pattern: r"(?i)mysql://[^:]+:[^@]+@[^/]+/[a-zA-Z0-9_-]+",
-            severity: "critical",
-            recommendation: "Remove and rotate MySQL credentials",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "REDIS_CONNECTION_STRING",
-            pattern: r"(?i)redis://:[^@]+@[^/]+",
-            severity: "critical",
-            recommendation: "Remove and change Redis AUTH password",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "AZURE_STORAGE_CONNECTION_STRING",
-            pattern: r"(?i)DefaultEndpointsProtocol=https;AccountName=[^;]+;AccountKey=[A-Za-z0-9+/=]{88};",
-            severity: "critical",
-            recommendation: "Remove and regenerate key in Azure Portal",
-            ..Default::default()
-        },
+        PatternConfig::new(
+            "POSTGRESQL_CONNECTION_STRING",
+            r"(?i)postgresql://[^:]+:[^@]+@[^/]+/[a-zA-Z0-9_-]+",
+            "critical",
+            "Remove and rotate database credentials",
+        ),
+        PatternConfig::new(
+            "MONGODB_CONNECTION_STRING",
+            r"(?i)mongodb(\+srv)?://[^:]+:[^@]+@[^/]+/?",
+            "critical",
+            "Remove and rotate MongoDB credentials",
+        ),
+        PatternConfig::new(
+            "MYSQL_CONNECTION_STRING",
+            r"(?i)mysql://[^:]+:[^@]+@[^/]+/[a-zA-Z0-9_-]+",
+            "critical",
+            "Remove and rotate MySQL credentials",
+        ),
+        PatternConfig::new(
+            "REDIS_CONNECTION_STRING",
+            r"(?i)redis://:[^@]+@[^/]+",
+            "critical",
+            "Remove and change Redis AUTH password",
+        ),
+        PatternConfig::new(
+            "AZURE_STORAGE_CONNECTION_STRING",
+            r"(?i)DefaultEndpointsProtocol=https;AccountName=[^;]+;AccountKey=[A-Za-z0-9+/=]{88};",
+            "critical",
+            "Remove and regenerate key in Azure Portal",
+        ),
         // Package Manager Tokens
-        PatternConfig {
-            name: "NPM_ACCESS_TOKEN",
-            pattern: r"npm_[a-zA-Z0-9]{36}",
-            severity: "critical",
-            recommendation: "Remove and revoke in npm Access Tokens",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "PYPI_API_TOKEN",
-            pattern: r"pypi-[a-zA-Z0-9_-]{50,}",
-            severity: "critical",
-            recommendation: "Remove and revoke in PyPI Settings",
-            ..Default::default()
-        },
+        PatternConfig::new(
+            "NPM_ACCESS_TOKEN",
+            r"npm_[a-zA-Z0-9]{36}",
+            "critical",
+            "Remove and revoke in npm Access Tokens",
+        ),
+        PatternConfig::new(
+            "PYPI_API_TOKEN",
+            r"pypi-[a-zA-Z0-9_-]{50,}",
+            "critical",
+            "Remove and revoke in PyPI Settings",
+        ),
         // AI/ML APIs
-        PatternConfig {
-            name: "OPENAI_API_KEY",
-            pattern: r"sk-proj-[a-zA-Z0-9]{48}",
-            severity: "critical",
-            recommendation: "Remove and revoke in OpenAI Platform",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "ANTHROPIC_API_KEY",
-            pattern: r"sk-ant-api[0-9]{2}-[a-zA-Z0-9_-]{49}",
-            severity: "critical",
-            recommendation: "Remove and revoke in Anthropic Console",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "HUGGINGFACE_TOKEN",
-            pattern: r"hf_[a-zA-Z0-9]{34}",
-            severity: "critical",
-            recommendation: "Remove and delete in Hugging Face Settings",
-            ..Default::default()
-        },
+        PatternConfig::new(
+            "OPENAI_API_KEY",
+            r"sk-proj-[a-zA-Z0-9]{48}",
+            "critical",
+            "Remove and revoke in OpenAI Platform",
+        ),
+        PatternConfig::new(
+            "ANTHROPIC_API_KEY",
+            r"sk-ant-api[0-9]{2}-[a-zA-Z0-9_-]{49}",
+            "critical",
+            "Remove and revoke in Anthropic Console",
+        ),
+        PatternConfig::new(
+            "HUGGINGFACE_TOKEN",
+            r"hf_[a-zA-Z0-9]{34}",
+            "critical",
+            "Remove and delete in Hugging Face Settings",
+        ),
         // Cloud Providers
-        PatternConfig {
-            name: "HEROKU_API_KEY",
-            pattern: r"(?i)heroku.*[\x27\x22][0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}[\x27\x22]",
-            severity: "critical",
-            recommendation: "Remove and regenerate in Heroku Settings",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "DIGITALOCEAN_TOKEN",
-            pattern: r"dop_v1_[a-f0-9]{64}",
-            severity: "high",
-            recommendation: "Remove and revoke in DigitalOcean Dashboard",
-            ..Default::default()
-        },
+        PatternConfig::new(
+            "HEROKU_API_KEY",
+            r#"(?i)heroku.*['"][0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}['"]"#,
+            "critical",
+            "Remove and regenerate in Heroku Settings",
+        ),
+        PatternConfig::new(
+            "DIGITALOCEAN_TOKEN",
+            r"dop_v1_[a-f0-9]{64}",
+            "high",
+            "Remove and revoke in DigitalOcean Dashboard",
+        ),
         // Private Keys
-        PatternConfig {
-            name: "PRIVATE_KEY_HEADER",
-            pattern: r"-----BEGIN (RSA |EC |DSA |OPENSSH |ENCRYPTED )?PRIVATE KEY-----",
-            severity: "critical",
-            recommendation: "Remove immediately - private key exposed",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "SSH_PRIVATE_KEY",
-            pattern: r"-----BEGIN OPENSSH PRIVATE KEY-----",
-            severity: "critical",
-            recommendation: "Remove and revoke SSH key from all servers",
-            ..Default::default()
-        },
+        PatternConfig::new(
+            "PRIVATE_KEY_HEADER",
+            r"-----BEGIN (RSA |EC |DSA |OPENSSH |ENCRYPTED )?PRIVATE KEY-----",
+            "critical",
+            "Remove immediately - private key exposed",
+        ),
+        PatternConfig::new(
+            "SSH_PRIVATE_KEY",
+            r"-----BEGIN OPENSSH PRIVATE KEY-----",
+            "critical",
+            "Remove and revoke SSH key from all servers",
+        ),
         // Tokens and Sessions
-        PatternConfig {
-            name: "JWT_TOKEN",
-            pattern: r"eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*",
-            severity: "high",
-            recommendation: "Remove and invalidate session",
-            ..Default::default()
-        },
+        PatternConfig::new(
+            "JWT_TOKEN",
+            r"eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*",
+            "high",
+            "Remove and invalidate session",
+        ),
         // Generic Secrets
-        PatternConfig {
-            name: "GENERIC_PASSWORD",
-            pattern: r"(?i)(password|passwd|pwd)\s*[:=]\s*[\x27\x22][^\x27\x22]{8,}[\x27\x22]",
-            severity: "high",
-            recommendation: "Use environment variables or secret manager",
-            ..Default::default()
-        },
-        PatternConfig {
-            name: "GENERIC_SECRET",
-            pattern: r"(?i)(password|secret|key|token)\s*[:=]\s*[\x27\x22][^\x27\x22]{8,}[\x27\x22]",
-            severity: "high",
-            recommendation: "Use environment variables or secret manager",
-            ..Default::default()
-        },
+        PatternConfig::new(
+            "GENERIC_PASSWORD",
+            r#"(?i)(password|passwd|pwd)\s*[:=]\s*['"][^'"]{8,}['"]"#,
+            "high",
+            "Use environment variables or secret manager",
+        ),
+        PatternConfig::new(
+            "GENERIC_SECRET",
+            r#"(?i)(password|secret|key|token)\s*[:=]\s*['"][^'"]{8,}['"]"#,
+            "high",
+            "Use environment variables or secret manager",
+        ),
         // Note: High entropy detection is disabled by default due to high false positive rate
         // Enable only with manual review and tuned thresholds
-        PatternConfig {
-            name: "HIGH_ENTROPY_STRING",
-            pattern: r"[a-zA-Z0-9+/=_-]{40,}",
-            severity: "low",
-            recommendation: "Review - may be false positive (entropy-based detection)",
-            extract_secret: false,  // Disabled by default
-            min_entropy: Some(4.5),  // Higher threshold
-        },
+        PatternConfig::new(
+            "HIGH_ENTROPY_STRING",
+            r"[a-zA-Z0-9+/=_-]{40,}",
+            "low",
+            "Review - may be false positive (entropy-based detection)",
+        ).with_enabled(false).with_min_entropy(4.5).with_extract_secret(false),
     ]
 }
 
@@ -496,13 +590,12 @@ mod tests {
 
     #[test]
     fn test_pattern_matching() {
-        let patterns = vec![PatternConfig {
-            name: "TEST_AWS",
-            pattern: r"AKIA[0-9A-Z]{16}",
-            severity: "critical",
-            recommendation: "Test",
-            ..Default::default()
-        }];
+        let patterns = vec![PatternConfig::new(
+            "TEST_AWS",
+            r"AKIA[0-9A-Z]{16}",
+            "critical",
+            "Test",
+        )];
 
         let cache = PatternCache::new(&patterns);
 
@@ -534,13 +627,12 @@ mod tests {
 
     #[test]
     fn test_try_from_config_invalid() {
-        let pattern = PatternConfig {
-            name: "INVALID",
-            pattern: r"[invalid(regex",
-            severity: "high",
-            recommendation: "Test",
-            ..Default::default()
-        };
+        let pattern = PatternConfig::new(
+            "INVALID",
+            r"[invalid(regex",
+            "high",
+            "Test",
+        );
 
         let result = CompiledPattern::try_from_config(&pattern);
         assert!(result.is_err());

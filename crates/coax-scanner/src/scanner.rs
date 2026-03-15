@@ -5,11 +5,15 @@
 //! - Parallel file scanning using rayon
 //! - Configurable thread pool
 //! - Context detection for false positive reduction
+//! - Token efficiency filtering (Betterleaks algorithm)
+//! - Word filter using Aho-Corasick (Betterleaks algorithm)
 
 use crate::pattern_cache::{PatternCache, PatternConfig};
-use crate::result::{ScanResult, ScanSummary, SeverityCounts};
+use crate::result::{ScanResult, ScanSummary, SeverityCounts, FindingContext};
 use crate::secrets;
 use crate::context::ContextAnalyzer;
+use crate::token_efficiency::TokenEfficiencyConfig;
+use crate::word_filter::{WordFilter, WordFilterConfig};
 use rayon::prelude::*;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -45,6 +49,22 @@ pub struct ScannerConfig {
     pub exclude_placeholders: bool,
     /// Exclude AWS example keys
     pub exclude_aws_examples: bool,
+    /// Enable token efficiency filtering (Betterleaks algorithm)
+    pub enable_token_efficiency: bool,
+    /// Token efficiency configuration
+    pub token_efficiency_config: TokenEfficiencyConfig,
+    /// Enable word filter (Betterleaks Aho-Corasick algorithm)
+    pub enable_word_filter: bool,
+    /// Word filter configuration
+    pub word_filter_config: WordFilterConfig,
+    /// Load patterns from external YAML files
+    pub load_external_patterns: bool,
+    /// Pattern directory path for external patterns
+    pub pattern_directory: Option<PathBuf>,
+    /// Minimum confidence level for external patterns ("low", "medium", "high")
+    pub min_confidence: String,
+    /// Load secrets-patterns-db patterns
+    pub enable_secrets_patterns_db: bool,
 }
 
 impl Default for ScannerConfig {
@@ -82,6 +102,14 @@ impl Default for ScannerConfig {
             exclude_comments: true,
             exclude_placeholders: true,
             exclude_aws_examples: true,
+            enable_token_efficiency: true,
+            token_efficiency_config: TokenEfficiencyConfig::default(),
+            enable_word_filter: true,
+            word_filter_config: WordFilterConfig::default(),
+            load_external_patterns: false,
+            pattern_directory: None,
+            min_confidence: "high".to_string(),
+            enable_secrets_patterns_db: false,
         }
     }
 }
@@ -121,6 +149,60 @@ impl ScannerConfig {
     /// Enable line content in results
     pub fn with_line_content(mut self) -> Self {
         self.include_line_content = true;
+        self
+    }
+
+    /// Enable token efficiency filtering
+    pub fn with_token_efficiency(mut self, enabled: bool) -> Self {
+        self.enable_token_efficiency = enabled;
+        self
+    }
+
+    /// Set token efficiency configuration
+    pub fn with_token_efficiency_config(mut self, config: TokenEfficiencyConfig) -> Self {
+        self.token_efficiency_config = config;
+        self
+    }
+
+    /// Enable word filter
+    pub fn with_word_filter(mut self, enabled: bool) -> Self {
+        self.enable_word_filter = enabled;
+        self
+    }
+
+    /// Set word filter configuration
+    pub fn with_word_filter_config(mut self, config: WordFilterConfig) -> Self {
+        self.word_filter_config = config;
+        self
+    }
+
+    /// Enable or disable context detection
+    pub fn with_context_detection(mut self, enabled: bool) -> Self {
+        self.enable_context_detection = enabled;
+        self
+    }
+
+    /// Enable loading patterns from external YAML files
+    pub fn with_external_patterns(mut self, enabled: bool) -> Self {
+        self.load_external_patterns = enabled;
+        self
+    }
+
+    /// Set the pattern directory for external patterns
+    pub fn with_pattern_directory(mut self, path: PathBuf) -> Self {
+        self.pattern_directory = Some(path);
+        self
+    }
+
+    /// Set minimum confidence level for external patterns
+    pub fn with_min_confidence(mut self, level: &str) -> Self {
+        self.min_confidence = level.to_string();
+        self
+    }
+
+    /// Enable secrets-patterns-db patterns
+    pub fn with_secrets_patterns_db(mut self, enabled: bool) -> Self {
+        self.enable_secrets_patterns_db = enabled;
         self
     }
 }
@@ -167,20 +249,49 @@ impl Scanner {
 
     /// Create a scanner with custom configuration
     pub fn with_config(config: ScannerConfig) -> Self {
-        let pattern_cache = Arc::new(PatternCache::new(&config.patterns));
+        // Load external patterns if configured
+        let mut final_config = config.clone();
+        if config.load_external_patterns {
+            if let Some(ref pattern_dir) = config.pattern_directory {
+                if let Ok(loader) = Self::load_patterns_from_directory(pattern_dir, &config.min_confidence) {
+                    // Merge with existing patterns
+                    let mut all_patterns = final_config.patterns.clone();
+                    all_patterns.extend(loader.into_patterns());
+                    final_config.patterns = all_patterns;
+                }
+            }
+        }
+
+        let pattern_cache = Arc::new(PatternCache::new(&final_config.patterns));
 
         // Initialize rayon thread pool if specified
-        if config.num_threads > 0 {
+        if final_config.num_threads > 0 {
             rayon::ThreadPoolBuilder::new()
-                .num_threads(config.num_threads)
+                .num_threads(final_config.num_threads)
                 .build_global()
                 .ok();
         }
 
         Self {
-            config,
+            config: final_config,
             pattern_cache,
         }
+    }
+
+    /// Load patterns from a directory
+    fn load_patterns_from_directory(
+        dir: &Path,
+        min_confidence: &str,
+    ) -> Result<crate::pattern_loader::PatternLoader, crate::pattern_loader::PatternLoaderError> {
+        use crate::pattern_loader::PatternLoader;
+
+        let mut loader = PatternLoader::new();
+        loader.load_from_directory(dir)?;
+
+        // Filter by confidence
+        let loader = loader.filter_by_confidence(min_confidence);
+
+        Ok(loader)
     }
 
     /// Create a scanner with custom patterns
@@ -374,7 +485,7 @@ fn scan_file_internal(
     scan_content_internal(content, path.to_path_buf(), cache, config)
 }
 
-/// Internal content scanning function with context detection
+/// Internal content scanning function with context detection and Betterleaks filters
 fn scan_content_internal(
     content: String,
     file: PathBuf,
@@ -390,14 +501,62 @@ fn scan_content_internal(
         exclude_aws_examples: config.exclude_aws_examples,
     };
 
+    // Initialize Betterleaks filters if enabled
+    let word_filter = if config.enable_word_filter {
+        Some(WordFilter::with_min_length(config.word_filter_config.min_word_length))
+    } else {
+        None
+    };
+
     for (line_num, line) in content.lines().enumerate() {
         for pattern in cache.patterns() {
             if pattern.is_match(line) {
-                // Analyze context
-                let context = context_analyzer.analyze(line, &file);
+                // Extract the potential secret
+                let secret = if pattern.extract_secret {
+                    crate::context::extract_secret(line, &pattern.name)
+                } else {
+                    None
+                };
 
-                // Skip excluded findings
-                if context_analyzer.should_exclude(&context) {
+                // Apply Betterleaks Token Efficiency Filter
+                if config.enable_token_efficiency {
+                    if let Some(ref secret_value) = secret {
+                        if !config.token_efficiency_config.passes_filter(secret_value) {
+                            tracing::debug!(
+                                "Filtered by token efficiency: {} in {}:{}",
+                                pattern.name,
+                                file.display(),
+                                line_num + 1
+                            );
+                            continue;
+                        }
+                    }
+                }
+
+                // Apply Betterleaks Word Filter
+                if let Some(ref _filter) = word_filter {
+                    if let Some(ref secret_value) = secret {
+                        if !config.word_filter_config.passes_filter(secret_value) {
+                            tracing::debug!(
+                                "Filtered by word filter: {} in {}:{}",
+                                pattern.name,
+                                file.display(),
+                                line_num + 1
+                            );
+                            continue;
+                        }
+                    }
+                }
+
+                // Analyze context (if enabled)
+                let context = if config.enable_context_detection {
+                    context_analyzer.analyze(line, &file)
+                } else {
+                    FindingContext::default()
+                };
+
+                // Skip excluded findings (only if context detection is enabled)
+                if config.enable_context_detection && context_analyzer.should_exclude(&context) {
                     continue;
                 }
 
@@ -411,8 +570,8 @@ fn scan_content_internal(
 
                 // Add detected secret if pattern supports extraction
                 if pattern.extract_secret {
-                    if let Some(secret) = crate::context::extract_secret(line, &pattern.name) {
-                        result = result.with_detected_secret(secret);
+                    if let Some(secret_value) = &secret {
+                        result = result.with_detected_secret(secret_value.clone());
                     }
                 }
 
@@ -423,6 +582,21 @@ fn scan_content_internal(
 
                 // Add context
                 result = result.with_context(context);
+
+                // Add Betterleaks filter metadata
+                if config.enable_token_efficiency || config.enable_word_filter {
+                    let mut notes = Vec::new();
+                    if config.enable_token_efficiency {
+                        notes.push("token_efficiency=enabled");
+                    }
+                    if config.enable_word_filter {
+                        notes.push("word_filter=enabled");
+                    }
+                    if let Some(existing_note) = &result.context.note {
+                        notes.push(existing_note.as_str());
+                    }
+                    result.context.note = Some(notes.join(", "));
+                }
 
                 results.push(result);
             }
@@ -465,12 +639,12 @@ mod tests {
 
     #[test]
     fn test_scanner_with_custom_patterns() {
-        let patterns = vec![PatternConfig {
-            name: "TEST",
-            pattern: r"test\d+",
-            severity: "low",
-            recommendation: "Test",
-        }];
+        let patterns = vec![PatternConfig::new(
+            "TEST",
+            r"test\d+",
+            "low",
+            "Test",
+        )];
 
         let scanner = Scanner::with_patterns(patterns);
         assert_eq!(scanner.pattern_count(), 1);
@@ -479,7 +653,13 @@ mod tests {
     #[test]
     fn test_scan_directory() {
         let temp_dir = TempDir::new().unwrap();
-        let scanner = Scanner::new();
+        // Disable filters and context detection for this test
+        let scanner = Scanner::with_config(
+            ScannerConfig::default()
+                .with_token_efficiency(false)
+                .with_word_filter(false)
+                .with_context_detection(false)
+        );
 
         // Create test files
         let clean_file = temp_dir.path().join("clean.rs");
@@ -495,7 +675,13 @@ mod tests {
 
     #[test]
     fn test_scan_content() {
-        let scanner = Scanner::new();
+        // Disable filters and context detection for this test
+        let scanner = Scanner::with_config(
+            ScannerConfig::default()
+                .with_token_efficiency(false)
+                .with_word_filter(false)
+                .with_context_detection(false)
+        );
         let content = "AWS_KEY=AKIAIOSFODNN7EXAMPLE";
         let results = scanner.scan_content(content, "test.txt");
 
@@ -506,7 +692,13 @@ mod tests {
     #[test]
     fn test_parallel_scanning_performance() {
         let temp_dir = TempDir::new().unwrap();
-        let scanner = Scanner::new();
+        // Disable filters and context detection for this test
+        let scanner = Scanner::with_config(
+            ScannerConfig::default()
+                .with_token_efficiency(false)
+                .with_word_filter(false)
+                .with_context_detection(false)
+        );
 
         // Create 100 test files
         for i in 0..100 {
@@ -537,7 +729,13 @@ mod tests {
     #[test]
     fn test_scan_with_summary() {
         let temp_dir = TempDir::new().unwrap();
-        let scanner = Scanner::new();
+        // Disable filters and context detection for this test
+        let scanner = Scanner::with_config(
+            ScannerConfig::default()
+                .with_token_efficiency(false)
+                .with_word_filter(false)
+                .with_context_detection(false)
+        );
 
         // Create test files
         for i in 0..5 {

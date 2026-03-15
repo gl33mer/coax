@@ -1,0 +1,142 @@
+# Database Connection Strings and Credentials
+# Patterns for detecting exposed database credentials
+
+patterns:
+  # PostgreSQL
+  - name: POSTGRESQL_CONNECTION_STRING
+    regex: '(?i)postgresql://[^:]+:[^@]+@[^/]+/[a-zA-Z0-9_-]+'
+    severity: critical
+    recommendation: "Remove and rotate database credentials"
+    description: "PostgreSQL Connection String"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: database
+    enabled: true
+
+  - name: POSTGRES_PASSWORD
+    regex: '(?i)postgres.*password\s*[:=]\s*[''"][^''"]{4,}[''"]'
+    severity: critical
+    recommendation: "Remove and rotate PostgreSQL password"
+    description: "PostgreSQL Password"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: database
+    enabled: true
+
+  # MongoDB
+  - name: MONGODB_CONNECTION_STRING
+    regex: '(?i)mongodb(\+srv)?://[^:]+:[^@]+@[^/]+/?'
+    severity: critical
+    recommendation: "Remove and rotate MongoDB credentials"
+    description: "MongoDB Connection String"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: database
+    enabled: true
+
+  - name: MONGODB_ATLAS_CONNECTION_STRING
+    regex: '(?i)mongodb(\+srv)?://[^:]+:[^@]+@cluster[0-9]*\.[a-z0-9]+\.mongodb\.net'
+    severity: critical
+    recommendation: "Remove and rotate MongoDB Atlas credentials immediately"
+    description: "MongoDB Atlas Connection String"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: database
+    enabled: true
+
+  # MySQL
+  - name: MYSQL_CONNECTION_STRING
+    regex: '(?i)mysql://[^:]+:[^@]+@[^/]+/[a-zA-Z0-9_-]+'
+    severity: critical
+    recommendation: "Remove and rotate MySQL credentials"
+    description: "MySQL Connection String"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: database
+    enabled: true
+
+  - name: MYSQL_PASSWORD
+    regex: '(?i)mysql.*password\s*[:=]\s*[''"][^''"]{4,}[''"]'
+    severity: critical
+    recommendation: "Remove and rotate MySQL password"
+    description: "MySQL Password"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: database
+    enabled: true
+
+  # Redis
+  - name: REDIS_CONNECTION_STRING
+    regex: '(?i)redis://:[^@]+@[^/]+'
+    severity: critical
+    recommendation: "Remove and change Redis AUTH password"
+    description: "Redis Connection String"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: database
+    enabled: true
+
+  - name: REDIS_PASSWORD
+    regex: '(?i)redis.*password\s*[:=]\s*[''"][^''"]{4,}[''"]'
+    severity: critical
+    recommendation: "Remove and change Redis password"
+    description: "Redis Password"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: database
+    enabled: true
+
+  # Microsoft SQL Server
+  - name: MSSQL_CONNECTION_STRING
+    regex: '(?i)Server=.*;Database=.*;User Id=.*;Password=.*;'
+    severity: critical
+    recommendation: "Remove and rotate SQL Server credentials"
+    description: "Microsoft SQL Server Connection String"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: database
+    enabled: true
+
+  # Oracle
+  - name: ORACLE_CONNECTION_STRING
+    regex: '(?i)oracle://[^:]+:[^@]+@[^/]+'
+    severity: critical
+    recommendation: "Remove and rotate Oracle credentials"
+    description: "Oracle Connection String"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: database
+    enabled: true
+
+  # Cassandra
+  - name: CASSANDRA_CONNECTION_STRING
+    regex: '(?i)cassandra://[^:]+:[^@]+@[^/]+'
+    severity: critical
+    recommendation: "Remove and rotate Cassandra credentials"
+    description: "Cassandra Connection String"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: database
+    enabled: true
+
+  # Elasticsearch
+  - name: ELASTICSEARCH_PASSWORD
+    regex: '(?i)elastic.*password\s*[:=]\s*[''"][^''"]{4,}[''"]'
+    severity: critical
+    recommendation: "Remove and rotate Elasticsearch password"
+    description: "Elasticsearch Password"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: database
+    enabled: true
+
+  # Databricks
+  - name: DATABRICKS_TOKEN
+    regex: '(?i)databricks.*token\s*[:=]\s*[''"]?[a-z0-9-]{36,}[''"]?'
+    severity: critical
+    recommendation: "Remove and regenerate Databricks token"
+    description: "Databricks API Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: database
+    enabled: true

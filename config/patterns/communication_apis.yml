@@ -1,0 +1,150 @@
+# Communication API Keys
+# Patterns for detecting exposed communication service credentials
+
+patterns:
+  # Slack
+  - name: SLACK_BOT_TOKEN
+    regex: 'xoxb-[0-9]{10,13}-[0-9]{10,13}[a-zA-Z0-9-]*'
+    severity: high
+    recommendation: "Remove and revoke the token in Slack Admin"
+    description: "Slack Bot Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: communication
+    enabled: true
+
+  - name: SLACK_USER_TOKEN
+    regex: 'xoxp-[0-9]{10,13}-[0-9]{10,13}[a-zA-Z0-9-]*'
+    severity: high
+    recommendation: "Remove and revoke the user token in Slack Admin"
+    description: "Slack User Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: communication
+    enabled: true
+
+  - name: SLACK_WEBHOOK_URL
+    regex: 'https://hooks\.slack\.com/services/T[a-zA-Z0-9_]{8,}/B[a-zA-Z0-9_]{8,}/[a-zA-Z0-9_]{24}'
+    severity: medium
+    recommendation: "Remove and regenerate the webhook URL"
+    description: "Slack Webhook URL"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: communication
+    enabled: true
+
+  - name: SLACK_APP_TOKEN
+    regex: 'xapp-[0-9]-[A-Z0-9]{10,}-[a-zA-Z0-9]{24}'
+    severity: high
+    recommendation: "Remove and revoke the app token"
+    description: "Slack App-Level Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: communication
+    enabled: true
+
+  # SendGrid
+  - name: SENDGRID_API_KEY
+    regex: 'SG\.[a-zA-Z0-9_-]{22}\.[a-zA-Z0-9_-]{43}'
+    severity: critical
+    recommendation: "Remove and regenerate in SendGrid Settings"
+    description: "SendGrid API Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: communication
+    enabled: true
+
+  # Twilio
+  - name: TWILIO_API_KEY
+    regex: 'SK[0-9a-fA-F]{32}'
+    severity: critical
+    recommendation: "Remove and revoke in Twilio Console"
+    description: "Twilio API Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: communication
+    enabled: true
+
+  - name: TWILIO_ACCOUNT_SID
+    regex: 'AC[0-9a-fA-F]{32}'
+    severity: medium
+    recommendation: "Review - Twilio Account SID exposed"
+    description: "Twilio Account SID"
+    cwe_id: null
+    confidence: high
+    category: communication
+    enabled: true
+
+  - name: TWILIO_AUTH_TOKEN
+    regex: '(?i)twilio.*auth.*token\s*[:=]\s*[''"]?[0-9a-f]{32}[''"]?'
+    severity: critical
+    recommendation: "Remove and regenerate in Twilio Console"
+    description: "Twilio Auth Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: communication
+    enabled: true
+
+  # Mailgun
+  - name: MAILGUN_API_KEY
+    regex: 'key-[0-9a-zA-Z]{32}'
+    severity: critical
+    recommendation: "Remove and rotate in Mailgun Dashboard"
+    description: "Mailgun API Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: communication
+    enabled: true
+
+  - name: MAILGUN_DOMAIN
+    regex: '(?i)mailgun.*domain\s*[:=]\s*[''"]?[a-z0-9.-]+\.mailgun\.org[''"]?'
+    severity: low
+    recommendation: "Review - Mailgun domain exposed"
+    description: "Mailgun Domain"
+    cwe_id: null
+    confidence: medium
+    category: communication
+    enabled: false
+
+  # Discord
+  - name: DISCORD_BOT_TOKEN
+    regex: 'MT[a-zA-Z0-9_-]{23}\.[a-zA-Z0-9_-]{6}\.[a-zA-Z0-9_-]{27}'
+    severity: critical
+    recommendation: "Remove and regenerate in Discord Developer Portal"
+    description: "Discord Bot Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: communication
+    enabled: true
+
+  - name: DISCORD_WEBHOOK_URL
+    regex: 'https://discord(app)?\.com/api/webhooks/[0-9]{18}/[a-zA-Z0-9_-]{68}'
+    severity: medium
+    recommendation: "Remove and regenerate the webhook URL"
+    description: "Discord Webhook URL"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: communication
+    enabled: true
+
+  # Telegram
+  - name: TELEGRAM_BOT_TOKEN
+    regex: '[0-9]{9,10}:[a-zA-Z0-9_-]{35}'
+    severity: high
+    recommendation: "Remove and revoke bot via @BotFather"
+    description: "Telegram Bot Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: communication
+    enabled: true
+
+  # WhatsApp Business
+  - name: WHATSAPP_API_KEY
+    regex: '(?i)whatsapp.*api.*key\s*[:=]\s*[''"]?[a-zA-Z0-9_-]{32,}[''"]?'
+    severity: high
+    recommendation: "Remove and regenerate in WhatsApp Business Dashboard"
+    description: "WhatsApp Business API Key"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: communication
+    enabled: true

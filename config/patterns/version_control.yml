@@ -1,0 +1,107 @@
+# Version Control System Tokens
+# Patterns for detecting exposed VCS credentials
+
+patterns:
+  # GitHub
+  - name: GITHUB_PAT
+    regex: 'ghp_[a-zA-Z0-9]{36}'
+    severity: critical
+    recommendation: "Remove and regenerate the token in GitHub Settings"
+    description: "GitHub Personal Access Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: version_control
+    enabled: true
+
+  - name: GITHUB_OAUTH
+    regex: 'gho_[a-zA-Z0-9]{36}'
+    severity: critical
+    recommendation: "Remove and revoke the OAuth token"
+    description: "GitHub OAuth Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: version_control
+    enabled: true
+
+  - name: GITHUB_APP_TOKEN
+    regex: 'ghu_[a-zA-Z0-9]{36}'
+    severity: critical
+    recommendation: "Remove and revoke the app installation token"
+    description: "GitHub App Installation Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: version_control
+    enabled: true
+
+  - name: GITHUB_SSH_KEY
+    regex: 'ghs_[a-zA-Z0-9]{36}'
+    severity: critical
+    recommendation: "Remove and revoke the SSH key"
+    description: "GitHub SSH Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: version_control
+    enabled: true
+
+  - name: GITHUB_FINE_GRAINED_PAT
+    regex: 'github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59}'
+    severity: critical
+    recommendation: "Remove and regenerate the fine-grained token in GitHub Settings"
+    description: "GitHub Fine-Grained Personal Access Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: version_control
+    enabled: true
+
+  # GitLab
+  - name: GITLAB_PAT
+    regex: 'glpat-[a-zA-Z0-9_-]{20}'
+    severity: critical
+    recommendation: "Remove and revoke the GitLab token"
+    description: "GitLab Personal Access Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: version_control
+    enabled: true
+
+  - name: GITLAB_RUNNER_TOKEN
+    regex: 'glrt-[a-zA-Z0-9_-]{20}'
+    severity: high
+    recommendation: "Remove and revoke the GitLab Runner token"
+    description: "GitLab Runner Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: version_control
+    enabled: true
+
+  - name: GITLAB_OAUTH
+    regex: 'glo-[a-zA-Z0-9_-]{20}'
+    severity: critical
+    recommendation: "Remove and revoke the GitLab OAuth token"
+    description: "GitLab OAuth Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: version_control
+    enabled: true
+
+  # Bitbucket
+  - name: BITBUCKET_APP_PASSWORD
+    regex: '(?i)bitbucket.*app.*password\s*[:=]\s*[''"][a-zA-Z0-9_-]{32}[''"]'
+    severity: critical
+    recommendation: "Remove and revoke the Bitbucket App Password"
+    description: "Bitbucket App Password"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: version_control
+    enabled: true
+
+  # Gitea
+  - name: GITEA_TOKEN
+    regex: '(?i)gitea.*token\s*[:=]\s*[''"]?[a-zA-Z0-9]{40}[''"]?'
+    severity: high
+    recommendation: "Remove and revoke the Gitea token"
+    description: "Gitea API Token"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: version_control
+    enabled: true

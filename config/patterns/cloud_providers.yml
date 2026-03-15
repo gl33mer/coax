@@ -1,0 +1,149 @@
+# Cloud Provider API Keys and Credentials
+# Patterns for detecting exposed cloud provider credentials
+
+patterns:
+  # AWS
+  - name: AWS_ACCESS_KEY
+    regex: 'AKIA[0-9A-Z]{16}'
+    severity: critical
+    recommendation: "Remove immediately and rotate the key via AWS IAM Console"
+    description: "AWS Access Key ID"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: cloud_provider
+    enabled: true
+
+  - name: AWS_SECRET_KEY
+    regex: '(?i)(aws_secret_access_key|aws_secret_key)\s*[:=]\s*[''"]?[0-9a-zA-Z/+=]{40}[''"]?'
+    severity: critical
+    recommendation: "Remove immediately and rotate the secret via AWS IAM Console"
+    description: "AWS Secret Access Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: cloud_provider
+    enabled: true
+
+  - name: AWS_SESSION_TOKEN
+    regex: '(?i)aws_session_token\s*[:=]\s*[''"]?[A-Za-z0-9/+=]{100,}[''"]?'
+    severity: high
+    recommendation: "Remove and regenerate session token"
+    description: "AWS Session Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: cloud_provider
+    enabled: true
+
+  - name: AWS_ARN
+    regex: 'arn:aws:[a-z0-9-]+:[a-z]{2}-[a-z]+-[0-9]+:[0-9]+:.+'
+    severity: low
+    recommendation: "Review - may contain sensitive resource identifiers"
+    description: "AWS Amazon Resource Name"
+    cwe_id: null
+    confidence: low
+    category: cloud_provider
+    enabled: false
+
+  # Google Cloud Platform
+  - name: GOOGLE_API_KEY
+    regex: 'AIza[0-9A-Za-z\-_]{35}'
+    severity: high
+    recommendation: "Remove and restrict API key usage in Google Cloud Console"
+    description: "Google Cloud API Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: cloud_provider
+    enabled: true
+
+  - name: GCP_SERVICE_ACCOUNT
+    regex: '(?i)"type"\s*:\s*"service_account"'
+    severity: high
+    recommendation: "Remove and revoke service account credentials"
+    description: "Google Cloud Service Account Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: cloud_provider
+    enabled: true
+
+  - name: GCP_OAUTH_CLIENT_ID
+    regex: '[0-9]+-[0-9A-Za-z_]{32}\.apps\.googleusercontent\.com'
+    severity: medium
+    recommendation: "Review - Google OAuth Client ID exposed"
+    description: "Google Cloud OAuth Client ID"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: cloud_provider
+    enabled: true
+
+  - name: GCP_OAUTH_TOKEN
+    regex: 'ya29\.[0-9A-Za-z\-_]+'
+    severity: high
+    recommendation: "Remove and invalidate the OAuth token"
+    description: "Google OAuth Access Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: cloud_provider
+    enabled: true
+
+  # Microsoft Azure
+  - name: AZURE_STORAGE_CONNECTION_STRING
+    regex: '(?i)DefaultEndpointsProtocol=https;AccountName=[^;]+;AccountKey=[A-Za-z0-9+/=]{88};'
+    severity: critical
+    recommendation: "Remove and regenerate key in Azure Portal"
+    description: "Azure Storage Connection String"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: cloud_provider
+    enabled: true
+
+  - name: AZURE_CLIENT_SECRET
+    regex: '(?i)azure.*client.*secret\s*[:=]\s*[''"][^''"]{8,}[''"]'
+    severity: critical
+    recommendation: "Remove and rotate in Azure AD"
+    description: "Azure Client Secret"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: cloud_provider
+    enabled: true
+
+  - name: AZURE_TENANT_ID
+    regex: '(?i)azure.*tenant.*id\s*[:=]\s*[''"]?[0-9a-f-]{36}[''"]?'
+    severity: low
+    recommendation: "Review - Azure Tenant ID exposed"
+    description: "Azure Tenant ID"
+    cwe_id: null
+    confidence: low
+    category: cloud_provider
+    enabled: false
+
+  # DigitalOcean
+  - name: DIGITALOCEAN_TOKEN
+    regex: 'dop_v1_[a-f0-9]{64}'
+    severity: high
+    recommendation: "Remove and revoke in DigitalOcean Dashboard"
+    description: "DigitalOcean API Token"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: cloud_provider
+    enabled: true
+
+  # Heroku
+  - name: HEROKU_API_KEY
+    regex: '(?i)heroku.*[''"][0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}[''"]'
+    severity: critical
+    recommendation: "Remove and regenerate in Heroku Settings"
+    description: "Heroku API Key"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: cloud_provider
+    enabled: true
+
+  # Linode
+  - name: LINODE_TOKEN
+    regex: 'linode[_-]?token\s*[:=]\s*[''"]?[a-z0-9]{64}[''"]?'
+    severity: high
+    recommendation: "Remove and revoke in Linode Cloud Manager"
+    description: "Linode API Token"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: cloud_provider
+    enabled: true

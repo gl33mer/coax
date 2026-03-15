@@ -18,14 +18,7 @@ pub struct SecretPattern {
 impl SecretPattern {
     /// Convert to PatternConfig for scanner use
     pub fn to_config(&self) -> PatternConfig {
-        PatternConfig {
-            name: self.name,
-            pattern: self.pattern,
-            severity: self.severity,
-            recommendation: self.recommendation,
-            extract_secret: true,
-            min_entropy: None,
-        }
+        PatternConfig::new(self.name, self.pattern, self.severity, self.recommendation)
     }
 }
 

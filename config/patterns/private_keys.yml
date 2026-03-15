@@ -1,0 +1,142 @@
+# Private Keys and Certificates
+# Patterns for detecting exposed cryptographic keys
+
+patterns:
+  # RSA Keys
+  - name: RSA_PRIVATE_KEY
+    regex: '-----BEGIN RSA PRIVATE KEY-----'
+    severity: critical
+    recommendation: "Remove and regenerate RSA key pair immediately"
+    description: "RSA Private Key Header"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: private_key
+    enabled: true
+
+  - name: RSA_ENCRYPTED_PRIVATE_KEY
+    regex: '-----BEGIN ENCRYPTED PRIVATE KEY-----'
+    severity: critical
+    recommendation: "Remove encrypted private key - should not be in code"
+    description: "Encrypted RSA Private Key Header"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: private_key
+    enabled: true
+
+  # EC Keys
+  - name: EC_PRIVATE_KEY
+    regex: '-----BEGIN EC PRIVATE KEY-----'
+    severity: critical
+    recommendation: "Remove and regenerate EC key pair immediately"
+    description: "EC Private Key Header"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: private_key
+    enabled: true
+
+  # DSA Keys
+  - name: DSA_PRIVATE_KEY
+    regex: '-----BEGIN DSA PRIVATE KEY-----'
+    severity: critical
+    recommendation: "Remove and regenerate DSA key pair immediately"
+    description: "DSA Private Key Header"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: private_key
+    enabled: true
+
+  # SSH Keys
+  - name: SSH_PRIVATE_KEY
+    regex: '-----BEGIN OPENSSH PRIVATE KEY-----'
+    severity: critical
+    recommendation: "Remove and revoke SSH key from all servers immediately"
+    description: "SSH Private Key Header"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: private_key
+    enabled: true
+
+  - name: SSH2_PRIVATE_KEY
+    regex: '-----BEGIN SSH2 PRIVATE KEY-----'
+    severity: critical
+    recommendation: "Remove and revoke SSH2 key from all servers immediately"
+    description: "SSH2 Private Key Header"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: private_key
+    enabled: true
+
+  # PGP Keys
+  - name: PGP_PRIVATE_KEY
+    regex: '-----BEGIN PGP PRIVATE KEY BLOCK-----'
+    severity: critical
+    recommendation: "Remove and revoke PGP key immediately"
+    description: "PGP Private Key Block"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: private_key
+    enabled: true
+
+  # Generic Private Key
+  - name: PRIVATE_KEY_HEADER
+    regex: '-----BEGIN (RSA |EC |DSA |OPENSSH |ENCRYPTED |SSH2 )?PRIVATE KEY-----'
+    severity: critical
+    recommendation: "Remove immediately - private key exposed"
+    description: "Generic Private Key Header"
+    cwe_id: "CWE-798"
+    confidence: high
+    category: private_key
+    enabled: true
+
+  # Certificate Files
+  - name: CERTIFICATE_HEADER
+    regex: '-----BEGIN CERTIFICATE-----'
+    severity: low
+    recommendation: "Review - certificates are typically public but verify sensitivity"
+    description: "Certificate Header"
+    cwe_id: null
+    confidence: high
+    category: private_key
+    enabled: false
+
+  - name: CERTIFICATE_REQUEST
+    regex: '-----BEGIN CERTIFICATE REQUEST-----'
+    severity: low
+    recommendation: "Review - certificate requests are typically public"
+    description: "Certificate Request Header"
+    cwe_id: null
+    confidence: medium
+    category: private_key
+    enabled: false
+
+  # PKCS Formats
+  - name: PKCS7_HEADER
+    regex: '-----BEGIN PKCS7-----'
+    severity: low
+    recommendation: "Review PKCS7 content for sensitive data"
+    description: "PKCS7 Header"
+    cwe_id: null
+    confidence: medium
+    category: private_key
+    enabled: false
+
+  - name: PKCS12_HEADER
+    regex: '-----BEGIN PKCS12-----'
+    severity: high
+    recommendation: "Remove PKCS12 file - may contain private keys"
+    description: "PKCS12 Header"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: private_key
+    enabled: true
+
+  # Kubernetes Secrets
+  - name: KUBERNETES_SECRET
+    regex: '(?i)kubernetes.*secret\s*[:=]\s*[''"][a-zA-Z0-9+/=]{20,}[''"]'
+    severity: high
+    recommendation: "Remove and rotate Kubernetes secret"
+    description: "Kubernetes Secret"
+    cwe_id: "CWE-798"
+    confidence: medium
+    category: private_key
+    enabled: true

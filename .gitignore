@@ -1,0 +1,38 @@
+# Rust
+/target/
+**/target/
+Cargo.lock
+
+# Build
+**/*.rs.bk
+*.pdb
+
+# Test artifacts
+/tests/corpus/*/actual_*
+*.snap
+coverage/
+*.gcno
+*.gcda
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Logs
+*.log
+
+# Binary analysis test files
+/tests/corpus/binaries/*.exe
+/tests/corpus/binaries/*.so
+/tests/corpus/binaries/*.dll
+/tests/corpus/binaries/*.dylib
+
+# Benchmark results
+/benches/results/

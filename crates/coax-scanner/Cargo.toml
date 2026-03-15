@@ -30,6 +30,12 @@ base64 = { workspace = true }
 # Lazy static initialization
 lazy_static = { workspace = true }
 
+# Token efficiency (BPE-based detection from Betterleaks)
+tiktoken-rs = "0.9.1"
+
+# Word filter (Aho-Corasick algorithm from Betterleaks)
+aho-corasick = "1.1.4"
+
 [dev-dependencies]
 # Benchmarking
 criterion = "0.5"
