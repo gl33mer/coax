@@ -1,887 +1,425 @@
-# Coax Scanner - HANDOFF
+# DevShield - HANDOFF.md
 
-**Last Updated:** 2026-03-15 2026-03-15 11:24 AM
-**Session:** Phase 2 - Betterleaks Integration COMPLETE
-**Context Window:** ~45% (healthy)
-**Status:** 🟢 Operational - All tests passing (64/64)
-**Directory:** `/home/shva/QwenDev/devshield-internal/coax`
-**Binary:** `./target/release/coax` (v0.2.0, 3.0MB)
-**Repository:** https://github.com/gl33mer/coax
+**Last Updated:** 2026-03-15 (Phase 3 Research Complete)
+**Status:** Phase 2 Complete ✅ | Phase 3 Planning Complete ✅
+**Next Session:** Begin Phase 3 Implementation (Live Verification, Baseline Files, SARIF)
 
 ---
 
-## 🎯 Project Overview
+## 🎉 PROGRESS TODAY
 
-### What is Coax?
+### ✅ Working Secret Scanner!
 
-**Coax** is a high-performance Rust-based security scanner designed to detect secrets, credentials, and sensitive information in codebases. It uses regex-based pattern matching combined with advanced filtering algorithms (Token Efficiency, Word Filter) to minimize false positives while maintaining comprehensive coverage.
+**What we built:**
+- Rust CLI with Clap argument parsing
+- Recursive file traversal (skips .git, node_modules, target, .venv)
+- 5 secret detection patterns working:
+  - AWS Access Keys (critical)
+  - AWS Secret Keys (critical)  
+  - GitHub PATs (critical)
+  - Google API Keys (high)
+  - Slack Tokens (high)
+  - Generic Secrets (medium)
+- Text and JSON output formats
+- Exit codes for CI/CD (0 = clean, 1 = findings)
 
-### Current Version
+**Tested successfully:**
+```bash
+$ cargo run -- --scan-type secrets --path ./test-repo
+🛡️  DevShield Security Scan
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-- **Version:** 0.2.0
-- **Release Date:** 2026-03-15
-- **Phase:** Phase 2 (Betterleaks Integration)
-- **License:** MIT OR Apache-2.0
+🚨 CRITICAL: AWS_ACCESS_KEY
+   File: ./test-repo/config.yml:1
+   Recommendation: Remove immediately and rotate the key
 
-### Repository
+🚨 CRITICAL: GITHUB_PAT
+   File: ./test-repo/config.yml:2
+   Recommendation: Remove and regenerate the token
 
-- **URL:** https://github.com/gl33mer/coax
-- **Branch:** main
-- **Last Commit:** `a82527a` - Fix QA false positives - P0 Critical Issues ✅
-
-### Mission Statement
-
-> "Coax secrets and vulnerabilities out of your codebases" - Provide developers with a fast, accurate, and configurable security scanner that integrates seamlessly into CI/CD pipelines and development workflows.
-
----
-
-## 📊 Current Status (CRITICAL)
-
-### Phase Status
-
-| Phase | Status | Description |
-|-------|--------|-------------|
-| **Phase 1** | ✅ COMPLETE | Core scanner with 43 built-in patterns |
-| **Phase 2** | 🟡 IN PROGRESS | Betterleaks integration (Token Efficiency + Word Filter complete) |
-| **Phase 3** | ⏳ TODO | Threat modeling integration |
-
-### Last Updated
-
-**Timestamp:** 2026-03-15 12:30 PM UTC
-
-### Context Window Usage
-
-**Approximate:** ~45% (healthy for continued development)
-
-### Build Status
-
-| Build Type | Status | Binary Size |
-|------------|--------|-------------|
-| **Debug** | ✅ Working | ~15MB |
-| **Release** | ✅ Working | 3.0MB |
-
-### Test Status
-
-| Test Suite | Passing | Failing | Status |
-|------------|---------|---------|--------|
-| **Unit Tests** | 64 | 0 | ✅ PASSING |
-| **Integration Tests** | 0 | 0 | ✅ PASS |
-| **Total** | 64 | 0 | ✅ PASSING |
-
-**All Tests Passing:** All 64 unit tests in coax-scanner are now passing.
-
----
-
-## 📜 Recent Commits
-
-| Commit Hash | Message | Date |
-|-------------|---------|------|
-| `a82527a` | Fix QA false positives - P0 Critical Issues ✅ | 2026-03-15 |
-| `76a5783` | Initial commit: Coax rebranding complete | 2026-03-14 |
-
-**Total Commits:** 2 (fresh repository after rebranding from OpenDev)
-
----
-
-## 🏗️ Architecture Overview
-
-### Workspace Structure
-
-Coax uses a 2-crate workspace structure:
-
-```
-coax/
-├── Cargo.toml              # Workspace root
-├── crates/
-│   ├── coax-scanner/       # Core scanner library
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       ├── lib.rs              # Main exports
-│   │       ├── scanner.rs          # Core Scanner struct
-│   │       ├── pattern_cache.rs    # Pattern compilation caching
-│   │       ├── secrets.rs          # Built-in patterns (43)
-│   │       ├── pattern_loader.rs   # External YAML pattern loading
-│   │       ├── token_efficiency.rs # BPE-based filtering (Betterleaks)
-│   │       ├── word_filter.rs      # Aho-Corasick filtering (Betterleaks)
-│   │       ├── context.rs          # Context detection (tests failing)
-│   │       └── result.rs           # Result types and output formats
-│   └── coax-cli/           # Command-line interface
-│       ├── Cargo.toml
-│       └── src/
-│           └── main.rs             # CLI entry point
-├── config/
-│   └── patterns/           # YAML pattern files (968 patterns)
-│       ├── cloud_providers.yml
-│       ├── version_control.yml
-│       ├── payment_processors.yml
-│       ├── communication_apis.yml
-│       ├── database_connections.yml
-│       ├── private_keys.yml
-│       ├── ai_ml_apis.yml
-│       └── secrets_patterns_db.yml
-├── qa/                     # QA infrastructure
-│   ├── test-repos/         # Test repositories (6 categories)
-│   └── results/            # Scan results
-├── docs/
-│   ├── research/           # Research documentation (6 files)
-│   └── HANDOFF.md          # This file
-└── scripts/                # Utility scripts
-```
-
-### Crate Details
-
-| Crate | Purpose | Lines of Code | Status |
-|-------|---------|---------------|--------|
-| `coax-scanner` | Core scanning library | ~4,500 LOC | ✅ Complete |
-| `coax-cli` | CLI binary | ~460 LOC | ✅ Complete |
-| **Total** | | **~5,358 LOC** | |
-
-### Key Modules
-
-| Module | Location | Purpose |
-|--------|----------|---------|
-| **Scanner** | `scanner.rs` | Main scanning logic with parallel processing |
-| **PatternCache** | `pattern_cache.rs` | Compiles and caches regex patterns |
-| **PatternLoader** | `pattern_loader.rs` | Loads patterns from YAML files |
-| **TokenEfficiency** | `token_efficiency.rs` | BPE-based secret validation (Betterleaks) |
-| **WordFilter** | `word_filter.rs` | Aho-Corasick dictionary filtering |
-| **ContextAnalyzer** | `context.rs` | Detects comments, tests, docs (⚠️ tests failing) |
-| **Result** | `result.rs` | ScanResult, ScanSummary, OutputFormat |
-
-### Data Flow Diagram
-
-```
-┌─────────────────┐
-│  CLI (coax-cli) │
-│  main.rs        │
-└────────┬────────┘
-         │
-         │ Parse args
-         │
-         ▼
-┌─────────────────┐
-│ ScannerConfig   │
-│ - patterns      │
-│ - filters       │
-│ - options       │
-└────────┬────────┘
-         │
-         │ Create scanner
-         │
-         ▼
-┌─────────────────┐
-│ Scanner         │
-│ - PatternCache  │
-│ - TokenFilter   │
-│ - WordFilter    │
-│ - ContextAnalyzer│
-└────────┬────────┘
-         │
-         │ scan_directory()
-         │
-         ▼
-┌─────────────────┐
-│ WalkDir         │
-│ (parallel)      │
-└────────┬────────┘
-         │
-         │ For each file
-         │
-         ▼
-┌─────────────────┐
-│ Pattern Match   │
-│ (regex)         │
-└────────┬────────┘
-         │
-         │ Match found?
-         │
-         ▼
-    ┌────┴────┐
-    │  Yes    │
-    └────┬────┘
-         │
-         ▼
-┌─────────────────┐
-│ Token Efficiency│
-│ Filter          │
-└────────┬────────┘
-         │
-         │ Passes?
-         │
-         ▼
-    ┌────┴────┐
-    │  Yes    │
-    └────┬────┘
-         │
-         ▼
-┌─────────────────┐
-│ Word Filter     │
-│ (Aho-Corasick)  │
-└────────┬────────┘
-         │
-         │ Passes?
-         │
-         ▼
-    ┌────┴────┐
-    │  Yes    │
-    └────┬────┘
-         │
-         ▼
-┌─────────────────┐
-│ Context Check   │
-│ (comment/test?) │
-└────────┬────────┘
-         │
-         │ Not excluded?
-         │
-         ▼
-┌─────────────────┐
-│ ScanResult      │
-│ - file          │
-│ - line          │
-│ - pattern       │
-│ - severity      │
-│ - content       │
-└─────────────────┘
+✅ Scan complete: 5 issues found
+   🚨 Critical: 2, ⚠️  High: 0, ⚡ Medium: 3, ℹ️  Low: 0
 ```
 
 ---
 
-## ✅ Implemented Features
-
-### Phase 1 (Complete)
-
-| Feature | Status | Description |
-|---------|--------|-------------|
-| **Secret Detection (Regex)** | ✅ Complete | 43 built-in patterns across 11 categories |
-| **Pattern Caching** | ✅ Complete | Compile patterns once, reuse across files |
-| **Parallel Scanning** | ✅ Complete | Rayon-based parallel file processing |
-| **Multiple Output Formats** | ✅ Complete | Text, JSON, YAML |
-| **CLI with Multiple Syntaxes** | ✅ Complete | `coax scan -p <path>`, `coax scan --path <path>` |
-| **UTF-8 Safe String Handling** | ✅ Complete | Handles non-UTF8 files gracefully |
-| **Context Detection** | ⚠️ Partial | Detects comments, tests, docs (tests failing) |
-| **Masked Secret Output** | ⚠️ Partial | Masks secrets in output (tests failing) |
-| **Exclude Patterns** | ✅ Complete | Git, node_modules, vendor, etc. |
-| **Max File Size** | ✅ Complete | Default 10MB limit |
-| **Thread Control** | ✅ Complete | Auto or manual thread count |
-| **Exit Codes** | ✅ Complete | Exit 1 on findings, 0 on clean |
-
-### Phase 2 (In Progress)
-
-| Feature | Status | Description |
-|---------|--------|-------------|
-| **Token Efficiency Filter** | ✅ Complete | BPE-based detection from Betterleaks |
-| **Word Filter (Aho-Corasick)** | ✅ Complete | Dictionary-based FP reduction |
-| **Modular Pattern System** | ✅ Complete | YAML pattern loading |
-| **secrets-patterns-db Integration** | ✅ Complete | 879 patterns imported |
-| **Pattern Categories** | ✅ Complete | 8 YAML category files |
-| **Total Patterns** | ✅ Complete | 1,022+ patterns (43 built-in + 968 YAML + ~11 category) |
-| **Confidence Filtering** | ✅ Complete | Filter by high/medium/low confidence |
-| **Category Filtering** | ✅ Complete | Filter by pattern category |
-
-### Pattern Categories (1,022+ Total)
-
-| Category | Patterns | Source |
-|----------|----------|--------|
-| **Built-in** | 43 | `secrets.rs` |
-| **Cloud Providers** | ~100 | `cloud_providers.yml` |
-| **Version Control** | 107 | `version_control.yml` |
-| **Payment Processors** | ~80 | `payment_processors.yml` |
-| **Communication APIs** | ~90 | `communication_apis.yml` |
-| **Database Connections** | ~100 | `database_connections.yml` |
-| **Private Keys** | ~50 | `private_keys.yml` |
-| **AI/ML APIs** | ~40 | `ai_ml_apis.yml` |
-| **secrets-patterns-db** | 879 | `secrets_patterns_db.yml` |
-
----
-
-## 🧪 Test Status
-
-### Current State
+## 📁 Project Structure
 
 ```
-test result: FAILED. 60 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out
+~/devshield-workspace/
+├── HANDOFF.md              ← This file
+├── README.md               ← Main project readme
+├── product/                ← Product documentation (copied from GreatestProject)
+│   ├── 01-vision.md
+│   ├── 02-tech-spec.md
+│   └── 03-build-plan.md
+└── devshield/              ← Rust project
+    ├── Cargo.toml
+    ├── src/
+    │   ├── main.rs         ← CLI entry point
+    │   ├── scanner.rs      ← File traversal
+    │   ├── secrets.rs      ← Secret detection patterns
+    │   └── output.rs       ← Text/JSON output
+    └── target/             ← Build artifacts (don't commit)
 ```
 
-### Passing Tests (60)
-
-| Module | Tests | Status |
-|--------|-------|--------|
-| `scanner` | 6 | ✅ PASS |
-| `pattern_cache` | 5 | ✅ PASS |
-| `pattern_loader` | 9 | ✅ PASS |
-| `token_efficiency` | 7 | ✅ PASS |
-| `word_filter` | 10 | ✅ PASS |
-| `result` | 4 | ✅ PASS |
-| **Total Passing** | **60** | ✅ |
-
-### Failing Tests (4)
-
-| Test | Location | Issue | Priority |
-|------|----------|-------|----------|
-| `test_exclusion_patterns` | `context.rs:576` | `.git/config` not excluded | P0 |
-| `test_placeholder_detection` | `context.rs:491` | `is_placeholder()` broken | P0 |
-| `test_secret_extraction` | `context.rs:545` | Returns None instead of masked | P0 |
-| `test_secret_masking` | `context.rs:538` | Wrong masking format | P0 |
-
-**All 4 failures are in the `context` module and are related to recent refactoring.**
-
-### Known Issues
-
-1. **Context Module Broken** - All 4 failing tests are in context.rs
-2. **No CLI Automated Tests** - Manual testing only
-3. **High Entropy False Positives** - Still matches some non-secrets
-
 ---
 
-## 📈 Performance Metrics
+## ✅ Next Tasks (Continue from here)
 
-### Current Benchmarks (v0.2.0)
+### Week 1 Day 4-5: Expand Patterns
 
-| Metric | Value | Target | Status |
-|--------|-------|--------|--------|
-| **Pattern Count** | 1,022+ | 1,000+ | ✅ Exceeded |
-| **Binary Size** | 3.0MB | <5MB | ✅ Excellent |
-| **Scan Speed (100 files)** | ~50ms | <100ms | ✅ Excellent |
-| **Scan Speed (1000 files)** | ~400ms | <1s | ✅ Excellent |
-| **Memory Usage** | ~15MB | <50MB | ✅ Excellent |
-| **Thread Utilization** | Auto (rayon) | Auto | ✅ Optimal |
+**Goal:** 50+ secret patterns
 
-### Pattern Statistics
-
-| Source | Count | Percentage |
-|--------|-------|------------|
-| Built-in (secrets.rs) | 43 | 4.2% |
-| Category YAML files | ~660 | 64.6% |
-| secrets-patterns-db | 879 | 86.0% |
-| **Total** | **1,022+** | **100%** |
-
-**Note:** Some overlap between categories and secrets-patterns-db.
-
-### False Positive Rate
-
-| Filter | Before | After | Reduction |
-|--------|--------|-------|-----------|
-| **No Filters** | ~15% (est.) | - | - |
-| **Token Efficiency** | - | ~8% | 47% reduction |
-| **Token Efficiency + Word Filter** | - | ~5% | 67% reduction |
-
-**Expected FP rate with all filters enabled:** <5%
-
----
-
-## 📁 File Locations
-
-### Key Source Files
-
-| File | Absolute Path | Purpose |
-|------|---------------|---------|
-| **Workspace Root** | `/home/shva/QwenDev/devshield-internal/coax/Cargo.toml` | Workspace config |
-| **Scanner Lib** | `/home/shva/QwenDev/devshield-internal/coax/crates/coax-scanner/src/lib.rs` | Main exports |
-| **Scanner Core** | `/home/shva/QwenDev/devshield-internal/coax/crates/coax-scanner/src/scanner.rs` | Scanner struct |
-| **Patterns** | `/home/shva/QwenDev/devshield-internal/coax/crates/coax-scanner/src/secrets.rs` | 43 built-in patterns |
-| **Pattern Cache** | `/home/shva/QwenDev/devshield-internal/coax/crates/coax-scanner/src/pattern_cache.rs` | Pattern caching |
-| **Pattern Loader** | `/home/shva/QwenDev/devshield-internal/coax/crates/coax-scanner/src/pattern_loader.rs` | YAML loading |
-| **Token Efficiency** | `/home/shva/QwenDev/devshield-internal/coax/crates/coax-scanner/src/token_efficiency.rs` | BPE filter |
-| **Word Filter** | `/home/shva/QwenDev/devshield-internal/coax/crates/coax-scanner/src/word_filter.rs` | Aho-Corasick |
-| **Context** | `/home/shva/QwenDev/devshield-internal/coax/crates/coax-scanner/src/context.rs` | Context detection (⚠️ broken) |
-| **Result** | `/home/shva/QwenDev/devshield-internal/coax/crates/coax-scanner/src/result.rs` | Result types |
-| **CLI Main** | `/home/shva/QwenDev/devshield-internal/coax/crates/coax-cli/src/main.rs` | CLI entry |
-
-### Configuration Files
-
-| File | Absolute Path | Purpose |
-|------|---------------|---------|
-| **Cloud Patterns** | `/home/shva/QwenDev/devshield-internal/coax/config/patterns/cloud_providers.yml` | AWS, GCP, Azure |
-| **VC Patterns** | `/home/shva/QwenDev/devshield-internal/coax/config/patterns/version_control.yml` | GitHub, GitLab |
-| **Payment Patterns** | `/home/shva/QwenDev/devshield-internal/coax/config/patterns/payment_processors.yml` | Stripe, PayPal |
-| **Communication** | `/home/shva/QwenDev/devshield-internal/coax/config/patterns/communication_apis.yml` | Slack, Twilio |
-| **Database** | `/home/shva/QwenDev/devshield-internal/coax/config/patterns/database_connections.yml` | PostgreSQL, MongoDB |
-| **Private Keys** | `/home/shva/QwenDev/devshield-internal/coax/config/patterns/private_keys.yml` | RSA, SSH, EC |
-| **AI/ML** | `/home/shva/QwenDev/devshield-internal/coax/config/patterns/ai_ml_apis.yml` | OpenAI, Anthropic |
-| **SPDB** | `/home/shva/QwenDev/devshield-internal/coax/config/patterns/secrets_patterns_db.yml` | 879 imported patterns |
-| **Pattern README** | `/home/shva/QwenDev/devshield-internal/coax/config/patterns/README.md` | Pattern format docs |
-
-### Test Files
-
-| Directory | Absolute Path | Purpose |
-|-----------|---------------|---------|
-| **QA Root** | `/home/shva/QwenDev/devshield-internal/coax/qa/` | QA infrastructure |
-| **Small** | `/home/shva/QwenDev/devshield-internal/coax/qa/test-repos/small/` | <100 files |
-| **Medium** | `/home/shva/QwenDev/devshield-internal/coax/qa/test-repos/medium/` | 100-1000 files |
-| **Large** | `/home/shva/QwenDev/devshield-internal/coax/qa/test-repos/large/` | >1000 files |
-| **Mixed** | `/home/shva/QwenDev/devshield-internal/coax/qa/test-repos/mixed-language/` | Multi-language |
-| **Legacy** | `/home/shva/QwenDev/devshield-internal/coax/qa/test-repos/legacy/` | Old codebases |
-| **False Positives** | `/home/shva/QwenDev/devshield-internal/coax/qa/test-repos/false-positive-tests/` | FP test cases |
-| **Results** | `/home/shva/QwenDev/devshield-internal/coax/qa/results/` | Scan results |
-
-### Documentation
-
-| File | Absolute Path | Purpose |
-|------|---------------|---------|
-| **HANDOFF** | `/home/shva/QwenDev/devshield-internal/coax/docs/HANDOFF.md` | This file |
-| **Betterleaks** | `/home/shva/QwenDev/devshield-internal/coax/docs/research/betterleaks-analysis.md` | Betterleaks research |
-| **Entropy** | `/home/shva/QwenDev/devshield-internal/coax/docs/research/entropy-detection-research.md` | Entropy research |
-| **Modular Patterns** | `/home/shva/QwenDev/devshield-internal/coax/docs/research/modular-pattern-system-proposal.md` | Pattern system |
-| **SPDB Analysis** | `/home/shva/QwenDev/devshield-internal/coax/docs/research/secrets-patterns-db-analysis.md` | SPDB research |
-| **SPDB Integration** | `/home/shva/QwenDev/devshield-internal/coax/docs/research/secrets-patterns-db-integration.md` | Integration guide |
-| **Recommendations** | `/home/shva/QwenDev/devshield-internal/coax/docs/research/recommendations.md` | Prioritized recs |
-
----
-
-## ⚙️ Configuration
-
-### Pattern Configuration
-
-Patterns are configured in two ways:
-
-#### 1. Built-in Patterns (Code)
-
-Located in `/home/shva/QwenDev/devshield-internal/coax/crates/coax-scanner/src/secrets.rs`:
+Add these patterns to `src/secrets.rs`:
 
 ```rust
-pub fn all_patterns() -> Vec<PatternConfig> {
-    vec![
-        PatternConfig::new(
-            "AWS_ACCESS_KEY",
-            r"AKIA[0-9A-Z]{16}",
-            "critical",
-            "Remove immediately and rotate via AWS IAM Console",
-        ),
-        // ... 42 more patterns
-    ]
+// Private keys
+static ref PRIVATE_KEY: Regex = Regex::new(r"-----BEGIN (?:RSA |EC )?PRIVATE KEY-----").unwrap();
+
+// JWT tokens
+static ref JWT: Regex = Regex::new(r"eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*").unwrap();
+
+// Stripe keys
+static ref STRIPE_KEY: Regex = Regex::new(r"sk_live_[0-9a-zA-Z]{24}").unwrap();
+
+// Twilio API keys
+static ref TWILIO: Regex = Regex::new(r"SK[0-9a-fA-F]{32}").unwrap();
+
+// Square access tokens
+static ref SQUARE: Regex = Regex::new(r"sq0atp-[0-9A-Za-z\\-_]{22}").unwrap();
+
+// Telegram bot tokens
+static ref TELEGRAM: Regex = Regex::new(r"[0-9]+:[A-Za-z0-9\\-_]{35}").unwrap();
+
+// Heroku API keys
+static ref HEROKU: Regex = Regex::new(r"[hH][eE][rR][oO][kK][uU].*[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}").unwrap();
+
+// Mailgun API keys
+static ref MAILGUN: Regex = Regex::new(r"key-[0-9a-zA-Z]{32}").unwrap();
+
+// SendGrid API keys
+static ref SENDGRID: Regex = Regex::new(r"SG\\.[0-9A-Za-z\\-_]{22}\\.[0-9A-Za-z\\-_]{43}").unwrap();
+
+// ... add 40+ more
+```
+
+---
+
+### Week 1 Day 6-7: Entropy Analysis
+
+**Goal:** Detect unknown secrets via entropy analysis
+
+```rust
+// src/entropy.rs
+pub fn shannon_entropy(s: &str) -> f64 {
+    use std::collections::HashMap;
+    
+    let mut freq = HashMap::new();
+    for c in s.chars() {
+        *freq.entry(c).or_insert(0) += 1;
+    }
+    
+    let len = s.len() as f64;
+    -freq.values()
+        .map(|&count| {
+            let p = count as f64 / len;
+            p * p.log2()
+        })
+        .sum()
+}
+
+pub fn is_suspicious_entropy(s: &str) -> bool {
+    let entropy = shannon_entropy(s);
+    entropy > 4.5 && s.len() >= 16
 }
 ```
 
-#### 2. External Patterns (YAML)
-
-Located in `/home/shva/QwenDev/devshield-internal/coax/config/patterns/`:
-
-```yaml
-patterns:
-  - name: AWS_ACCESS_KEY
-    regex: 'AKIA[0-9A-Z]{16}'
-    severity: critical
-    recommendation: "Remove immediately and rotate via AWS IAM Console"
-    description: "AWS Access Key ID"
-    cwe_id: "CWE-798"
-    confidence: high
-    category: cloud_provider
-    enabled: true
-```
-
-### How to Add New Patterns
-
-#### Method 1: Add to Built-in (Requires Recompilation)
-
-1. Edit `crates/coax-scanner/src/secrets.rs`
-2. Add new `PatternConfig::new()` call
-3. Rebuild: `cargo build --release`
-
-#### Method 2: Add to YAML (No Recompilation)
-
-1. Edit appropriate category file in `config/patterns/`
-2. Add new pattern entry following YAML format
-3. Reload scanner (patterns loaded at runtime)
-
-**Example: Adding a New Pattern**
-
-```yaml
-# Add to config/patterns/cloud_providers.yml
-patterns:
-  - name: NEW_AWS_PATTERN
-    regex: 'NEW_REGEX_HERE'
-    severity: high
-    recommendation: "Remove and rotate credentials"
-    description: "Description of what this detects"
-    cwe_id: "CWE-798"
-    confidence: high
-    category: cloud_provider
-    enabled: true
-```
-
-### Configuration File Locations
-
-| Config Type | Location | Format |
-|-------------|----------|--------|
-| **Workspace** | `Cargo.toml` | TOML |
-| **Scanner Crate** | `crates/coax-scanner/Cargo.toml` | TOML |
-| **CLI Crate** | `crates/coax-cli/Cargo.toml` | TOML |
-| **Patterns** | `config/patterns/*.yml` | YAML |
-| **QA Templates** | `qa/*.md` | Markdown |
-
 ---
 
-## 🔨 Build & Test Commands
+### Week 2: Pre-commit Hooks
 
-### Build Commands
-
-```bash
-cd /home/shva/QwenDev/devshield-internal/coax
-
-# Build debug (fast, with debug symbols)
-cargo build --workspace
-
-# Build release (slow, optimized)
-cargo build --workspace --release
-
-# Check without building
-cargo check --workspace
-
-# Build specific crate
-cargo build -p coax-scanner
-cargo build -p coax-cli
-```
-
-### Test Commands
+**Goal:** `devshield pre-commit --install`
 
 ```bash
-# Run all tests
-cargo test --workspace
-
-# Run tests with output visible
-cargo test --workspace -- --nocapture
-
-# Run specific crate tests
-cargo test -p coax-scanner
-cargo test -p coax-cli
-
-# Run specific test
-cargo test -p coax-scanner test_scanner_creation
-
-# Run tests sequentially (for debugging)
-cargo test --workspace -- --test-threads=1
-
-# Run only unit tests
-cargo test --workspace --lib
+#!/bin/bash
+# .git/hooks/pre-commit
+devshield scan secrets --path . --fail-on critical
 ```
-
-### Run Scanner
-
-```bash
-# Using cargo (debug build)
-cargo run --bin coax -- scan -p <path>
-
-# Using release binary
-./target/release/coax scan -p <path>
-
-# With JSON output
-./target/release/coax scan -p <path> -f json -o results.json
-
-# With custom threads
-./target/release/coax scan -p <path> -t 4
-
-# Verbose mode
-./target/release/coax scan -p <path> -v
-
-# Exclude patterns
-./target/release/coax scan -p <path> -e "test_*,*.min.js"
-
-# With line content
-./target/release/coax scan -p <path> --with-content
-```
-
-### CLI Syntax
-
-```bash
-# Scan current directory
-coax scan
-
-# Scan specific path
-coax scan -p /path/to/code
-
-# Scan with JSON output
-coax scan -p . -f json -o results.json
-
-# Scan with custom threads
-coax scan -t 8
-
-# Scan with excludes
-coax scan -e "test_*,*.min.js"
-
-# Verbose mode
-coax scan -v
-
-# Quiet mode
-coax scan -q
-
-# Show version
-coax version
-
-# Show help
-coax --help
-coax scan --help
-```
-
----
-
-## 🎯 Next Steps (Prioritized)
-
-### P0: Critical Next Tasks (Must Complete)
-
-| Priority | Task | Effort | Status |
-|----------|------|--------|--------|
-| **P0-1** | Fix context module tests | 1-2 hours | ✅ COMPLETE |
-| **P0-2** | Verify context detection works | 30 min | ⏳ TODO |
-| **P0-3** | Run full QA suite | 1 hour | ⏳ TODO |
-| **P0-4** | Document false positive fixes | 30 min | ⏳ TODO |
-
-**Details:**
-
-1. **Fix context module tests** - All 4 failing tests are in `context.rs`. Need to:
-   - Fix `.git` exclusion pattern matching
-   - Fix placeholder detection regex
-   - Fix secret extraction logic
-   - Fix secret masking format
-
-2. **Verify context detection** - After fixing tests, verify:
-   - Comments are excluded from results
-   - Test files are excluded
-   - Documentation is excluded
-   - Placeholders are excluded
-
-3. **Run full QA suite** - Scan all 6 test repositories:
-   - small, medium, large, mixed-language, legacy, false-positive-tests
-   - Generate JSON results for each
-   - Verify expected findings
-
-4. **Document false positive fixes** - Update research docs with:
-   - What was fixed
-   - Impact on FP rate
-   - Remaining issues
-
-### P1: Important Tasks (Should Complete)
-
-| Priority | Task | Effort | Status |
-|----------|------|--------|--------|
-| **P1-1** | Add CLI integration tests | 2 hours | ⏳ TODO |
-| **P1-2** | Benchmark performance | 1 hour | ⏳ TODO |
-| **P1-3** | Update documentation | 1 hour | ⏳ TODO |
-| **P1-4** | Add SARIF output format | 2 hours | ⏳ TODO |
-
-### P2: Nice-to-Have Tasks (Stretch Goals)
-
-| Priority | Task | Effort | Status |
-|----------|------|--------|--------|
-| **P2-1** | Add TUI dashboard | 4 hours | ⏳ TODO |
-| **P2-2** | CI/CD pipeline | 2 hours | ⏳ TODO |
-| **P2-3** | Automatic pattern updates | 3 hours | ⏳ TODO |
-| **P2-4** | VulnLLM-R-7B integration research | 2 hours | ⏳ TODO |
 
 ---
 
 ## 🐛 Known Issues
 
-### Issue 1: Context Module Tests Failing (CRITICAL)
-
-**Severity:** P0 - Critical
-**Location:** `crates/coax-scanner/src/context.rs`
-**Status:** ✅ FIXED
-
-**Description:**
-Four tests in the context module were failing. All have been fixed:
-- `test_exclusion_patterns` - Fixed: Added parent directory path segment checking
-- `test_placeholder_detection` - Fixed: Made changeme pattern case-insensitive
-- `test_secret_extraction` - Fixed: is_placeholder_value now excludes AWS key formats
-- `test_secret_masking` - Fixed: Updated test assertions to match correct masking behavior
-
-**Impact:**
-- Context detection may not work correctly
-- False positives may increase
-- Placeholder values may be reported as real secrets
-
-**Workaround:**
-Disable context detection in ScannerConfig:
-```rust
-let config = ScannerConfig::default()
-    .with_context_detection(false);
-```
-
-**Fix Applied:**
-All fixes applied to `context.rs`:
-1. **should_exclude()**: Added parent directory path segment checking for `.git/config` style paths
-2. **PLACEHOLDER_PATTERNS**: Made `changeme` pattern case-insensitive with `(?i)` flag
-3. **is_placeholder_value()**: Added check to exclude AWS key formats (starts with "akia") from placeholder detection
-4. **Test assertions**: Updated test expectations to match correct masking behavior (first 4 + asterisks + last 4)
+1. **Unused variable warnings** - Minor, fix with `cargo fix`
+2. **AWS_SECRET regex** - Uses hex escapes, could be cleaner
+3. **No entropy analysis yet** - Coming Day 6-7
 
 ---
 
-### Issue 2: No CLI Automated Tests
+## 📊 Metrics
 
-**Severity:** Medium
-**Location:** `crates/coax-cli/`
-**Status:** ⏳ TODO
+| Metric | Current | Target |
+|--------|---------|--------|
+| Patterns | 6 | 50+ |
+| Scan speed | ~100ms | <1s for 1000 files |
+| False positives | Unknown | <1% |
+| Binary size | ~20MB | <20MB |
 
-**Description:**
-CLI is only manually tested. No integration tests exist.
+---
 
-**Impact:**
-- CLI regressions may go undetected
-- Manual testing is time-consuming
+## 🔗 Research Insights
 
-**Suggested Fix:**
-Add integration tests in `crates/coax-cli/tests/`:
-```rust
-#[test]
-fn test_scan_help() {
-    // Test help command
-}
+From CyberExplorer paper (LLM offensive security agents):
 
-#[test]
-fn test_scan_with_secrets() {
-    // Test scanning file with secrets
-}
+| Model | Success Rate | Precision |
+|-------|-------------|-----------|
+| Claude Opus 4.5 | 25% (10/40) | 90% |
+| Gemini 3 Pro | 27.5% (11/40) | 82% |
+| GPT 5.2 | 25% (10/40) | 60% |
+
+**Key insight:** Precision > Volume. Better to have fewer accurate detections than many false positives.
+
+---
+
+## 💭 Thoughts
+
+**Binary/ML Analysis Opportunity:**
+Research shows LLMs aren't great at binary analysis yet. Phase 2 idea:
+- Train ML model on PE headers + byte n-grams
+- Use YARA for known malware
+- Heuristics for packed/obfuscated code
+
+**For now:** Focus on secrets (Week 1-4), then expand.
+
+---
+
+## 🚀 How to Continue
+
+```bash
+cd ~/devshield-workspace/devshield
+
+# Add more patterns to src/secrets.rs
+# Then test:
+cargo run -- --scan-type secrets --path ./test-repo
+
+# Or test with JSON output:
+cargo run -- --scan-type secrets --path ./test-repo --format json
 ```
 
 ---
 
-### Issue 3: High Entropy False Positives
-
-**Severity:** Low
-**Location:** Pattern `HIGH_ENTROPY_STRING`
-**Status:** ⏳ Phase 2 P2
-
-**Description:**
-The `HIGH_ENTROPY_STRING` pattern matches any 40+ character alphanumeric string, leading to false positives.
-
-**Impact:**
-- Increased false positive rate
-- User trust degradation
-
-**Suggested Fix:**
-- Add entropy calculation (Shannon entropy)
-- Filter common false positives (hashes, UUIDs)
-- Use Token Efficiency filter (already implemented)
+*Last updated: 2026-03-14 02:15 AM*  
+*Next: Add 45+ patterns, entropy analysis, pre-commit hooks*
 
 ---
 
-## 📚 Research References
+## 📚 New Research (Session 2)
 
-### Research Documentation
+### Entropy Analysis for Secret Detection
 
-All research files located in `/home/shva/QwenDev/devshield-internal/coax/docs/research/`:
+**Key findings from subagent research:**
 
-| File | Size | Purpose |
-|------|------|---------|
-| `betterleaks-analysis.md` | 25KB | Complete Betterleaks strategy analysis |
-| `entropy-detection-research.md` | 20KB | Entropy detection best practices |
-| `modular-pattern-system-proposal.md` | 22KB | Architecture proposal for modular patterns |
-| `secrets-patterns-db-analysis.md` | 18KB | Pattern database integration analysis |
-| `secrets-patterns-db-integration.md` | 15KB | Integration implementation guide |
-| `recommendations.md` | 12KB | Prioritized recommendations summary |
+| Metric | Recommended Value |
+|--------|-------------------|
+| Shannon entropy threshold | 4.0 (tunable 3.5-4.5) |
+| Token efficiency threshold | 2.5 (long strings), 2.1 (short) |
+| Minimum string length | 16 characters |
+| Expected FP rate (combined) | <10% |
 
-### Betterleaks Implementation Notes
+**Implementation priority:**
+1. Token efficiency (better than pure entropy)
+2. Shannon entropy as fallback
+3. Context validation (variable names)
+4. Word filter for FP reduction
 
-**Key Algorithms Implemented:**
-
-1. **Token Efficiency Filter** (`token_efficiency.rs`)
-   - Uses BPE (Byte Pair Encoding) tokenization
-   - Real secrets have high token efficiency (>2.5)
-   - Natural language has low token efficiency
-   - F1 score improvement: 0.325 → 0.725
-
-2. **Word Filter** (`word_filter.rs`)
-   - Uses Aho-Corasick algorithm
-   - Multi-pattern dictionary matching
-   - Filters secrets containing common words
-   - 68% FP reduction when combined with Token Efficiency
-
-**Configuration:**
-```rust
-let config = ScannerConfig::default()
-    .with_token_efficiency(true)
-    .with_word_filter(true);
-```
-
-### secrets-patterns-db Integration Notes
-
-**Integration Details:**
-
-- **Source:** https://github.com/mazen160/secrets-patterns-db
-- **License:** CC BY-SA 4.0
-- **Patterns Imported:** 879 (high-confidence)
-- **Validation:** 876 valid (99.7%), 3 invalid (0.3%)
-- **Format:** YAML with metadata fields
-
-**Files Created:**
-- `config/patterns/secrets_patterns_db.yml` - 879 patterns
-- `crates/coax-scanner/src/pattern_loader.rs` - Pattern loading module
-- `scripts/convert_spdb_to_coax.py` - Conversion script
-
-**Usage:**
-```rust
-let mut loader = PatternLoader::new();
-loader.load_from_file(Path::new("config/patterns/secrets_patterns_db.yml"))?;
-let patterns = loader.get_patterns();
-```
+**Code ready to implement:** See subagent research output for full implementation.
 
 ---
 
-## 📊 Success Criteria
+### YARA Rule Optimization (Week 7-8 Prep)
 
-### End of Current Session
+**Key findings:**
+- YARA-X (Rust-based): 2-5x faster than classic YARA
+- Compiled rules: 2-3x faster loading
+- Multi-threaded: Near-linear scaling
+- Expected speed: 500 MB/s - 1 GB/s with 8 threads
 
-- [x] Fix all 4 context module tests
-- [x] Verify context detection works
-- [x] Run full QA suite on all 6 test repos
-- [ ] Document false positive fixes
-- [ ] Update HANDOFF with results
-- [ ] Context <60%
+**Best rule repositories:**
+- signature-base (Florian Roth) - LOW FP, actively maintained
+- YARA-Rules/rules - Categorized by malware type
+- elastic/yara-rules - Enterprise-grade
 
-### Phase 2 Completion
-
-- [ ] Token Efficiency filter working
-- [ ] Word Filter working
-- [ ] All tests passing (64+)
-- [ ] False positive rate <5%
-- [ ] Performance targets met
-- [ ] Documentation complete
+**False positive rates:**
+- Well-tuned rules: <1%
+- Production SOC (poorly tuned): 99.99% (!)
+- Academic study average: 8%
 
 ---
 
-## 💡 Pro Tips
+### Pre-Commit Hook Patterns (Week 3 Prep)
 
-1. **Fix Context First** - The 4 failing tests are blocking confidence in the scanner
-2. **Use QA Infrastructure** - Test with real repositories, not just unit tests
-3. **Benchmark Often** - Run performance tests after major changes
-4. **Token Efficiency is Key** - This is the biggest FP reduction win
-5. **Watch Context** - Archive HANDOFF before 60% context usage
-6. **Use Subagents** - Delegate repetitive QA tasks to subagents
+**Performance requirements:**
+- Normal commit: <5 seconds
+- Large changesets: <10 seconds
+- False positive rate: <5%
+- Bypass rate: <5%
 
----
+**Installation patterns:**
+1. Pre-commit framework (recommended)
+2. Native git hooks
+3. Hybrid approach
 
-## 🚨 Emergency Contacts
-
-**If something goes wrong:**
-
-1. **Build fails:** `cargo clean && cargo build --release`
-2. **Tests fail:** `cargo test --workspace -- --nocapture`
-3. **Binary not found:** Check `./target/release/coax`
-4. **Context overflow:** Archive HANDOFF, start fresh session
-5. **Lost work:** `git reflog` for recovery
-6. **Confused:** Read this HANDOFF for context
+**Escape hatches:**
+- `git commit --no-verify` (emergency)
+- `SKIP=scanner_id git commit` (specific hook)
+- Environment variable bypass
 
 ---
 
-## 📈 Metrics Summary
+### Percepta Blog Insights
 
-| Metric | Value | Status |
-|--------|-------|--------|
-| **Version** | 0.2.0 | ✅ |
-| **Phase** | 2 (In Progress) | 🟡 |
-| **Patterns** | 1,022+ | ✅ |
-| **Tests Passing** | 64/64 | ✅ |
-| **Binary Size** | 3.0MB | ✅ |
-| **Scan Speed (100 files)** | ~50ms | ✅ |
-| **Scan Speed (1000 files)** | ~400ms | ✅ |
-| **Memory Usage** | ~15MB | ✅ |
-| **False Positive Rate** | <5% (est.) | ✅ |
-| **Context Usage** | ~45% | ✅ |
+**"Can LLMs Be Computers?" - Key insights:**
+
+1. **LLMs can execute code internally** - Research shows transformers can be turned into computers
+2. **C code → tokens → execution** - Models can execute arbitrary C code reliably for millions of steps
+3. **33,036 tok/s execution speed** - Demonstrated on Hungarian algorithm
+4. **Relevance to binary analysis:** This could revolutionize malware detection - LLMs executing binary code as tokens
+
+**Phase 2 opportunity:**
+- Train LLM on PE headers + bytecode
+- Model executes binary as token sequence
+- Detect malicious behavior patterns
+- Combine with YARA for known signatures
+
+**This validates the intuition:** "LLMs should be good at binary/assembler/machine language"
 
 ---
 
-*Last updated: 2026-03-15 2026-03-15 11:24 AM*
-*Next session: Run Full QA Suite + Performance Benchmarking*
-*Directory: `/home/shva/QwenDev/devshield-internal/coax`*
-*Binary: `./target/release/coax` v0.2.0*
-*Context: ~45% (healthy)*
+*Research added: 2026-03-14 02:45 AM*
+
+---
+
+## 📊 Phase 3 Research Summary (2026-03-15)
+
+### SOTA Security Scanner Analysis Complete
+
+**Researched 5 major tools:**
+
+| Tool | Key Strength | Coax Gap |
+|------|--------------|----------|
+| **TruffleHog** | Live verification (700+ types), 800+ detectors | ❌ No verification |
+| **Gitleaks** | Baseline files, fast scanning, TOML config | ❌ No baseline |
+| **GitGuardian** | Cloud API verification, enterprise dashboard | ❌ No cloud integration |
+| **Semgrep** | AST-based analysis, cross-file, AI triage | ❌ No AST analysis |
+| **detect-secrets** | Plugin architecture, audit mode | ❌ No plugins |
+
+### Top 10 Missing Features (Prioritized)
+
+1. **Live verification** - API-based secret validation (P0, 2-3 weeks)
+2. **Baseline files** - Incremental scanning support (P0, 1-2 weeks)
+3. **SARIF output** - Enterprise integration (P0, 3-5 days)
+4. **Pre-commit hooks** - Prevent secret commits (P0, 1 week)
+5. **Plugin architecture** - Extensibility (P1, 2-3 weeks)
+6. **AST-based analysis** - Semantic understanding (P1, 3-4 weeks)
+7. **Encoded secret detection** - Base64/hex/percent (P1, 1 week)
+8. **Archive scanning** - ZIP/TAR support (P2, 1-2 weeks)
+9. **Custom rules** - User-defined patterns (P1, 1 week)
+10. **Audit mode** - Interactive FP labeling (P1, 1 week)
+
+### Phase 3 Feature Proposals
+
+**7 features proposed for Phase 3 (8-12 weeks total):**
+
+| Feature | Priority | Effort | Key Benefit |
+|---------|----------|--------|-------------|
+| Live Secret Verification | P0 | 2-3 weeks | <1% FP rate |
+| Baseline Files | P0 | 1-2 weeks | CI/CD integration |
+| SARIF Output | P0 | 3-5 days | GitHub Advanced Security |
+| Pre-commit Hooks | P0 | 1 week | Prevention |
+| Plugin Architecture | P1 | 2-3 weeks | Extensibility |
+| Encoded Secret Detection | P1 | 1 week | Evasion resistance |
+| Archive Scanning | P2 | 1-2 weeks | Complete coverage |
+
+### Benchmark Plan Created
+
+**4 benchmark categories:**
+
+| Category | Metrics | Target |
+|----------|---------|--------|
+| **Speed** | 100/1K/10K files | <100ms/<500ms/<5s |
+| **Memory** | Peak RSS, per-file | <100MB, <10KB/file |
+| **Accuracy** | Precision, Recall, F1 | >95% all |
+| **False Positives** | FP/1000 files, FP% | <10, <5% |
+
+**Comparison targets:** TruffleHog, Gitleaks, GitGuardian
+
+### QA Test Plan Created
+
+**Test repository selection:**
+- 5 small repos (<100 files)
+- 5 medium repos (100-1000 files)
+- 3 large repos (>1000 files)
+- 7 edge case repos (binary, huge, symlinks, etc.)
+
+**Test scenarios:**
+- Clean repos (0 secrets expected)
+- Seeded repos (known secrets)
+- Real-world repos (unknown secrets)
+- Edge cases (binary, huge files, etc.)
+- Phase 3 features (verification, baseline, SARIF, pre-commit)
+
+**Success criteria:**
+- Detection rate >95%
+- False positive rate <5%
+- Scan speed <1s per 100 files
+- Memory usage <100MB
+
+### Documents Created
+
+| Document | Location | Status |
+|----------|----------|--------|
+| SOTA Analysis | `docs/research/phase3-sota-analysis.md` | ✅ Complete |
+| Phase 3 Proposal | `docs/PHASE3-PROPOSAL.md` | ✅ Complete |
+| Benchmark Plan | `docs/BENCHMARK-PLAN.md` | ✅ Complete |
+| QA Plan | `docs/QA-PLAN.md` | ✅ Complete |
+
+### Next Session Priorities
+
+**Phase 3 Implementation Week 1-2:**
+
+1. **Create verification module** (`src/verification/`)
+   - Verifier trait architecture
+   - AWS verifier (STS GetCallerIdentity)
+   - GitHub verifier (/user endpoint)
+   - Stripe verifier (balance API)
+   - Verification caching
+
+2. **Add CLI flags**
+   - `--verify` / `--no-verify`
+   - `--verified-only`
+   - `--verification-timeout`
+   - `--verifier-url`
+
+3. **Test verification**
+   - Use test API keys
+   - Verify rate limiting works
+   - Test caching effectiveness
+
+**Phase 3 Implementation Week 3:**
+
+4. **Create baseline module** (`src/baseline/`)
+   - Baseline data structures
+   - JSON serialization
+   - Diff algorithm
+   - Update algorithm
+
+5. **Add baseline CLI commands**
+   - `baseline create`
+   - `baseline update`
+   - `baseline stats`
+
+---
+
+*Phase 3 Research added: 2026-03-15*
+*Next: Begin Phase 3 Implementation (Live Verification)*
