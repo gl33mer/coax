@@ -1,0 +1,669 @@
+{
+  "findings": [
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/clap_builder/src/parser/matches/arg_matches.rs",
+      "line": 1922,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/clap_builder/src/output/textwrap/core.rs",
+      "line": 149,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/clap_builder/src/error/kind.rs",
+      "line": 300,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "> None,",
+      "file": "qa/test-repos/real-world/small-clap/clap_builder/src/error/kind.rs",
+      "line": 353,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": ":Dis*********************************mand",
+      "file": "qa/test-repos/real-world/small-clap/clap_builder/src/error/format.rs",
+      "line": 366,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": ":Dis***********************************************************and,",
+      "file": "qa/test-repos/real-world/small-clap/clap_builder/src/error/mod.rs",
+      "line": 272,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": ":Dis**********************************and,",
+      "file": "qa/test-repos/real-world/small-clap/clap_builder/src/error/mod.rs",
+      "line": 368,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/clap_builder/src/builder/arg.rs",
+      "line": 4958,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/clap_builder/src/builder/arg.rs",
+      "line": 4970,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/clap_builder/src/builder/arg.rs",
+      "line": 5072,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/clap_builder/src/builder/arg.rs",
+      "line": 5096,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/clap_builder/src/builder/arg.rs",
+      "line": 5123,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 284,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 290,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 296,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 308,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 314,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 320,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 326,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 332,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 338,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 344,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 362,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 368,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 405,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 411,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 417,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 429,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 435,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 441,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 447,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 453,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 459,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-clap/Cargo.toml",
+      "line": 489,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    }
+  ],
+  "scan_duration_ms": 20259,
+  "summary": {
+    "by_severity": {
+      "critical": 0,
+      "high": 0,
+      "low": 0,
+      "medium": 34
+    },
+    "files_scanned": 467,
+    "scan_duration_ms": 20259,
+    "top_patterns": [
+      {
+        "count": 34,
+        "pattern": "HIGH_ENTROPY_STRING"
+      }
+    ],
+    "total_findings": 34
+  },
+  "version": "0.2.0"
+}

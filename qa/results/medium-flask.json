@@ -1,0 +1,255 @@
+{
+  "findings": [
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "deve******* key",
+      "file": "qa/test-repos/real-world/medium-flask/src/flask/config.py",
+      "line": 66,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "prov******************ons,",
+      "file": "qa/test-repos/real-world/medium-flask/src/flask/sansio/blueprints.py",
+      "line": 438,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "inst*****************fig,",
+      "file": "qa/test-repos/real-world/medium-flask/src/flask/app.py",
+      "line": 332,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "get_*************ges,",
+      "file": "qa/test-repos/real-world/medium-flask/src/flask/app.py",
+      "line": 497,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "(\"ht********************************************************************s\"),",
+      "file": "qa/test-repos/real-world/medium-flask/docs/conf.py",
+      "line": 29,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//gi*********************************************************gz\",",
+      "file": "qa/test-repos/real-world/medium-flask/pyproject.toml",
+      "line": 221,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//gi***************************************************gz\",",
+      "file": "qa/test-repos/real-world/medium-flask/pyproject.toml",
+      "line": 222,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//gi**********************************************************gz\",",
+      "file": "qa/test-repos/real-world/medium-flask/pyproject.toml",
+      "line": 223,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//gi***************************************************gz\",",
+      "file": "qa/test-repos/real-world/medium-flask/pyproject.toml",
+      "line": 224,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//gi********************************************************gz\",",
+      "file": "qa/test-repos/real-world/medium-flask/pyproject.toml",
+      "line": 225,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//gi******************************************************gz\",",
+      "file": "qa/test-repos/real-world/medium-flask/pyproject.toml",
+      "line": 226,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "http************************************************************************************************</a>",
+      "file": "qa/test-repos/real-world/medium-flask/examples/javascript/js_example/templates/fetch.html",
+      "line": 4,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    }
+  ],
+  "scan_duration_ms": 536,
+  "summary": {
+    "by_severity": {
+      "critical": 0,
+      "high": 1,
+      "low": 0,
+      "medium": 11
+    },
+    "files_scanned": 127,
+    "scan_duration_ms": 536,
+    "top_patterns": [
+      {
+        "count": 11,
+        "pattern": "HIGH_ENTROPY_STRING"
+      },
+      {
+        "count": 1,
+        "pattern": "GENERIC_SECRET"
+      }
+    ],
+    "total_findings": 12
+  },
+  "version": "0.2.0"
+}

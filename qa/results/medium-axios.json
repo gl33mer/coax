@@ -1,0 +1,17 @@
+{
+  "findings": [],
+  "scan_duration_ms": 5353,
+  "summary": {
+    "by_severity": {
+      "critical": 0,
+      "high": 0,
+      "low": 0,
+      "medium": 0
+    },
+    "files_scanned": 301,
+    "scan_duration_ms": 5353,
+    "top_patterns": [],
+    "total_findings": 0
+  },
+  "version": "0.2.0"
+}

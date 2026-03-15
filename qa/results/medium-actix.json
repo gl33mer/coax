@@ -1,0 +1,1239 @@
+{
+  "findings": [
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-files/src/named.rs",
+      "line": 734,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-files/src/lib.rs",
+      "line": 104,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-files/src/lib.rs",
+      "line": 116,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-files/src/lib.rs",
+      "line": 128,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-files/src/lib.rs",
+      "line": 517,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-files/src/lib.rs",
+      "line": 613,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-files/src/lib.rs",
+      "line": 826,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-multipart/src/test.rs",
+      "line": 66,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-multipart/src/test.rs",
+      "line": 78,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "crea*******************************************ary(",
+      "file": "qa/test-repos/real-world/medium-actix/actix-multipart/src/test.rs",
+      "line": 151,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "crea*******************************************ary(",
+      "file": "qa/test-repos/real-world/medium-actix/actix-multipart/src/test.rs",
+      "line": 175,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "crat********************************************************ary(",
+      "file": "qa/test-repos/real-world/medium-actix/actix-multipart/src/multipart.rs",
+      "line": 550,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-multipart/src/multipart.rs",
+      "line": 814,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-router/benches/router.rs",
+      "line": 159,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "====*********************************************************************====",
+      "file": "qa/test-repos/real-world/medium-actix/scripts/free-disk-space.sh",
+      "line": 27,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "====*********************************************************************====",
+      "file": "qa/test-repos/real-world/medium-actix/scripts/free-disk-space.sh",
+      "line": 29,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/rmap.rs",
+      "line": 380,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/introspection.rs",
+      "line": 1069,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/introspection.rs",
+      "line": 1096,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/introspection.rs",
+      "line": 1151,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/introspection.rs",
+      "line": 1177,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/introspection.rs",
+      "line": 1206,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/scope.rs",
+      "line": 883,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/service.rs",
+      "line": 891,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/service.rs",
+      "line": 897,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/service.rs",
+      "line": 909,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/service.rs",
+      "line": 915,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/types/readlines.rs",
+      "line": 80,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/types/readlines.rs",
+      "line": 230,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/types/payload.rs",
+      "line": 256,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/types/form.rs",
+      "line": 399,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/types/json.rs",
+      "line": 678,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/types/json.rs",
+      "line": 699,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/types/either.rs",
+      "line": 338,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "&Ser************************r) {",
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/middleware/compress.rs",
+      "line": 310,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "&Ser************************r) {",
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/middleware/compress.rs",
+      "line": 321,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/middleware/compress.rs",
+      "line": 425,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/middleware/compress.rs",
+      "line": 431,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/http/header/content_disposition.rs",
+      "line": 853,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/http/header/range.rs",
+      "line": 404,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/response/responder.rs",
+      "line": 161,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/response/responder.rs",
+      "line": 174,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/response/responder.rs",
+      "line": 178,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/response/responder.rs",
+      "line": 179,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/response/responder.rs",
+      "line": 180,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/response/responder.rs",
+      "line": 181,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/response/responder.rs",
+      "line": 183,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/response/responder.rs",
+      "line": 184,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/guard/host.rs",
+      "line": 268,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/request.rs",
+      "line": 1194,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/h1/decoder.rs",
+      "line": 346,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/h1/chunked.rs",
+      "line": 224,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/h1/chunked.rs",
+      "line": 291,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/h1/chunked.rs",
+      "line": 321,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/h1/codec.rs",
+      "line": 205,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/h1/dispatcher_tests.rs",
+      "line": 539,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/header/map.rs",
+      "line": 1119,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/header/shared/extended.rs",
+      "line": 115,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/header/shared/extended.rs",
+      "line": 151,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/header/shared/extended.rs",
+      "line": 158,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/header/shared/extended.rs",
+      "line": 164,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/header/shared/extended.rs",
+      "line": 170,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/http_message.rs",
+      "line": 174,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-actix/actix-http/src/ws/frame.rs",
+      "line": 355,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    }
+  ],
+  "scan_duration_ms": 889,
+  "summary": {
+    "by_severity": {
+      "critical": 0,
+      "high": 0,
+      "low": 0,
+      "medium": 64
+    },
+    "files_scanned": 364,
+    "scan_duration_ms": 889,
+    "top_patterns": [
+      {
+        "count": 64,
+        "pattern": "HIGH_ENTROPY_STRING"
+      }
+    ],
+    "total_findings": 64
+  },
+  "version": "0.2.0"
+}

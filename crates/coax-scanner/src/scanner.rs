@@ -14,6 +14,7 @@ use crate::secrets;
 use crate::context::ContextAnalyzer;
 use crate::token_efficiency::TokenEfficiencyConfig;
 use crate::word_filter::{WordFilter, WordFilterConfig};
+use crate::entropy_filter::EntropyFilter;
 use rayon::prelude::*;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -539,6 +540,24 @@ fn scan_content_internal(
                         if !config.word_filter_config.passes_filter(secret_value) {
                             tracing::debug!(
                                 "Filtered by word filter: {} in {}:{}",
+                                pattern.name,
+                                file.display(),
+                                line_num + 1
+                            );
+                            continue;
+                        }
+                    }
+                }
+
+
+                // Apply Entropy Filter for HIGH_ENTROPY_STRING pattern
+                // This uses multiple signals to reduce false positives
+                if pattern.name.as_ref() == "HIGH_ENTROPY_STRING" {
+                    if let Some(ref secret_value) = secret {
+                        let entropy_filter = EntropyFilter::new();
+                        if !entropy_filter.is_likely_secret(secret_value, line) {
+                            tracing::debug!(
+                                "Filtered by entropy filter: {} in {}:{}",
                                 pattern.name,
                                 file.display(),
                                 line_num + 1

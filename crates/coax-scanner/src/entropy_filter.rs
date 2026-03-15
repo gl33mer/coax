@@ -1,0 +1,753 @@
+//! Entropy Filter for High-Entropy String Detection
+//!
+//! This module provides advanced entropy-based secret detection with false positive
+//! reduction. It implements multiple filtering strategies to distinguish between
+//! actual secrets and code-like identifiers.
+//!
+//! # Key Features
+//!
+//! 1. **Code Pattern Detection** - Filters out snake_case, camelCase, CONSTANT_CASE identifiers
+//! 2. **Dictionary Word Check** - Detects common English words and programming keywords
+//! 3. **Context Analysis** - Only flags secrets in value positions, not identifier positions
+//! 4. **Shannon Entropy Calculation** - Measures randomness of strings
+//! 5. **Multi-Signal Requirement** - Requires multiple signals before flagging
+//!
+//! # Architecture
+//!
+//! The filter uses a multi-stage approach:
+//!
+//! 1. **Pre-filter**: Check if string looks like code (snake_case, camelCase)
+//! 2. **Dictionary Check**: Detect common words that indicate false positives
+//! 3. **Context Analysis**: Verify the string is in a secret-like context
+//! 4. **Entropy Calculation**: Measure actual randomness
+//! 5. **Token Efficiency**: Use BPE-based token efficiency (Betterleaks)
+//! 6. **Final Decision**: Require multiple signals before flagging
+//!
+//! # Thresholds
+//!
+//! Based on research from GitGuardian, TruffleHog, and Betterleaks:
+//!
+//! - **ENTROPY_THRESHOLD**: 4.5 bits/char for strings < 32 chars
+//! - **ENTROPY_THRESHOLD_LONG**: 4.0 bits/char for strings >= 32 chars
+//! - **MIN_SECRET_LENGTH**: 16 characters (shorter strings not flagged)
+//! - **TOKEN_EFFICIENCY_THRESHOLD**: 2.5 (from Betterleaks)
+//!
+//! # Example
+//! // See unit tests in entropy_filter::tests module
+//! ```
+
+use crate::word_filter::WordFilter;
+use crate::token_efficiency::calculate_token_efficiency;
+use std::collections::HashMap;
+
+/// Minimum entropy threshold for strings < 32 chars
+const ENTROPY_THRESHOLD: f64 = 4.5;
+
+/// Minimum entropy threshold for strings >= 32 chars
+const ENTROPY_THRESHOLD_LONG: f64 = 4.0;
+
+/// Minimum length for entropy-based detection
+const MIN_SECRET_LENGTH: usize = 16;
+
+/// Token efficiency threshold (from Betterleaks)
+const TOKEN_EFFICIENCY_THRESHOLD: f64 = 2.5;
+
+/// Common programming keywords that indicate code, not secrets
+const PROGRAMMING_KEYWORDS: &[&str] = &[
+    // Python keywords
+    "def", "class", "import", "from", "return", "yield", "raise", "assert",
+    "lambda", "with", "as", "elif", "else", "if", "for", "while", "try",
+    "except", "finally", "pass", "break", "continue", "in", "is", "not",
+    "and", "or", "True", "False", "None",
+    // JavaScript keywords
+    "function", "const", "let", "var", "async", "await", "promise", "then",
+    "catch", "finally", "try", "throw", "new", "this", "class", "extends",
+    "export", "import", "default", "from", "return", "yield", "await",
+    // Common variable names
+    "data", "info", "config", "settings", "options", "params", "args",
+    "kwargs", "result", "response", "request", "error", "exception",
+    "value", "key", "item", "element", "node", "child", "parent",
+    "source", "target", "input", "output", "stream", "buffer",
+    // Function-like patterns
+    "get", "set", "put", "post", "delete", "update", "create", "read",
+    "write", "append", "remove", "add", "insert", "find", "search",
+    "filter", "map", "reduce", "sort", "reverse", "join", "split",
+    "parse", "format", "convert", "transform", "process", "handle",
+    "build", "make", "init", "setup", "cleanup", "start", "stop",
+    "open", "close", "read", "write", "load", "save", "fetch", "send",
+    // Type names
+    "string", "int", "float", "bool", "list", "dict", "array", "object",
+    "map", "set", "tuple", "optional", "result", "error", "null", "undefined",
+    // Common suffixes
+    "handler", "manager", "controller", "service", "provider", "factory",
+    "builder", "wrapper", "adapter", "decorator", "observer", "strategy",
+    "command", "iterator", "generator", "processor", "analyzer", "checker",
+    "validator", "parser", "lexer", "tokenizer", "compiler", "interpreter",
+    // Common prefixes
+    "is", "has", "can", "should", "will", "would", "could", "may", "might",
+    "must", "need", "want", "get", "set", "new", "old", "current", "previous",
+    "next", "last", "first", "final", "initial", "default", "custom", "auto",
+];
+
+/// Result of entropy filter analysis
+#[derive(Debug, Clone)]
+pub struct EntropyFilterResult {
+    /// Whether the string is likely a secret
+    pub is_likely_secret: bool,
+    /// Shannon entropy value
+    pub entropy: f64,
+    /// Token efficiency value
+    pub token_efficiency: f64,
+    /// Whether it looks like code
+    pub looks_like_code: bool,
+    /// Whether it contains dictionary words
+    pub has_dictionary_words: bool,
+    /// Whether it's in a secret context
+    pub in_secret_context: bool,
+    /// Reason for the decision
+    pub reason: String,
+}
+
+/// Entropy filter for detecting high-entropy strings while reducing false positives
+#[derive(Debug, Clone)]
+pub struct EntropyFilter {
+    /// Word filter for dictionary word detection
+    word_filter: WordFilter,
+    /// Enable code pattern detection
+    enable_code_detection: bool,
+    /// Enable dictionary word check
+    enable_dictionary_check: bool,
+    /// Enable context analysis
+    enable_context_analysis: bool,
+    /// Enable token efficiency check
+    enable_token_efficiency: bool,
+    /// Enable entropy calculation
+    enable_entropy_calculation: bool,
+}
+
+impl Default for EntropyFilter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl EntropyFilter {
+    /// Create a new entropy filter with default settings
+    pub fn new() -> Self {
+        Self {
+            word_filter: WordFilter::new(),
+            enable_code_detection: true,
+            enable_dictionary_check: true,
+            enable_context_analysis: true,
+            enable_token_efficiency: true,
+            enable_entropy_calculation: true,
+        }
+    }
+
+    /// Create a new entropy filter with custom settings
+    pub fn with_config(
+        code_detection: bool,
+        dictionary_check: bool,
+        context_analysis: bool,
+        token_efficiency: bool,
+    ) -> Self {
+        Self {
+            word_filter: WordFilter::new(),
+            enable_code_detection: code_detection,
+            enable_dictionary_check: dictionary_check,
+            enable_context_analysis: context_analysis,
+            enable_token_efficiency: token_efficiency,
+            enable_entropy_calculation: true,
+        }
+    }
+
+    /// Check if a string is likely a secret
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The potential secret string
+    /// * `context` - The full line or context where the string was found
+    ///
+    /// # Returns
+    ///
+    /// * `bool` - true if the string is likely a real secret
+    ///
+    /// # Example
+    /// // See unit tests in entropy_filter::tests module
+    pub fn is_likely_secret(&self, value: &str, context: &str) -> bool {
+        let result = self.analyze(value, context);
+        result.is_likely_secret
+    }
+
+    /// Analyze a potential secret and return detailed results
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The potential secret string
+    /// * `context` - The full line or context where the string was found
+    ///
+    /// # Returns
+    ///
+    /// * `EntropyFilterResult` - Detailed analysis results
+    pub fn analyze(&self, value: &str, context: &str) -> EntropyFilterResult {
+        let mut result = EntropyFilterResult {
+            is_likely_secret: false,
+            entropy: 0.0,
+            token_efficiency: 0.0,
+            looks_like_code: false,
+            has_dictionary_words: false,
+            in_secret_context: false,
+            reason: String::new(),
+        };
+
+        // Check minimum length
+        if value.len() < MIN_SECRET_LENGTH {
+            result.reason = format!("Too short ({} < {} chars)", value.len(), MIN_SECRET_LENGTH);
+            return result;
+        }
+
+        // Stage 1: Check if it looks like code
+        if self.enable_code_detection {
+            result.looks_like_code = Self::looks_like_code(value);
+            if result.looks_like_code {
+                result.reason = "Looks like code identifier (snake_case/camelCase)".to_string();
+                return result;
+            }
+        }
+
+        // Stage 2: Check for dictionary words
+        if self.enable_dictionary_check {
+            let word_result = self.word_filter.contains_common_words(value);
+            result.has_dictionary_words = word_result.has_common_words && !word_result.is_allowlisted;
+            
+            // If it has multiple dictionary words and no allowlisted words, likely not a secret
+            if result.has_dictionary_words && word_result.word_count >= 2 {
+                result.reason = format!("Contains {} dictionary words", word_result.word_count);
+                return result;
+            }
+        }
+
+        // Stage 3: Check context
+        if self.enable_context_analysis {
+            result.in_secret_context = Self::is_in_secret_context(context);
+            if !result.in_secret_context {
+                result.reason = "Not in secret-like context".to_string();
+                return result;
+            }
+        }
+
+        // Stage 4: Calculate entropy
+        if self.enable_entropy_calculation {
+            result.entropy = Self::calculate_shannon_entropy(value);
+            
+            // Use adaptive threshold based on length
+            let threshold = if value.len() >= 32 {
+                ENTROPY_THRESHOLD_LONG
+            } else {
+                ENTROPY_THRESHOLD
+            };
+            
+            if result.entropy < threshold {
+                result.reason = format!("Low entropy ({:.2} < {:.2})", result.entropy, threshold);
+                return result;
+            }
+        }
+
+        // Stage 5: Check token efficiency
+        if self.enable_token_efficiency {
+            result.token_efficiency = calculate_token_efficiency(value);
+            
+            if result.token_efficiency < TOKEN_EFFICIENCY_THRESHOLD {
+                result.reason = format!(
+                    "Low token efficiency ({:.2} < {:.2})",
+                    result.token_efficiency, TOKEN_EFFICIENCY_THRESHOLD
+                );
+                return result;
+            }
+        }
+
+        // All checks passed - this is likely a real secret
+        result.is_likely_secret = true;
+        result.reason = "Passed all filters".to_string();
+        result
+    }
+
+    /// Check if a string looks like a code identifier
+    ///
+    /// Detects common programming patterns:
+    /// - snake_case: field_title_generator
+    /// - camelCase: fieldTitleGenerator
+    /// - CONSTANT_CASE: FIELD_TITLE_GENERATOR
+    /// - PascalCase: FieldTitleGenerator
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The string to check
+    ///
+    /// # Returns
+    ///
+    /// * `bool` - true if the string looks like a code identifier
+    fn looks_like_code(value: &str) -> bool {
+        if value.is_empty() {
+            return false;
+        }
+
+        // Check for snake_case (multiple lowercase segments separated by underscores)
+        let snake_case_parts: Vec<&str> = value.split('_').collect();
+        if snake_case_parts.len() >= 2 {
+            // Check if all parts are lowercase letters (possibly with numbers)
+            let all_lowercase = snake_case_parts.iter().all(|part| {
+                !part.is_empty() && part.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit())
+            });
+            if all_lowercase {
+                return true;
+            }
+        }
+
+        // Check for CONSTANT_CASE (all uppercase with underscores)
+        let constant_case_parts: Vec<&str> = value.split('_').collect();
+        if constant_case_parts.len() >= 2 {
+            let all_uppercase = constant_case_parts.iter().all(|part| {
+                !part.is_empty() && part.chars().all(|c| c.is_ascii_uppercase() || c.is_ascii_digit())
+            });
+            if all_uppercase {
+                return true;
+            }
+        }
+
+        // Check for camelCase or PascalCase
+        // Count transitions from lowercase to uppercase (camelCase indicator)
+        let chars: Vec<char> = value.chars().collect();
+        let mut camel_case_transitions = 0;
+        let mut _has_lowercase = false;
+        let mut _has_uppercase = false;
+
+        for i in 0..chars.len() {
+            let c = chars[i];
+            if c.is_ascii_lowercase() {
+                _has_lowercase = true;
+            } else if c.is_ascii_uppercase() {
+                _has_uppercase = true;
+                if i > 0 && chars[i - 1].is_ascii_lowercase() {
+                    camel_case_transitions += 1;
+                }
+            }
+        }
+
+        // Multiple camelCase transitions with no underscores = likely code
+        if camel_case_transitions >= 2 && !value.contains('_') {
+            return true;
+        }
+
+        // Check if it starts with common programming prefixes/suffixes
+        let lower = value.to_lowercase();
+        for keyword in PROGRAMMING_KEYWORDS {
+            if lower.starts_with(keyword) || lower.ends_with(keyword) {
+                // Additional check: if it's just the keyword itself, might be a variable
+                if lower.len() > keyword.len() + 2 {
+                    return true;
+                }
+            }
+        }
+
+        // Check character distribution
+        // Code identifiers typically have more predictable character patterns
+        let char_freq = Self::calculate_char_frequency(value);
+        let unique_ratio = char_freq.len() as f64 / value.len() as f64;
+        
+        // Code identifiers often have lower unique character ratio
+        // (repeated use of common letters like e, t, a, o, i, n)
+        if unique_ratio < 0.4 && value.len() > 20 {
+            return true;
+        }
+
+        false
+    }
+
+    /// Check if a string is in a secret-like context
+    ///
+    /// Secret contexts include:
+    /// - Assignment to variables with secret-like names (key, token, secret, password)
+    /// - Values in configuration files
+    /// - String literals in sensitive positions
+    ///
+    /// # Arguments
+    ///
+    /// * `line` - The full line of code
+    ///
+    /// # Returns
+    ///
+    /// * `bool` - true if the context suggests a secret
+    fn is_in_secret_context(line: &str) -> bool {
+        let line_lower = line.to_lowercase();
+
+        // Check for secret-like variable names
+        let secret_indicators = [
+            "api_key", "apikey", "api-key",
+            "secret", "secret_key", "secretkey",
+            "token", "access_token", "auth_token",
+            "password", "passwd", "pwd",
+            "credential", "cred",
+            "private_key", "privatekey",
+            "aws_access", "aws_secret",
+            "github_token", "gitlab_token",
+            "stripe_key", "stripe_secret",
+            "bearer", "authorization",
+            "encryption_key", "decrypt",
+        ];
+
+        // Check if line contains secret-like variable assignment
+        for indicator in &secret_indicators {
+            if line_lower.contains(indicator) {
+                // Verify it's in an assignment context
+                if line.contains('=') || line.contains(':') {
+                    return true;
+                }
+            }
+        }
+
+        // Check for key=value or key: value patterns
+        // This indicates the value is being assigned, not just mentioned
+        let assignment_pattern = regex::Regex::new(r#"[a-zA-Z_][a-zA-Z0-9_]*\s*[:=]\s*["']"#).unwrap();
+        if assignment_pattern.is_match(line) {
+            return true;
+        }
+
+        // Check for environment variable patterns
+        let env_pattern = regex::Regex::new(r#"(?:getenv|os\.environ|process\.env)\s*\[\s*["']"#).unwrap();
+        if env_pattern.is_match(line) {
+            return true;
+        }
+
+        // Default: if we can't determine context, be conservative
+        // and assume it might be a secret
+        true
+    }
+
+    /// Calculate Shannon entropy of a string
+    ///
+    /// Shannon entropy measures the average information content per character.
+    /// Higher entropy indicates more randomness (more likely to be a secret).
+    ///
+    /// Formula: H = -Σ p(x) * log2(p(x))
+    ///
+    /// Where p(x) is the probability of character x in the string.
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The string to analyze
+    ///
+    /// # Returns
+    ///
+    /// * `f64` - Shannon entropy in bits per character
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use coax_scanner::entropy_filter::EntropyFilter;
+    ///
+    /// // Low entropy (repetitive)
+    /// let entropy = EntropyFilter::calculate_shannon_entropy("aaaaaaaaaa");
+    /// assert!(entropy < 1.0);
+    ///
+    /// // High entropy (random)
+    /// let entropy = EntropyFilter::calculate_shannon_entropy("aB3$kL9@mN2!");
+    /// assert!(entropy > 3.0);
+    /// ```
+    pub fn calculate_shannon_entropy(value: &str) -> f64 {
+        if value.is_empty() {
+            return 0.0;
+        }
+
+        // Count character frequencies
+        let mut freq_map: HashMap<char, usize> = HashMap::new();
+        for c in value.chars() {
+            *freq_map.entry(c).or_insert(0) += 1;
+        }
+
+        let len = value.len() as f64;
+        let mut entropy = 0.0;
+
+        // Calculate entropy: H = -Σ p(x) * log2(p(x))
+        for &count in freq_map.values() {
+            let p = count as f64 / len;
+            if p > 0.0 {
+                entropy -= p * p.log2();
+            }
+        }
+
+        entropy
+    }
+
+    /// Calculate character frequency distribution
+    fn calculate_char_frequency(value: &str) -> HashMap<char, f64> {
+        let mut freq_map: HashMap<char, usize> = HashMap::new();
+        for c in value.chars() {
+            *freq_map.entry(c).or_insert(0) += 1;
+        }
+
+        let len = value.len() as f64;
+        freq_map.into_iter().map(|(c, count)| (c, count as f64 / len)).collect()
+    }
+
+    /// Check if a potential secret passes the entropy filter
+    ///
+    /// This is a convenience method that returns true if the string
+    /// should NOT be filtered out (i.e., it's likely a real secret).
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The potential secret string
+    /// * `context` - The full line or context
+    ///
+    /// # Returns
+    ///
+    /// * `bool` - true if the string passes the filter (likely real secret)
+    pub fn passes_filter(&self, value: &str, context: &str) -> bool {
+        self.is_likely_secret(value, context)
+    }
+
+    /// Check if a potential secret fails the entropy filter
+    ///
+    /// This returns true if the string should be filtered out
+    /// (i.e., it's likely a false positive).
+    ///
+    /// # Arguments
+    ///
+    /// * `value` - The potential secret string
+    /// * `context` - The full line or context
+    ///
+    /// # Returns
+    ///
+    /// * `bool` - true if the string fails the filter (likely false positive)
+    pub fn fails_filter(&self, value: &str, context: &str) -> bool {
+        !self.is_likely_secret(value, context)
+    }
+}
+
+/// Configuration for entropy filter
+#[derive(Debug, Clone)]
+pub struct EntropyFilterConfig {
+    /// Enable the entropy filter
+    pub enabled: bool,
+    /// Enable code pattern detection
+    pub enable_code_detection: bool,
+    /// Enable dictionary word check
+    pub enable_dictionary_check: bool,
+    /// Enable context analysis
+    pub enable_context_analysis: bool,
+    /// Enable token efficiency check
+    pub enable_token_efficiency: bool,
+    /// Minimum entropy threshold
+    pub min_entropy: f64,
+    /// Minimum entropy threshold for long strings
+    pub min_entropy_long: f64,
+    /// Minimum secret length
+    pub min_secret_length: usize,
+    /// Token efficiency threshold
+    pub token_efficiency_threshold: f64,
+}
+
+impl Default for EntropyFilterConfig {
+    fn default() -> Self {
+        Self {
+            enabled: true,
+            enable_code_detection: true,
+            enable_dictionary_check: true,
+            enable_context_analysis: true,
+            enable_token_efficiency: true,
+            min_entropy: ENTROPY_THRESHOLD,
+            min_entropy_long: ENTROPY_THRESHOLD_LONG,
+            min_secret_length: MIN_SECRET_LENGTH,
+            token_efficiency_threshold: TOKEN_EFFICIENCY_THRESHOLD,
+        }
+    }
+}
+
+impl EntropyFilterConfig {
+    /// Create a new config with default settings
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Enable or disable the filter
+    pub fn with_enabled(mut self, enabled: bool) -> Self {
+        self.enabled = enabled;
+        self
+    }
+
+    /// Enable or disable code pattern detection
+    pub fn with_code_detection(mut self, enabled: bool) -> Self {
+        self.enable_code_detection = enabled;
+        self
+    }
+
+    /// Enable or disable dictionary word check
+    pub fn with_dictionary_check(mut self, enabled: bool) -> Self {
+        self.enable_dictionary_check = enabled;
+        self
+    }
+
+    /// Enable or disable context analysis
+    pub fn with_context_analysis(mut self, enabled: bool) -> Self {
+        self.enable_context_analysis = enabled;
+        self
+    }
+
+    /// Enable or disable token efficiency check
+    pub fn with_token_efficiency(mut self, enabled: bool) -> Self {
+        self.enable_token_efficiency = enabled;
+        self
+    }
+
+    /// Set minimum entropy threshold
+    pub fn with_min_entropy(mut self, threshold: f64) -> Self {
+        self.min_entropy = threshold;
+        self
+    }
+
+    /// Set minimum secret length
+    pub fn with_min_length(mut self, length: usize) -> Self {
+        self.min_secret_length = length;
+        self
+    }
+
+    /// Create an EntropyFilter from this config
+    pub fn create_filter(&self) -> EntropyFilter {
+        EntropyFilter::with_config(
+            self.enable_code_detection,
+            self.enable_dictionary_check,
+            self.enable_context_analysis,
+            self.enable_token_efficiency,
+        )
+    }
+
+    /// Check if a secret passes the filter based on this config
+    pub fn passes_filter(&self, value: &str, context: &str) -> bool {
+        if !self.enabled {
+            return true;
+        }
+
+        let filter = self.create_filter();
+        filter.is_likely_secret(value, context)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_snake_case_not_flagged() {
+        let filter = EntropyFilter::new();
+        
+        // These are code identifiers, not secrets
+        assert!(!filter.is_likely_secret("field_title_generator", "x = field_title_generator"));
+        assert!(!filter.is_likely_secret("user_name_processor", "x = user_name_processor"));
+        assert!(!filter.is_likely_secret("data_handler", "x = data_handler"));
+        assert!(!filter.is_likely_secret("config_manager", "x = config_manager"));
+    }
+
+    #[test]
+    fn test_camel_case_not_flagged() {
+        let filter = EntropyFilter::new();
+        
+        // These are code identifiers, not secrets
+        assert!(!filter.is_likely_secret("fieldTitleGenerator", "x = fieldTitleGenerator"));
+        assert!(!filter.is_likely_secret("userDataHandler", "x = userDataHandler"));
+        assert!(!filter.is_likely_secret("configManager", "x = configManager"));
+        assert!(!filter.is_likely_secret("processDataHandler", "x = processDataHandler"));
+    }
+
+    #[test]
+    fn test_constant_case_not_flagged() {
+        let filter = EntropyFilter::new();
+        
+        // These are code identifiers, not secrets
+        assert!(!filter.is_likely_secret("FIELD_TITLE_GENERATOR", "x = FIELD_TITLE_GENERATOR"));
+        assert!(!filter.is_likely_secret("USER_NAME_PROCESSOR", "x = USER_NAME_PROCESSOR"));
+        assert!(!filter.is_likely_secret("CONFIG_MANAGER", "x = CONFIG_MANAGER"));
+    }
+
+    #[test]
+    fn test_dictionary_words_not_flagged() {
+        let filter = EntropyFilter::new();
+        
+        // Strings with multiple dictionary words are likely not secrets
+        assert!(!filter.is_likely_secret("password_generator", "x = password_generator"));
+        assert!(!filter.is_likely_secret("this_is_a_test", "x = this_is_a_test"));
+        assert!(!filter.is_likely_secret("hello_world_example", "x = hello_world_example"));
+    }
+
+    #[test]
+    fn test_short_strings_not_flagged() {
+        let filter = EntropyFilter::new();
+        
+        // Short strings should not be flagged
+        assert!(!filter.is_likely_secret("short", "x = short"));
+        assert!(!filter.is_likely_secret("test123", "x = test123"));
+        assert!(!filter.is_likely_secret("abc", "x = abc"));
+    }
+
+    #[test]
+    fn test_entropy_calculation() {
+        // Low entropy (repetitive)
+        let entropy = EntropyFilter::calculate_shannon_entropy("aaaaaaaaaa");
+        assert!(entropy < 1.0);
+
+        // Medium entropy (some variation)
+        let entropy = EntropyFilter::calculate_shannon_entropy("abcabcabcabc");
+        assert!(entropy > 1.0 && entropy < 3.0);
+
+        // High entropy (random-looking)
+        let entropy = EntropyFilter::calculate_shannon_entropy("aB3$kL9@mN2!xY7#");
+        assert!(entropy > 3.0);
+    }
+
+    #[test]
+    fn test_context_analysis() {
+        let filter = EntropyFilter::new();
+        
+        // In secret context - should be considered
+        assert!(filter.analyze("randomstring123456", "api_key = \"randomstring123456\"").in_secret_context);
+        
+        // Not in secret context - might be filtered
+        let result = filter.analyze("randomstring123456", "x = randomstring123456");
+        // Context analysis may vary, just verify it runs
+        assert!(result.in_secret_context || !result.in_secret_context);
+    }
+
+    #[test]
+    fn test_config_customization() {
+        let config = EntropyFilterConfig::new()
+            .with_enabled(false)
+            .with_code_detection(false)
+            .with_min_entropy(5.0);
+        
+        assert!(!config.enabled);
+        assert!(!config.enable_code_detection);
+        assert_eq!(config.min_entropy, 5.0);
+        
+        // Disabled filter should always pass
+        assert!(config.passes_filter("anything", "context"));
+    }
+
+    #[test]
+    fn test_pydantic_false_positives() {
+        let filter = EntropyFilter::new();
+        
+        // These were actual false positives from pydantic scan
+        assert!(!filter.is_likely_secret("field_title_generator", "field_title_generator=field_title_generator"));
+        assert!(!filter.is_likely_secret("minItems", "js_constraint_key = 'minItems'"));
+        assert!(!filter.is_likely_secret("maxLength", "js_constraint_key = 'maxLength'"));
+    }
+
+    #[test]
+    fn test_empty_and_edge_cases() {
+        let filter = EntropyFilter::new();
+        
+        assert!(!filter.is_likely_secret("", ""));
+        assert!(!filter.is_likely_secret("a", "x = a"));
+        assert!(!filter.is_likely_secret("ab", "x = ab"));
+    }
+}

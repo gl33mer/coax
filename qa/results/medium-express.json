@@ -1,0 +1,118 @@
+{
+  "findings": [
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "keyb**** cat",
+      "file": "qa/test-repos/real-world/medium-express/examples/session/index.js",
+      "line": 19,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "keyb******at',",
+      "file": "qa/test-repos/real-world/medium-express/examples/session/redis.js",
+      "line": 23,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "shhh**********cret",
+      "file": "qa/test-repos/real-world/medium-express/examples/auth/index.js",
+      "line": 25,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "some********here",
+      "file": "qa/test-repos/real-world/medium-express/examples/mvc/index.js",
+      "line": 43,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "mann***********}));",
+      "file": "qa/test-repos/real-world/medium-express/examples/cookie-sessions/index.js",
+      "line": 13,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    }
+  ],
+  "scan_duration_ms": 508,
+  "summary": {
+    "by_severity": {
+      "critical": 0,
+      "high": 5,
+      "low": 0,
+      "medium": 0
+    },
+    "files_scanned": 169,
+    "scan_duration_ms": 508,
+    "top_patterns": [
+      {
+        "count": 5,
+        "pattern": "GENERIC_SECRET"
+      }
+    ],
+    "total_findings": 5
+  },
+  "version": "0.2.0"
+}

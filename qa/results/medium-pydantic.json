@@ -1,0 +1,4344 @@
+{
+  "findings": [
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "fiel**************tor,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/fields.py",
+      "line": 1374,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "coer**************str,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/fields.py",
+      "line": 1389,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/deprecated/class_validators.py",
+      "line": 33,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/deprecated/class_validators.py",
+      "line": 46,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_known_annotated_metadata.py",
+      "line": 229,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "minI**********************************************tems",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_known_annotated_metadata.py",
+      "line": 261,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "minL************************************************ngth",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_known_annotated_metadata.py",
+      "line": 263,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "[",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 178,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 202,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 249,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 287,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 303,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Unsu*************************ing)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 610,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "defa*****************ry),",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 626,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "_add*************************************************************************************ema)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 752,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "set_*********ator",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 1286,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "_ext*********************************************nfo)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 1317,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "_ext*****************************************nfo)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 2166,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "chec********************************tes,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 2231,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "pyda*************************ons)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 2237,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 2238,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Unsu*************************ing,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 2262,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Unsu*************************ing,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 2273,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "_ext*******************************************ata)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 2323,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 2333,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "chec********************************tes,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_generate_schema.py",
+      "line": 2369,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_discriminated_union.py",
+      "line": 375,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_discriminated_union.py",
+      "line": 389,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_discriminated_union.py",
+      "line": 400,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_discriminated_union.py",
+      "line": 430,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_discriminated_union.py",
+      "line": 432,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_discriminated_union.py",
+      "line": 454,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_discriminated_union.py",
+      "line": 458,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_discriminated_union.py",
+      "line": 462,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "_cre*************ule,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_model_construction.py",
+      "line": 261,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_fields.py",
+      "line": 128,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_fields.py",
+      "line": 203,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//gi*******************************************************************************************1875",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_typing_extra.py",
+      "line": 673,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "====*********************************************====",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_internal/_typing_extra.py",
+      "line": 676,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Conf****************************************************rue)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/config.py",
+      "line": 842,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "excl****************lds,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/main.py",
+      "line": 485,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "poly******************ion,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/main.py",
+      "line": 490,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "excl****************lds,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/main.py",
+      "line": 553,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "poly******************ion,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/main.py",
+      "line": 558,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Use **************************************************************************************yOf)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/main.py",
+      "line": 578,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Use **************************************************************************ype)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/main.py",
+      "line": 580,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "User**************************************d1')",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/types.py",
+      "line": 1813,
+      "line_content": null,
+      "pattern": "GENERIC_PASSWORD",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "User**************************************d1')",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/types.py",
+      "line": 1813,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//do******************************************************************************************************r.',",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/types.py",
+      "line": 1915,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/types.py",
+      "line": 2842,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/types.py",
+      "line": 2974,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "cust*************age,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/types.py",
+      "line": 3138,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "cust*************ext,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/types.py",
+      "line": 3139,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/json_schema.py",
+      "line": 227,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//js**************************************************************id4)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/json_schema.py",
+      "line": 238,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Use **************************************************************************************yOf)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/json_schema.py",
+      "line": 256,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Use **************************************************************************ype)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/json_schema.py",
+      "line": 258,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/json_schema.py",
+      "line": 344,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/json_schema.py",
+      "line": 1797,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Use **************************************************************************************yOf)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/json_schema.py",
+      "line": 2541,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Use **************************************************************************ype)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/json_schema.py",
+      "line": 2543,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Use **************************************************************************************yOf)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/json_schema.py",
+      "line": 2592,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Use **************************************************************************ype)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/json_schema.py",
+      "line": 2594,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "expe*******************ial,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/type_adapter.py",
+      "line": 447,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "expe*******************ial,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/type_adapter.py",
+      "line": 497,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "expe*******************ial,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/type_adapter.py",
+      "line": 544,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "excl****************lds,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/type_adapter.py",
+      "line": 616,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "poly******************ion,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/type_adapter.py",
+      "line": 621,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "excl****************lds,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/type_adapter.py",
+      "line": 687,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "poly******************ion,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/type_adapter.py",
+      "line": 692,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Use **************************************************************************************yOf)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/type_adapter.py",
+      "line": 712,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Use **************************************************************************ype)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/type_adapter.py",
+      "line": 714,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Use **************************************************************************************yOf)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/type_adapter.py",
+      "line": 759,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Use **************************************************************************ype)",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/type_adapter.py",
+      "line": 761,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "http*****************************************************************ers/",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/version.py",
+      "line": 17,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/version.py",
+      "line": 105,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "DECO******************************************************************er'}",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/mypy.py",
+      "line": 101,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/mypy.py",
+      "line": 146,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Clas*****************one:",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/mypy.py",
+      "line": 172,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/mypy.py",
+      "line": 538,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "IfSt****************************mt]:",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/mypy.py",
+      "line": 695,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/mypy.py",
+      "line": 707,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "requ*****************ses,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/mypy.py",
+      "line": 902,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "forc*****************ant,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/mypy.py",
+      "line": 1155,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//do*****************************************************/.',",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/color.py",
+      "line": 74,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "_env**************ter,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/v1/env_settings.py",
+      "line": 45,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "init***************************************************************************ings",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/v1/env_settings.py",
+      "line": 73,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//hy************************************************************************************************ints",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/v1/_hypothesis_plugin.py",
+      "line": 10,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/v1/mypy.py",
+      "line": 124,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Clas*****************one:",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/v1/mypy.py",
+      "line": 158,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/v1/mypy.py",
+      "line": 188,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Chec******************************************one:",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/v1/mypy.py",
+      "line": 820,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//ra*******************************************************************y at",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/v1/datetime_parse.py",
+      "line": 9,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/v1/datetime_parse.py",
+      "line": 10,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//do*************************************************************************************ngs ",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic/_migration.py",
+      "line": 306,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "anth*opic",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/orgs.toml",
+      "line": 18,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "astr***neca",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/orgs.toml",
+      "line": 33,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "capi***_one",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/orgs.toml",
+      "line": 49,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//tw***************************************************************************************tic.",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/orgs.toml",
+      "line": 110,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "jpmorgan",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/orgs.toml",
+      "line": 114,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "micr*soft",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/orgs.toml",
+      "line": 127,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//tw************************************************72).",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/orgs.toml",
+      "line": 152,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//we************************************************************************************************************ml).",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/orgs.toml",
+      "line": 178,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "palantir",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/orgs.toml",
+      "line": 195,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "qualcomm",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/orgs.toml",
+      "line": 199,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//tw****************************************************************************022.",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/orgs.toml",
+      "line": 224,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "//bl**************************************************************************************thm)",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/orgs.toml",
+      "line": 244,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "[340**********************************************55],",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/conversion_table.py",
+      "line": 1264,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "[340**********************************************55],",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/conversion_table.py",
+      "line": 1313,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "[340**********************************************55],",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/conversion_table.py",
+      "line": 1361,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "requ***************************************************************************************md')",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/main.py",
+      "line": 283,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "f387************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 5,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "fcd6************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 10,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "6127************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 15,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "42eb************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 20,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "540f************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 25,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "9bb2************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 30,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "df8a************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 35,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "b4b4************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 40,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "4853************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 45,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "c26c************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 49,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "acc3************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 53,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "5670************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 57,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "5b1a************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 61,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "5ca1************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 65,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "360a************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 69,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "acc3************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 79,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "4853************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 83,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "eb20************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 91,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "8454************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 99,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "cb5d************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 103,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "f67d************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 107,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "cd78************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 111,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "b83b************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 115,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "c26c************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 119,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "88ca************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 123,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "21b5************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 127,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "75f5************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 135,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "b69e************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 139,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "507d************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 143,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "573a************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 151,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "e8af************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 155,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "b42e************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 159,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "922a************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 163,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "44e8************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 167,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "0745************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 175,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "faa7************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 179,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "4570************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 183,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "8938************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 187,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "386c************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 191,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "1e9b************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 195,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "8546************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 199,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "1590************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 203,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "86d6************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 231,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "8b45************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 235,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "acc3************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 240,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "4853************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 244,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "eb20************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 252,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "cb5d************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 260,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "4570************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 264,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "f67d************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 268,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "cd78************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 272,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "b69e************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 276,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "fa12************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 284,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "d7ed************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 288,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "c26c************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 292,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "507d************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 296,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "b42e************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 300,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "21b5************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 304,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "abc4************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 308,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "e8af************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 312,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "75f5************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 316,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "88ca************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 320,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "0d34************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 324,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "922a************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 332,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "d6cc************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 336,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "f700************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 340,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "5104************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 344,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "1590************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 348,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "8917************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 360,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "8938************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 364,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "a989************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 368,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "1531************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 372,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "387c************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 376,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "86d6************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 380,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "0745************************************&v=4",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/plugins/people.yml",
+      "line": 384,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "1fc8**************************90';",
+      "file": "qa/test-repos/real-world/medium-pydantic/docs/extra/algolia.js",
+      "line": 2,
+      "line_content": null,
+      "pattern": "GENERIC_SECRET",
+      "recommendation": "Use environment variables or secret manager",
+      "severity": "high"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "api/***********************************s.md",
+      "file": "qa/test-repos/real-world/medium-pydantic/mkdocs.yml",
+      "line": 149,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "api/************************************n.md",
+      "file": "qa/test-repos/real-world/medium-pydantic/mkdocs.yml",
+      "line": 157,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "api/***********************************s.md",
+      "file": "qa/test-repos/real-world/medium-pydantic/mkdocs.yml",
+      "line": 310,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "api/***********************************s.md",
+      "file": "qa/test-repos/real-world/medium-pydantic/mkdocs.yml",
+      "line": 312,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/medium-pydantic/pyproject.toml",
+      "line": 278,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "micr***********************ior,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/src/input/datetime.rs",
+      "line": 507,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "micr***********************ior,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/src/input/datetime.rs",
+      "line": 532,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "micr***********************ior,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/src/input/datetime.rs",
+      "line": 700,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "__Py**********************************__\";",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/src/serializers/errors.rs",
+      "line": 13,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Lazy**********|| {",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/src/validators/url.rs",
+      "line": 72,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Lazy**********|| {",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/src/validators/url.rs",
+      "line": 86,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "> &S************************************ATH,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/src/validators/url.rs",
+      "line": 197,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "> &S*******************************************ATH,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/src/validators/url.rs",
+      "line": 198,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Lazy**********|| {",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/src/validators/url.rs",
+      "line": 326,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "Lazy**************************>> =",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/src/validators/url.rs",
+      "line": 340,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "> &S***********************************************ATH,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/src/validators/url.rs",
+      "line": 447,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "> &S******************************************************ATH,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/src/validators/url.rs",
+      "line": 448,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "coer**************str,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 933,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "micr***************ion,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 1116,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "micr***************ion,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 1194,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "micr***************ion,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 1256,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "defa*******************ata,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 2548,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "cust*************age,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 2658,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "cust*************ext,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 2659,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "cust*************age,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 2754,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "cust*************ext,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 2755,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "seri**************ude,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 2972,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "seri*****************_if,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 2973,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "seri**************ude,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 3103,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "seri*****************_if,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 3104,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "reva*************ces,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 3274,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "seri**************ude,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 3350,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "seri*****************_if,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 3351,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "reva*************ces,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 3486,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "cust*************age,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 3834,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "cust*************ext,",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/python/pydantic_core/core_schema.py",
+      "line": 3835,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "http*******************************************************************************************/h1>",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/wasm-preview/index.html",
+      "line": 42,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "http*************************************************************************************************************************ipt>",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/wasm-preview/index.html",
+      "line": 52,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "awai*********************************************************************************n');",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/wasm-preview/worker.js",
+      "line": 81,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    },
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": "`htt*************************************************************************************************************ip`;",
+      "file": "qa/test-repos/real-world/medium-pydantic/pydantic-core/wasm-preview/worker.js",
+      "line": 86,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    }
+  ],
+  "scan_duration_ms": 8254,
+  "summary": {
+    "by_severity": {
+      "critical": 0,
+      "high": 12,
+      "low": 0,
+      "medium": 215
+    },
+    "files_scanned": 662,
+    "scan_duration_ms": 8254,
+    "top_patterns": [
+      {
+        "count": 215,
+        "pattern": "HIGH_ENTROPY_STRING"
+      },
+      {
+        "count": 11,
+        "pattern": "GENERIC_SECRET"
+      },
+      {
+        "count": 1,
+        "pattern": "GENERIC_PASSWORD"
+      }
+    ],
+    "total_findings": 227
+  },
+  "version": "0.2.0"
+}

@@ -1,0 +1,42 @@
+{
+  "findings": [
+    {
+      "column": null,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "token_efficiency=enabled, word_filter=enabled"
+      },
+      "detected_secret": null,
+      "file": "qa/test-repos/real-world/small-requests/src/requests/utils.py",
+      "line": 620,
+      "line_content": null,
+      "pattern": "HIGH_ENTROPY_STRING",
+      "recommendation": "Review - may be false positive",
+      "severity": "medium"
+    }
+  ],
+  "scan_duration_ms": 455,
+  "summary": {
+    "by_severity": {
+      "critical": 0,
+      "high": 0,
+      "low": 0,
+      "medium": 1
+    },
+    "files_scanned": 57,
+    "scan_duration_ms": 455,
+    "top_patterns": [
+      {
+        "count": 1,
+        "pattern": "HIGH_ENTROPY_STRING"
+      }
+    ],
+    "total_findings": 1
+  },
+  "version": "0.2.0"
+}
