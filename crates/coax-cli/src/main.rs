@@ -5,11 +5,13 @@
 use anyhow::Result;
 use clap::{Parser, Subcommand, ValueEnum};
 use colored::Colorize;
-use coax_scanner::{Scanner, ScannerConfig, ScanResult, OutputFormat, sarif_output, baseline::{BaselineFile, default_baseline_path, compare_with_baseline}};
+use coax_scanner::{Scanner, ScannerConfig, ScanResult, OutputFormat};
+use coax_threat_model::{
+    ThreatModelGenerator, GeneratorConfig, OutputFormat as ThreatOutputFormat,
+    format_threat_model, enhance_threat_model,
+};
 use std::path::PathBuf;
 use std::time::Instant;
-use std::fs;
-use std::process::Command;
 
 /// Coax - High-Performance Security Scanner
 #[derive(Parser, Debug)]
@@ -65,78 +67,33 @@ enum Commands {
         /// Maximum file size to scan (e.g., "10MB", "1GB")
         #[arg(long, default_value = "10MB")]
         max_file_size: String,
-
-        /// Path to baseline file (only report new findings)
-        #[arg(long)]
-        baseline: Option<PathBuf>,
-
-        /// Scan only staged git files
-        #[arg(long)]
-        staged: bool,
     },
 
-    /// Baseline management
-    Baseline {
-        #[command(subcommand)]
-        action: BaselineAction,
-    },
+    /// Generate threat model
+    ThreatModel {
+        /// Path to analyze
+        #[arg(short, long, default_value = ".")]
+        path: PathBuf,
 
-    /// Pre-commit hook management
-    PreCommit {
-        #[command(subcommand)]
-        action: PreCommitAction,
+        /// Output format
+        #[arg(short, long, value_enum, default_value = "yaml")]
+        format: ThreatModelFormatArg,
+
+        /// Output file (default: stdout)
+        #[arg(short, long)]
+        output: Option<PathBuf>,
+
+        /// Correlate with scan findings
+        #[arg(long)]
+        correlate: bool,
+
+        /// Scan hidden files and directories
+        #[arg(long)]
+        hidden: bool,
     },
 
     /// Show version information
     Version,
-    
-    /// Launch TUI dashboard
-    Tui {
-        /// Path to scan
-        #[arg(short, long, default_value = ".")]
-        path: PathBuf,
-        
-        /// Auto-scan on startup
-        #[arg(long, default_value = "true")]
-        auto_scan: bool,
-    },
-}
-
-#[derive(Subcommand, Debug)]
-enum BaselineAction {
-    /// Generate a new baseline file
-    Generate {
-        /// Path to scan
-        #[arg(short, long, default_value = ".")]
-        path: PathBuf,
-
-        /// Output path for baseline file
-        #[arg(short, long)]
-        output: Option<PathBuf>,
-    },
-
-    /// Update existing baseline with new findings
-    Update {
-        /// Path to scan
-        #[arg(short, long, default_value = ".")]
-        path: PathBuf,
-
-        /// Path to baseline file
-        #[arg(short, long)]
-        baseline: Option<PathBuf>,
-    },
-}
-
-#[derive(Subcommand, Debug)]
-enum PreCommitAction {
-    /// Install pre-commit hook
-    Install,
-
-    /// Uninstall pre-commit hook
-    Uninstall,
-
-    /// Run pre-commit scan manually
-    Run,
 }
 
 #[derive(ValueEnum, Debug, Clone)]
@@ -144,7 +101,6 @@ enum OutputFormatArg {
     Text,
     Json,
     Yaml,
-    Sarif,
 }
 
 impl From<OutputFormatArg> for OutputFormat {
@@ -153,7 +109,27 @@ impl From<OutputFormatArg> for OutputFormat {
             OutputFormatArg::Text => OutputFormat::Text,
             OutputFormatArg::Json => OutputFormat::Json,
             OutputFormatArg::Yaml => OutputFormat::Yaml,
-            OutputFormatArg::Sarif => OutputFormat::Sarif,
+        }
+    }
+}
+
+#[derive(ValueEnum, Debug, Clone)]
+enum ThreatModelFormatArg {
+    Yaml,
+    Json,
+    Text,
+    Simple,
+    Component,
+}
+
+impl From<ThreatModelFormatArg> for ThreatOutputFormat {
+    fn from(arg: ThreatModelFormatArg) -> Self {
+        match arg {
+            ThreatModelFormatArg::Yaml => ThreatOutputFormat::Yaml,
+            ThreatModelFormatArg::Json => ThreatOutputFormat::Json,
+            ThreatModelFormatArg::Text => ThreatOutputFormat::Text,
+            ThreatModelFormatArg::Simple => ThreatOutputFormat::SimpleText,
+            ThreatModelFormatArg::Component => ThreatOutputFormat::Component,
         }
     }
 }
@@ -178,44 +154,23 @@ fn main() -> Result<()> {
             with_content,
             hidden,
             max_file_size,
-            baseline,
-            staged,
-        } => {
-            if staged {
-                run_staged_scan(
-                    format.into(),
-                    output,
-                    threads,
-                    exclude,
-                    with_content,
-                    hidden,
-                    max_file_size,
-                    baseline,
-                )
-            } else {
-                run_scan(
-                    path,
-                    format.into(),
-                    output,
-                    threads,
-                    exclude,
-                    with_content,
-                    hidden,
-                    max_file_size,
-                    baseline,
-                )
-            }
-        }
-        Commands::Baseline { action } => match action {
-            BaselineAction::Generate { path, output } => run_baseline_generate(path, output),
-            BaselineAction::Update { path, baseline } => run_baseline_update(path, baseline),
-        },
-        Commands::PreCommit { action } => match action {
-            PreCommitAction::Install => run_precommit_install(),
-            PreCommitAction::Uninstall => run_precommit_uninstall(),
-            PreCommitAction::Run => run_precommit_run(),
-        },
-        Commands::Tui { path, auto_scan } => run_tui(path, auto_scan),
+        } => run_scan(
+            path,
+            format.into(),
+            output,
+            threads,
+            exclude,
+            with_content,
+            hidden,
+            max_file_size,
+        ),
+        Commands::ThreatModel {
+            path,
+            format,
+            output,
+            correlate,
+            hidden,
+        } => run_threat_model(path, format.into(), output, correlate, hidden),
         Commands::Version => {
             println!("coax {}", env!("CARGO_PKG_VERSION"));
             Ok(())
@@ -240,112 +195,6 @@ fn parse_file_size(size: &str) -> Result<u64> {
     Ok(num * multiplier)
 }
 
-/// Get staged files from git
-fn get_staged_files() -> Result<Vec<String>> {
-    let output = Command::new("git")
-        .args(["diff", "--cached", "--name-only", "--diff-filter=ACM"])
-        .output()?;
-
-    if !output.status.success() {
-        anyhow::bail!("Failed to get staged files");
-    }
-
-    let files = String::from_utf8_lossy(&output.stdout)
-        .lines()
-        .map(|s| s.to_string())
-        .collect();
-
-    Ok(files)
-}
-
-/// Run scan on staged files only
-#[allow(clippy::too_many_arguments)]
-fn run_staged_scan(
-    format: OutputFormat,
-    output: Option<PathBuf>,
-    threads: usize,
-    exclude: Option<String>,
-    with_content: bool,
-    hidden: bool,
-    max_file_size: String,
-    baseline: Option<PathBuf>,
-) -> Result<()> {
-    let staged_files = get_staged_files()?;
-
-    if staged_files.is_empty() {
-        eprintln!("{} No staged files to scan", "ℹ️".blue());
-        return Ok(());
-    }
-
-    eprintln!(
-        "{} Scanning {} staged files...",
-        "🔍".blue(),
-        staged_files.len().to_string().yellow()
-    );
-
-    // Create scanner and scan each file
-    let mut config = ScannerConfig::default()
-        .with_threads(threads)
-        .with_max_file_size(parse_file_size(&max_file_size)?);
-
-    if with_content {
-        config = config.with_line_content();
-    }
-
-    if hidden {
-        config.scan_hidden = true;
-    }
-
-    if let Some(exclude_str) = exclude {
-        for pattern in exclude_str.split(',') {
-            config.exclude_patterns.push(pattern.trim().to_string());
-        }
-    }
-
-    let scanner = Scanner::with_config(config);
-    let mut all_results = Vec::new();
-
-    for file in &staged_files {
-        let path = PathBuf::from(file);
-        if path.exists() && path.is_file() {
-            let results = scanner.scan_file(&path);
-            all_results.extend(results);
-        }
-    }
-
-    // Apply baseline filter if provided
-    let results = if let Some(baseline_path) = baseline {
-        if baseline_path.exists() {
-            let baseline = BaselineFile::load(&baseline_path)?;
-            baseline.filter_new_findings(&all_results)
-        } else {
-            all_results
-        }
-    } else {
-        all_results
-    };
-
-    // Create summary
-    let summary = coax_scanner::ScanSummary::from_results(&results);
-
-    // Format and output
-    let output_str = format_results(&results, &summary, format, std::time::Duration::from_millis(0))?;
-
-    if let Some(output_path) = output {
-        fs::write(&output_path, &output_str)?;
-        eprintln!("{} Results written to {}", "✓".green(), output_path.display().to_string().cyan());
-    } else {
-        println!("{}", output_str);
-    }
-
-    // Exit with error if findings
-    if !results.is_empty() {
-        std::process::exit(1);
-    }
-
-    Ok(())
-}
-
 /// Run the security scan
 #[allow(clippy::too_many_arguments)]
 fn run_scan(
@@ -357,7 +206,6 @@ fn run_scan(
     with_content: bool,
     hidden: bool,
     max_file_size: String,
-    baseline: Option<PathBuf>,
 ) -> Result<()> {
     // Validate path
     if !path.exists() {
@@ -406,35 +254,15 @@ fn run_scan(
 
     // Run scan
     let start = Instant::now();
-    let (mut results, summary) = scanner.scan_with_summary(&path);
+    let (results, summary) = scanner.scan_with_summary(&path);
     let duration = start.elapsed();
-
-    // Apply baseline filter if provided
-    if let Some(baseline_path) = baseline {
-        if baseline_path.exists() {
-            let baseline = BaselineFile::load(&baseline_path)?;
-            let new_findings = baseline.filter_new_findings(&results);
-            
-            if !cli_quiet() {
-                eprintln!(
-                    "{} Filtered {} findings ({} new, {} existing)",
-                    "📊".blue(),
-                    results.len(),
-                    new_findings.len(),
-                    results.len() - new_findings.len()
-                );
-            }
-            
-            results = new_findings;
-        }
-    }
 
     // Format output
     let output_str = format_results(&results, &summary, format, duration)?;
 
     // Write output
     if let Some(output_path) = output {
-        fs::write(&output_path, &output_str)?;
+        std::fs::write(&output_path, &output_str)?;
         if !cli_quiet() {
             eprintln!(
                 "{} Results written to {}",
@@ -447,7 +275,7 @@ fn run_scan(
     }
 
     // Print summary to stderr if not quiet
-    if !cli_quiet() && format != OutputFormat::Json && format != OutputFormat::Yaml && format != OutputFormat::Sarif {
+    if !cli_quiet() && format != OutputFormat::Json && format != OutputFormat::Yaml {
         eprintln!();
         eprintln!("{}", "─".repeat(60).dimmed());
         eprintln!(
@@ -526,7 +354,7 @@ fn format_results(
                 ),
             ]),
         ))?),
-        OutputFormat::Sarif => Ok(sarif_output::generate_sarif_json(results, env!("CARGO_PKG_VERSION"))),
+        OutputFormat::Sarif => Ok(format_sarif(results)),
     }
 }
 
@@ -615,162 +443,69 @@ fn format_text(
     output
 }
 
-/// Generate baseline file
-fn run_baseline_generate(path: PathBuf, output: Option<PathBuf>) -> Result<()> {
-    if !path.exists() {
-        anyhow::bail!("Path does not exist: {}", path.display());
-    }
+/// Format results as SARIF
+fn format_sarif(results: &[ScanResult]) -> String {
+    let sarif = serde_json::json!({
+        "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+        "version": "2.1.0",
+        "runs": [{
+            "tool": {
+                "driver": {
+                    "name": "Coax",
+                    "version": env!("CARGO_PKG_VERSION"),
+                    "informationUri": "https://github.com/gl33mer/coax",
+                    "rules": results.iter()
+                        .map(|r| {
+                            serde_json::json!({
+                                "id": r.pattern,
+                                "name": r.pattern,
+                                "shortDescription": {
+                                    "text": r.recommendation
+                                },
+                                "defaultConfiguration": {
+                                    "level": match r.severity.to_lowercase().as_str() {
+                                        "critical" => "error",
+                                        "high" => "error",
+                                        "medium" => "warning",
+                                        "low" => "note",
+                                        _ => "none"
+                                    }
+                                }
+                            })
+                        })
+                        .collect::<Vec<_>>()
+                }
+            },
+            "results": results.iter()
+                .map(|r| {
+                    serde_json::json!({
+                        "ruleId": r.pattern,
+                        "level": match r.severity.to_lowercase().as_str() {
+                            "critical" | "high" => "error",
+                            "medium" => "warning",
+                            "low" => "note",
+                            _ => "none"
+                        },
+                        "message": {
+                            "text": r.recommendation
+                        },
+                        "locations": [{
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": r.file.to_string_lossy()
+                                },
+                                "region": {
+                                    "startLine": r.line
+                                }
+                            }
+                        }]
+                    })
+                })
+                .collect::<Vec<_>>()
+        }]
+    });
 
-    eprintln!(
-        "{} Generating baseline for {}",
-        "🔍".blue(),
-        path.display().to_string().cyan()
-    );
-
-    let scanner = Scanner::with_default_patterns();
-    let (results, _) = scanner.scan_with_summary(&path);
-
-    let mut baseline = BaselineFile::from_results(&results);
-
-    let baseline_path = output.unwrap_or_else(|| default_baseline_path());
-    baseline.save(&baseline_path)?;
-
-    eprintln!(
-        "{} Baseline generated: {} ({} findings)",
-        "✓".green(),
-        baseline_path.display().to_string().cyan(),
-        baseline.findings.len().to_string().yellow()
-    );
-
-    Ok(())
-}
-
-/// Update baseline with new findings
-fn run_baseline_update(path: PathBuf, baseline_path: Option<PathBuf>) -> Result<()> {
-    if !path.exists() {
-        anyhow::bail!("Path does not exist: {}", path.display());
-    }
-
-    let baseline_path = baseline_path.unwrap_or_else(|| default_baseline_path());
-
-    if !baseline_path.exists() {
-        anyhow::bail!("Baseline file not found: {}", baseline_path.display());
-    }
-
-    eprintln!(
-        "{} Updating baseline {}",
-        "🔍".blue(),
-        baseline_path.display().to_string().cyan()
-    );
-
-    let mut baseline = BaselineFile::load(&baseline_path)?;
-    let scanner = Scanner::with_default_patterns();
-    let (results, _) = scanner.scan_with_summary(&path);
-
-    let new_findings = baseline.update(&results);
-
-    if new_findings.is_empty() {
-        eprintln!("{} No new findings to add", "✓".green());
-    } else {
-        eprintln!(
-            "{} Added {} new findings to baseline",
-            "✓".green(),
-            new_findings.len().to_string().yellow()
-        );
-    }
-
-    baseline.save(&baseline_path)?;
-
-    Ok(())
-}
-
-/// Install pre-commit hook
-fn run_precommit_install() -> Result<()> {
-    let git_hooks_dir = PathBuf::from(".git/hooks");
-    
-    if !git_hooks_dir.exists() {
-        anyhow::bail!("Not a git repository. Run 'git init' first.");
-    }
-
-    // Find the pre-commit script in the coax installation
-    let script_path = find_precommit_script()?;
-    
-    let hook_path = git_hooks_dir.join("pre-commit");
-    
-    // Copy the script
-    fs::copy(&script_path, &hook_path)?;
-    
-    // Make it executable
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::PermissionsExt;
-        let mut perms = fs::metadata(&hook_path)?.permissions();
-        perms.set_mode(0o755);
-        fs::set_permissions(&hook_path, perms)?;
-    }
-
-    eprintln!(
-        "{} Pre-commit hook installed to {}",
-        "✓".green(),
-        hook_path.display().to_string().cyan()
-    );
-
-    Ok(())
-}
-
-/// Find the pre-commit script
-fn find_precommit_script() -> Result<PathBuf> {
-    // Try common locations
-    let candidates = [
-        PathBuf::from("scripts/pre-commit"),
-        PathBuf::from("../scripts/pre-commit"),
-        PathBuf::from("../../scripts/pre-commit"),
-    ];
-
-    for candidate in &candidates {
-        if candidate.exists() {
-            return Ok(candidate.clone());
-        }
-    }
-
-    anyhow::bail!(
-        "Pre-commit script not found. Please ensure coax is properly installed."
-    );
-}
-
-/// Uninstall pre-commit hook
-fn run_precommit_uninstall() -> Result<()> {
-    let hook_path = PathBuf::from(".git/hooks/pre-commit");
-
-    if !hook_path.exists() {
-        eprintln!("{} Pre-commit hook not found", "ℹ️".blue());
-        return Ok(());
-    }
-
-    fs::remove_file(&hook_path)?;
-
-    eprintln!(
-        "{} Pre-commit hook removed from {}",
-        "✓".green(),
-        hook_path.display().to_string().cyan()
-    );
-
-    Ok(())
-}
-
-/// Run pre-commit scan manually
-fn run_precommit_run() -> Result<()> {
-    // This is essentially the same as staged scan
-    run_staged_scan(
-        OutputFormat::Text,
-        None,
-        0,
-        None,
-        false,
-        false,
-        "10MB".to_string(),
-        Some(default_baseline_path()),
-    )
+    serde_json::to_string_pretty(&sarif).unwrap_or_default()
 }
 
 /// Check if CLI should be quiet
@@ -779,52 +514,120 @@ fn cli_quiet() -> bool {
     std::env::var("COAX_QUIET").is_ok()
 }
 
-/// Run the TUI dashboard
-/// Run the TUI dashboard
-fn run_tui(path: PathBuf, auto_scan: bool) -> Result<()> {
-    use coax_tui::App;
-    use crossterm::{
-        terminal::{self, EnterAlternateScreen, LeaveAlternateScreen},
-        ExecutableCommand,
-    };
-    use ratatui::Terminal;
-    use std::io;
-
-    // Setup terminal
-    terminal::enable_raw_mode()?;
-    let mut stdout = io::stdout();
-    stdout.execute(EnterAlternateScreen)?;
-    let mut terminal = Terminal::new(ratatui::backend::CrosstermBackend::new(stdout))?;
-
-    // Create app and optionally scan
-    let mut app = App::new(path);
-    if auto_scan {
-        app.scan();
+/// Run threat model generation
+fn run_threat_model(
+    path: PathBuf,
+    format: ThreatOutputFormat,
+    output: Option<PathBuf>,
+    correlate: bool,
+    hidden: bool,
+) -> Result<()> {
+    // Validate path
+    if !path.exists() {
+        anyhow::bail!("Path does not exist: {}", path.display());
     }
 
-    // Main loop
-    let result = loop {
-        // Draw UI
-        terminal.draw(|frame| coax_tui::ui::render(frame, &mut app))?;
+    if !cli_quiet() {
+        eprintln!(
+            "{} {} - Generating threat model for {}",
+            "🔍".bold().blue(),
+            "Coax".bold(),
+            path.display().to_string().cyan()
+        );
+        eprintln!();
+    }
 
-        // Handle events
-        use crossterm::event::{self, Event, KeyEventKind};
-        if event::poll(std::time::Duration::from_millis(100))? {
-            if let Event::Key(key) = event::read()? {
-                if key.kind == KeyEventKind::Press {
-                    match coax_tui::events::handle_key_event(&mut app, key) {
-                        coax_tui::events::EventResult::Quit => break Ok(()),
-                        coax_tui::events::EventResult::Handled => {}
-                        coax_tui::events::EventResult::NotHandled => {}
-                    }
-                }
-            }
+    // Build generator configuration
+    let mut config = GeneratorConfig::default();
+    if hidden {
+        config.scan_hidden = true;
+    }
+
+    // Create generator
+    let generator = ThreatModelGenerator::with_config(config);
+
+    // Generate threat model
+    let start = Instant::now();
+    let mut model = generator.generate(&path)?;
+    let duration = start.elapsed();
+
+    // Optionally correlate with scan findings
+    if correlate {
+        if !cli_quiet() {
+            eprintln!("{} Correlating with scan findings...", "🔗".bold().blue());
         }
-    };
 
-    // Restore terminal
-    terminal::disable_raw_mode()?;
-    terminal.backend_mut().execute(LeaveAlternateScreen)?;
+        let scanner = Scanner::with_default_patterns();
+        let (findings, _) = scanner.scan_with_summary(&path);
 
-    result
+        enhance_threat_model(&mut model, &findings);
+
+        if !cli_quiet() {
+            eprintln!(
+                "{} Correlated {} findings with threat model",
+                "✓".bold().green(),
+                findings.len().to_string().yellow()
+            );
+        }
+    }
+
+    // Format output
+    let output_str = format_threat_model(&model, format)
+        .map_err(|e| anyhow::anyhow!("Failed to format output: {}", e))?;
+
+    // Write output
+    if let Some(output_path) = output {
+        std::fs::write(&output_path, &output_str)?;
+        if !cli_quiet() {
+            eprintln!(
+                "{} Results written to {}",
+                "✓".bold().green(),
+                output_path.display().to_string().cyan()
+            );
+        }
+    } else {
+        println!("{}", output_str);
+    }
+
+    // Print summary to stderr if not quiet and using text format
+    if !cli_quiet() && format != ThreatOutputFormat::Yaml && format != ThreatOutputFormat::Json {
+        eprintln!();
+        eprintln!("{}", "─".repeat(60).dimmed());
+        eprintln!(
+            "{} Threat model generated in {:?}",
+            "📊".bold().blue(),
+            duration
+        );
+        eprintln!(
+            "{} {} entry points, {} data flows, {} trust boundaries",
+            "📈".bold().blue(),
+            model.entry_points.len().to_string().yellow(),
+            model.data_flows.len().to_string().yellow(),
+            model.trust_boundaries.len().to_string().yellow()
+        );
+
+        let counts = model.threats_by_severity();
+        eprintln!(
+            "{} {} threats ({} critical, {} high, {} medium, {} low)",
+            "🚨".bold().red(),
+            model.threats.len().to_string().red().bold(),
+            counts.critical.to_string().red(),
+            counts.high.to_string().yellow(),
+            counts.medium.to_string().blue(),
+            counts.low.to_string().white()
+        );
+        eprintln!(
+            "{} Total risk score: {}",
+            "⚠️".bold().yellow(),
+            model.total_risk_score().to_string().red()
+        );
+        eprintln!("{}", "─".repeat(60).dimmed());
+    }
+
+    // Exit with error code if critical threats found
+    if model.threats_by_severity().critical > 0 {
+        std::process::exit(1);
+    }
+
+    Ok(())
 }
