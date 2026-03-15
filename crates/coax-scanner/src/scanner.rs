@@ -14,6 +14,7 @@ use crate::secrets;
 use crate::context::ContextAnalyzer;
 use crate::token_efficiency::TokenEfficiencyConfig;
 use crate::word_filter::{WordFilter, WordFilterConfig};
+use crate::unicode::{UnicodeConfig, UnicodeScanner};
 use rayon::prelude::*;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -65,6 +66,8 @@ pub struct ScannerConfig {
     pub min_confidence: String,
     /// Load secrets-patterns-db patterns
     pub enable_secrets_patterns_db: bool,
+    /// Unicode scanning configuration
+    pub unicode: UnicodeConfig,
 }
 
 impl Default for ScannerConfig {
@@ -110,6 +113,7 @@ impl Default for ScannerConfig {
             pattern_directory: None,
             min_confidence: "high".to_string(),
             enable_secrets_patterns_db: false,
+            unicode: UnicodeConfig::default(),
         }
     }
 }
@@ -200,12 +204,26 @@ impl ScannerConfig {
         self
     }
 
+
     /// Enable secrets-patterns-db patterns
     pub fn with_secrets_patterns_db(mut self, enabled: bool) -> Self {
         self.enable_secrets_patterns_db = enabled;
         self
     }
+
+    /// Enable Unicode attack detection
+    pub fn with_unicode_enabled(mut self, enabled: bool) -> Self {
+        self.unicode.enabled = enabled;
+        self
+    }
+
+    /// Set Unicode sensitivity level
+    pub fn with_unicode_sensitivity(mut self, sensitivity: crate::unicode::SensitivityLevel) -> Self {
+        self.unicode.sensitivity = sensitivity;
+        self
+    }
 }
+
 
 /// High-performance security scanner
 ///
@@ -234,6 +252,8 @@ pub struct Scanner {
     pub(crate) config: ScannerConfig,
     /// Pre-compiled patterns (thread-safe)
     pattern_cache: Arc<PatternCache>,
+    /// Unicode scanner (optional, based on config)
+    unicode_scanner: Option<UnicodeScanner>,
 }
 
 impl Scanner {
@@ -272,9 +292,16 @@ impl Scanner {
                 .ok();
         }
 
+        let unicode_scanner = if final_config.unicode.enabled {
+            Some(UnicodeScanner::new(final_config.unicode.clone()))
+        } else {
+            None
+        };
+
         Self {
             config: final_config,
             pattern_cache,
+            unicode_scanner,
         }
     }
 
@@ -337,7 +364,7 @@ impl Scanner {
 
     /// Scan a single file
     pub fn scan_file(&self, path: &Path) -> Vec<ScanResult> {
-        scan_file_internal(path, &self.pattern_cache, &self.config)
+        scan_file_internal(path, &self.pattern_cache, &self.config, self.unicode_scanner.as_ref())
     }
 
     /// Scan content directly (for testing or custom use cases)
@@ -347,6 +374,7 @@ impl Scanner {
             PathBuf::from(file_name),
             &self.pattern_cache,
             &self.config,
+            self.unicode_scanner.as_ref(),
         )
     }
 
@@ -354,11 +382,12 @@ impl Scanner {
     fn scan_files_parallel(&self, files: &[PathBuf]) -> Vec<ScanResult> {
         let cache = Arc::clone(&self.pattern_cache);
         let config = self.config.clone();
+        let unicode_scanner = self.unicode_scanner.as_ref().map(|s| s as &UnicodeScanner);
 
         files
             .par_iter()
             .flat_map(move |path| {
-                scan_file_internal(path, &cache, &config)
+                scan_file_internal(path, &cache, &config, unicode_scanner)
             })
             .collect()
     }
@@ -476,13 +505,14 @@ fn scan_file_internal(
     path: &Path,
     cache: &Arc<PatternCache>,
     config: &ScannerConfig,
+    unicode_scanner: Option<&UnicodeScanner>,
 ) -> Vec<ScanResult> {
     let content = match std::fs::read_to_string(path) {
         Ok(c) => c,
         Err(_) => return Vec::new(),
     };
 
-    scan_content_internal(content, path.to_path_buf(), cache, config)
+    scan_content_internal(content, path.to_path_buf(), cache, config, unicode_scanner)
 }
 
 /// Internal content scanning function with context detection and Betterleaks filters
@@ -491,6 +521,7 @@ fn scan_content_internal(
     file: PathBuf,
     cache: &Arc<PatternCache>,
     config: &ScannerConfig,
+    unicode_scanner: Option<&UnicodeScanner>,
 ) -> Vec<ScanResult> {
     let mut results = Vec::new();
     let context_analyzer = ContextAnalyzer {
@@ -616,7 +647,16 @@ fn scan_content_internal(
         }
     }
 
-    results
+    // Unicode scanning
+    let mut all_results = results;
+    if let Some(scanner) = unicode_scanner {
+        let unicode_findings = scanner.scan(&content, file.to_str().unwrap_or(""));
+        for finding in unicode_findings {
+            all_results.push(finding.to_scan_result());
+        }
+    }
+
+    all_results
 }
 
 /// Get top patterns by occurrence count

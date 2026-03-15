@@ -67,6 +67,18 @@ enum Commands {
         /// Maximum file size to scan (e.g., "10MB", "1GB")
         #[arg(long, default_value = "10MB")]
         max_file_size: String,
+
+        /// Enable Unicode attack detection (default: true)
+        #[arg(long, default_value = "true")]
+        unicode_scan: bool,
+
+        /// Unicode sensitivity level (low, medium, high, critical)
+        #[arg(long, default_value = "high")]
+        unicode_sensitivity: String,
+
+        /// Only scan for Unicode attacks (skip secret detection)
+        #[arg(long)]
+        unicode_only: bool,
     },
 
     /// Generate threat model
@@ -154,6 +166,9 @@ fn main() -> Result<()> {
             with_content,
             hidden,
             max_file_size,
+            unicode_scan,
+            unicode_sensitivity,
+            unicode_only,
         } => run_scan(
             path,
             format.into(),
@@ -163,6 +178,9 @@ fn main() -> Result<()> {
             with_content,
             hidden,
             max_file_size,
+            unicode_scan,
+            unicode_sensitivity,
+            unicode_only,
         ),
         Commands::ThreatModel {
             path,
@@ -206,6 +224,9 @@ fn run_scan(
     with_content: bool,
     hidden: bool,
     max_file_size: String,
+    unicode_scan: bool,
+    unicode_sensitivity: String,
+    unicode_only: bool,
 ) -> Result<()> {
     // Validate path
     if !path.exists() {

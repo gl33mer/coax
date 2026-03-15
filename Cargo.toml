@@ -9,7 +9,7 @@ members = [
 
 [workspace.package]
 name = "coax"
-version = "0.2.0"
+version = "0.6.2"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/gl33mer/coax"
@@ -20,8 +20,8 @@ description = "Coax secrets and vulnerabilities out of your codebases"
 
 [workspace.dependencies]
 # Internal crates
-coax-scanner = { path = "crates/coax-scanner", version = "0.2.0" }
-coax-threat-model = { path = "crates/coax-threat-model", version = "0.2.0" }
+coax-scanner = { path = "crates/coax-scanner", version = "0.6.2" }
+coax-threat-model = { path = "crates/coax-threat-model", version = "0.6.2" }
 
 # Core dependencies
 regex = "1.10"
