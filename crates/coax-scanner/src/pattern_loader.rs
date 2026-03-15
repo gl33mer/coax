@@ -25,7 +25,7 @@
 //!
 //! # Example
 //!
-//! ```rust
+//! ```rust,no_run
 //! use coax_scanner::PatternLoader;
 //! use std::path::Path;
 //!
@@ -232,9 +232,12 @@ impl PatternLoader {
     ///
     /// # Example
     ///
-    /// ```rust
+    /// ```rust,no_run
+    /// # use coax_scanner::PatternLoader;
+    /// # use std::path::Path;
     /// let mut loader = PatternLoader::new();
     /// loader.load_from_file(Path::new("patterns/aws.yml"))?;
+    /// # Ok::<(), coax_scanner::pattern_loader::PatternLoaderError>(())
     /// ```
     pub fn load_from_file(&mut self, path: &Path) -> Result<usize> {
         let content = fs::read_to_string(path).map_err(|e| PatternLoaderError::FileReadError {
@@ -262,9 +265,12 @@ impl PatternLoader {
     ///
     /// # Example
     ///
-    /// ```rust
+    /// ```rust,no_run
+    /// # use coax_scanner::PatternLoader;
+    /// # use std::path::Path;
     /// let mut loader = PatternLoader::new();
     /// loader.load_from_directory(Path::new("patterns/"))?;
+    /// # Ok::<(), coax_scanner::pattern_loader::PatternLoaderError>(())
     /// ```
     pub fn load_from_directory(&mut self, dir: &Path) -> Result<usize> {
         if !dir.exists() {

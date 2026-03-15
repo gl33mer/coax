@@ -254,12 +254,7 @@ impl CompiledPattern {
 /// use std::sync::Arc;
 ///
 /// let patterns = vec![
-///     PatternConfig {
-///         name: "AWS_KEY",
-///         pattern: r"AKIA[0-9A-Z]{16}",
-///         severity: "critical",
-///         recommendation: "Rotate immediately",
-///     },
+///     PatternConfig::new("AWS_KEY", r"AKIA[0-9A-Z]{16}", "critical", "Rotate immediately"),
 /// ];
 ///
 /// let cache = Arc::new(PatternCache::new(&patterns));

@@ -36,7 +36,7 @@ lazy_static! {
         Regex::new(r#"[:=]\s*[\x27\x22]your[-_]?password[\x27\x22]"#).unwrap(),
         Regex::new(r#"[:=]\s*[\x27\x22]your[-_]?token[\x27\x22]"#).unwrap(),
         Regex::new(r#"[:=]\s*[\x27\x22]xxx+[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]changeme[\x27\x22]"#).unwrap(),
+        Regex::new(r#"(?i)[:=]\s*[\x27\x22]changeme[\x27\x22]"#).unwrap(),
         Regex::new(r#"[:=]\s*[\x27\x22]replace[-_]?me[\x27\x22]"#).unwrap(),
         Regex::new(r#"[:=]\s*[\x27\x22]insert[-_]?here[\x27\x22]"#).unwrap(),
         Regex::new(r#"[:=]\s*[\x27\x22]example[\x27\x22]"#).unwrap(),
@@ -153,14 +153,18 @@ impl ExclusionPatterns {
 
     /// Check if a path should be excluded
     pub fn should_exclude(&self, path: &Path) -> bool {
-        // Check if path is a directory that should be excluded
-        if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
-            for dir in &self.directories {
-                if name == dir || name.starts_with(&dir.replace("*", "")) {
-                    return true;
-                }
+        // Check if any path segment matches a directory pattern (e.g., .git/config -> .git)
+        let path_str = path.to_string_lossy();
+        for dir in &self.directories {
+            if path_str.starts_with(&format!("{}/", dir)) || 
+               path_str.contains(&format!("/{}/", dir)) ||
+               path_str == dir.as_str() {
+                return true;
             }
-
+        }
+        
+        // Check file_name against file_names patterns
+        if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
             for pattern in &self.file_names {
                 if pattern.starts_with("*.") {
                     // Extension pattern
@@ -180,10 +184,20 @@ impl ExclusionPatterns {
             }
         }
 
-        // Check path patterns (simple glob matching)
+        // Check path patterns (glob-style matching)
         let path_str = path.to_string_lossy();
         for pattern in &self.path_patterns {
-            if path_str.contains(&pattern.replace("**/", "")) {
+            // Convert glob pattern to simple substring match
+            // **/tests/** -> tests (matches /tests/ or tests/)
+            let glob_pattern = pattern.replace("**/", "");
+            if glob_pattern.ends_with("/**") {
+                // Pattern like "tests/**" - match if path starts with or contains the directory
+                let dir_name = glob_pattern.replace("/**", "");
+                if path_str.starts_with(&format!("{}/", dir_name)) ||
+                   path_str.contains(&format!("/{}/", dir_name)) {
+                    return true;
+                }
+            } else if path_str.contains(&glob_pattern) {
                 return true;
             }
         }
@@ -441,11 +455,19 @@ pub fn extract_secret(line: &str, pattern_name: &str) -> Option<String> {
 /// Check if a value is a placeholder
 fn is_placeholder_value(value: &str) -> bool {
     let lower = value.to_lowercase();
+    
+    // AWS key format (starts with AKIA) should not be treated as placeholder
+    // even if it contains "EXAMPLE" (like AWS documentation keys)
+    if lower.starts_with("akia") {
+        return false;
+    }
+    
+    // Check for specific placeholder patterns
     lower.contains("your-") ||
     lower.contains("your_") ||
-    lower.contains("xxx") ||
-    lower.contains("changeme") ||
-    lower.contains("example") ||
+    lower == "xxx" ||
+    lower == "changeme" ||
+    lower == "example" ||
     lower.contains("placeholder") ||
     lower.contains("test-") ||
     lower.contains("test_")
@@ -535,20 +557,24 @@ mod tests {
 
     #[test]
     fn test_secret_masking() {
-        assert_eq!(mask_secret("AKIAIOSFODNN7EXAMPLE123"), "AKIA************MPLE");
-        assert_eq!(mask_secret("ghp_1234567890abcdefghij1234567890abcdefghij"), "ghp_****************************************ghij");
+        // "AKIAIOSFODNN7EXAMPLE123" has 23 chars: AKIA + 15 asterisks + E123
+        assert_eq!(mask_secret("AKIAIOSFODNN7EXAMPLE123"), "AKIA***************E123");
+        // "ghp_1234567890abcdefghij1234567890abcdefghij" has 44 chars: ghp_ + 36 asterisks + ghij
+        assert_eq!(mask_secret("ghp_1234567890abcdefghij1234567890abcdefghij"), "ghp_************************************ghij");
         assert_eq!(mask_secret("short"), "short");
     }
 
     #[test]
     fn test_secret_extraction() {
+        // "AKIAIOSFODNN7EXAMPLE123" has 23 chars: AKIA + 15 asterisks + E123
         assert_eq!(
             extract_secret(r#"AWS_KEY="AKIAIOSFODNN7EXAMPLE123""#, "AWS_ACCESS_KEY"),
-            Some("AKIA************MPLE".to_string())
+            Some("AKIA***************E123".to_string())
         );
+        // "sk_live_1234567890abcdefghij1234567890abcdefghij" has 48 chars: sk_l + 40 asterisks + ghij
         assert_eq!(
             extract_secret(r#"api_key=sk_live_1234567890abcdefghij1234567890abcdefghij"#, "STRIPE_SECRET_KEY"),
-            Some("sk_l********************************************************ghij".to_string())
+            Some("sk_l****************************************ghij".to_string())
         );
     }
 
