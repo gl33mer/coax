@@ -52,6 +52,7 @@ pub mod entropy_filter;
 pub mod sarif_output;
 pub mod baseline;
 pub mod encoded_detection;
+pub mod cfg;
 
 pub use pattern_cache::{PatternCache, CompiledPattern, PatternConfig};
 pub use scanner::{Scanner, ScannerConfig};
@@ -62,6 +63,7 @@ pub use pattern_loader::{PatternLoader, PatternLoaderError, PatternValidationRes
 pub use token_efficiency::{TokenEfficiencyConfig, calculate_token_efficiency, is_likely_secret, fails_token_efficiency_filter};
 pub use word_filter::{WordFilter, WordFilterConfig, WordFilterResult};
 pub use entropy_filter::{EntropyFilter, EntropyFilterConfig, EntropyFilterResult};
+pub use cfg::{CFGBuilder, BackwardSlicer, ForwardSlicer, SliceIntersection, CFG, VulnerabilitySlice, CfgFinding, EntryPoint, SinkPoint};
 
 /// Crate version
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

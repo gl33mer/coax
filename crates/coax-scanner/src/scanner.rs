@@ -66,6 +66,8 @@ pub struct ScannerConfig {
     pub min_confidence: String,
     /// Load secrets-patterns-db patterns
     pub enable_secrets_patterns_db: bool,
+    /// Enable CFG-based vulnerability analysis
+    pub enable_cfg_analysis: bool,
 }
 
 impl Default for ScannerConfig {
@@ -111,6 +113,7 @@ impl Default for ScannerConfig {
             pattern_directory: None,
             min_confidence: "high".to_string(),
             enable_secrets_patterns_db: false,
+            enable_cfg_analysis: false,
         }
     }
 }
@@ -202,12 +205,20 @@ impl ScannerConfig {
     }
 
     /// Enable secrets-patterns-db patterns
+
+    /// Enable secrets-patterns-db patterns
     pub fn with_secrets_patterns_db(mut self, enabled: bool) -> Self {
         self.enable_secrets_patterns_db = enabled;
         self
     }
-}
 
+    /// Enable CFG-based vulnerability analysis
+    pub fn with_cfg_analysis(mut self, enabled: bool) -> Self {
+        self.enable_cfg_analysis = enabled;
+        self
+    }
+
+}
 /// High-performance security scanner
 ///
 /// Uses pattern caching and parallel scanning for optimal performance.
@@ -443,6 +454,41 @@ impl Scanner {
 
         (results, summary)
     }
+
+    /// Scan with CFG-based vulnerability analysis
+    pub fn scan_with_cfg_analysis(&self, path: &Path) -> Vec<crate::cfg::CfgFinding> {
+        use crate::cfg::{CFGBuilder, SliceIntersection, entry_points, sinks};
+        
+        let mut all_findings = Vec::new();
+        let pattern_findings = self.scan_directory(path);
+        
+        let mut findings_by_file: std::collections::HashMap<String, Vec<&crate::result::ScanResult>> = 
+            std::collections::HashMap::new();
+        
+        for finding in &pattern_findings {
+            findings_by_file
+                .entry(finding.file.to_string_lossy().to_string())
+                .or_insert_with(Vec::new)
+                .push(finding);
+        }
+        
+        for (file_path, _file_findings) in &findings_by_file {
+            let path = Path::new(&file_path);
+            if let Ok(content) = std::fs::read_to_string(path) {
+                let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
+                if let Some(builder) = CFGBuilder::for_extension(ext) {
+                    if let Ok(cfg) = builder.build(&content) {
+                        let entries = entry_points::detect_all(&cfg);
+                        let sink_points = sinks::detect_all(&cfg);
+                        let paths = SliceIntersection::find_vulnerability_paths(&cfg, &entries, &sink_points);
+                        let cfg_findings = SliceIntersection::to_findings(paths, file_path);
+                        all_findings.extend(cfg_findings);
+                    }
+                }
+            }
+        }
+        all_findings
+    }
 }
 
 impl Default for Scanner {
@@ -646,9 +692,8 @@ fn get_top_patterns(results: &[ScanResult], limit: usize) -> Vec<crate::result::
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use std::fs;
-    use tempfile::TempDir;
+#[cfg(test)]
+mod tests {
 
     #[test]
     fn test_scanner_creation() {
@@ -802,4 +847,5 @@ mod tests {
         let results = scanner.scan_directory(temp_dir.path());
         assert!(results.is_empty()); // Large file should be skipped
     }
+}
 }

@@ -29,6 +29,14 @@ base64 = { workspace = true }
 # Baseline functionality
 sha2 = "0.10"
 hex = "0.4"
+# CFG-based vulnerability slicing
+tree-sitter = "0.23"
+tree-sitter-rust = "0.23"
+tree-sitter-python = "0.23"
+tree-sitter-javascript = "0.23"
+tree-sitter-typescript = "0.23"
+oxc_cfg = "0.39"
+petgraph = "0.6"
 chrono = { version = "0.4", features = ["serde"] }
 
 # Lazy static initialization
@@ -55,3 +63,5 @@ harness = false
 [features]
 default = []
 parallel = []  # Feature flag for parallel scanning (enabled by default via rayon)
+
+

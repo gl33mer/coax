@@ -5,7 +5,7 @@
 use anyhow::Result;
 use clap::{Parser, Subcommand, ValueEnum};
 use colored::Colorize;
-use coax_scanner::{Scanner, ScannerConfig, ScanResult, OutputFormat};
+use coax_scanner::{Scanner, ScannerConfig, ScanResult, OutputFormat, ScanSummary, SeverityCounts, FindingContext};
 use coax_threat_model::{
     ThreatModelGenerator, GeneratorConfig, OutputFormat as ThreatOutputFormat,
     format_threat_model, enhance_threat_model,
@@ -67,6 +67,10 @@ enum Commands {
         /// Maximum file size to scan (e.g., "10MB", "1GB")
         #[arg(long, default_value = "10MB")]
         max_file_size: String,
+        
+        /// Use CFG-based vulnerability slicing
+        #[arg(long)]
+        cfg_analysis: bool,
     },
 
     /// Generate threat model
@@ -154,6 +158,7 @@ fn main() -> Result<()> {
             with_content,
             hidden,
             max_file_size,
+            cfg_analysis,
         } => run_scan(
             path,
             format.into(),
@@ -163,6 +168,7 @@ fn main() -> Result<()> {
             with_content,
             hidden,
             max_file_size,
+            cfg_analysis,
         ),
         Commands::ThreatModel {
             path,
@@ -206,6 +212,7 @@ fn run_scan(
     with_content: bool,
     hidden: bool,
     max_file_size: String,
+    cfg_analysis: bool,
 ) -> Result<()> {
     // Validate path
     if !path.exists() {
@@ -254,7 +261,47 @@ fn run_scan(
 
     // Run scan
     let start = Instant::now();
-    let (results, summary) = scanner.scan_with_summary(&path);
+    
+    let (results, summary) = if cfg_analysis {
+        // Use CFG-based analysis
+        eprintln!("{} Using CFG-based vulnerability analysis...", "🔬".bold().purple());
+        let cfg_findings = scanner.scan_with_cfg_analysis(&path);
+        eprintln!("{} Found {} potential vulnerability paths", "✓".bold().green(), cfg_findings.len());
+        
+        // Convert CFG findings to regular ScanResults for display
+        let mut results: Vec<ScanResult> = cfg_findings.iter().map(|f| {
+            ScanResult {
+                file: PathBuf::from(&f.file),
+                line: f.line,
+                column: None,
+                pattern: f.pattern.clone(),
+                severity: f.severity.clone(),
+                recommendation: f.recommendation.clone(),
+                detected_secret: None,
+                line_content: None,
+                context: FindingContext::default(),
+            }
+        }).collect();
+        
+        let summary = ScanSummary {
+            files_scanned: 1,
+            total_findings: results.len() as u32,
+            by_severity: SeverityCounts {
+                critical: results.iter().filter(|r| r.severity == "critical").count() as u32,
+                high: results.iter().filter(|r| r.severity == "high").count() as u32,
+                medium: results.iter().filter(|r| r.severity == "medium").count() as u32,
+                low: results.iter().filter(|r| r.severity == "low").count() as u32,
+            },
+            top_patterns: vec![],
+            scan_duration_ms: 0,
+        };
+        
+        (results, summary)
+    } else {
+        // Use regular pattern-based scanning
+        scanner.scan_with_summary(&path)
+    };
+    
     let duration = start.elapsed();
 
     // Format output
