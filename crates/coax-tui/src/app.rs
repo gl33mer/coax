@@ -401,17 +401,29 @@ impl App {
     
     /// Mark the selected finding as ignored
     pub fn ignore_selected(&mut self) {
-        if let Some(finding) = self.scan_results.get_mut(self.selected_index) {
-            finding.ignored = true;
-            self.status_message = Some("Finding ignored".to_string());
+        if let Some(finding) = self.filtered_results.get(self.selected_index) {
+            // Find the corresponding finding in scan_results by matching key fields
+            if let Some(target) = self.scan_results.iter_mut().find(|f| {
+                f.file == finding.file && f.line == finding.line && f.pattern == finding.pattern
+            }) {
+                target.ignored = true;
+                self.status_message = Some("Finding ignored".to_string());
+                self.apply_filters();  // Refresh filtered list
+            }
         }
     }
     
     /// Mark the selected finding as false positive
     pub fn mark_false_positive(&mut self) {
-        if let Some(finding) = self.scan_results.get_mut(self.selected_index) {
-            finding.false_positive = true;
-            self.status_message = Some("Marked as false positive".to_string());
+        if let Some(finding) = self.filtered_results.get(self.selected_index) {
+            // Find the corresponding finding in scan_results by matching key fields
+            if let Some(target) = self.scan_results.iter_mut().find(|f| {
+                f.file == finding.file && f.line == finding.line && f.pattern == finding.pattern
+            }) {
+                target.false_positive = true;
+                self.status_message = Some("Marked as false positive".to_string());
+                self.apply_filters();  // Refresh filtered list
+            }
         }
     }
     

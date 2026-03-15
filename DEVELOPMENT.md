@@ -1081,7 +1081,15 @@ coax/
 │   │       ├── generator.rs # Threat model generation
 │   │       └── templates.rs # STRIDE, PLOT4 templates
 │   │
-│   └── opendev-binary/     # Phase 3: Binary analysis
+│   ├── coax-tui/           # TUI dashboard
+│   │   ├── Cargo.toml
+│   │   └── src/
+│   │       ├── lib.rs      # TUI library entry point
+│   │       ├── app.rs      # Application state management
+│   │       ├── ui.rs       # UI rendering
+│   │       └── events.rs   # Event handling
+│   │
+│   ├── opendev-binary/     # Phase 3: Binary analysis
 │       ├── Cargo.toml
 │       └── src/
 │           ├── lib.rs
@@ -1213,6 +1221,33 @@ coax/
 - Integration with threat modeling tools (Threagile, OWASP Threat Dragon)
 
 **Status:** Phase 2 (in development)
+
+#### coax-tui
+
+**Location:** `crates/coax-tui/`
+
+**Purpose:** Interactive terminal UI dashboard
+
+**Features:**
+- Real-time finding visualization
+- Interactive filtering by severity
+- Search functionality
+- False positive marking
+- Baseline file creation
+- Code context navigation
+
+**Key Files:**
+- `src/lib.rs` - TUI library entry point
+- `src/app.rs` - Application state and navigation
+- `src/ui.rs` - UI rendering components
+- `src/events.rs` - Event handling
+
+**Dependencies:**
+- `ratatui` - Terminal UI framework
+- `crossterm` - Terminal manipulation
+- `coax-scanner` - Core scanning functionality
+
+**Status:** Active development
 
 #### opendev-binary
 
