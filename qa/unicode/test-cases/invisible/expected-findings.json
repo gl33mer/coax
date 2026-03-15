@@ -1,0 +1,30 @@
+{
+  "description": "Invisible character test cases",
+  "expected_findings": [
+    {
+      "category": "invisible_character",
+      "severity": "high",
+      "character": "U+200B",
+      "description": "Zero-width space should be detected"
+    },
+    {
+      "category": "invisible_character",
+      "severity": "high",
+      "character": "U+200C",
+      "description": "Zero-width non-joiner should be detected"
+    },
+    {
+      "category": "invisible_character",
+      "severity": "high",
+      "character": "U+200D",
+      "description": "Zero-width joiner should be detected"
+    },
+    {
+      "category": "invisible_character",
+      "severity": "critical",
+      "character": "U+FE00",
+      "description": "Variation selector should be detected"
+    }
+  ],
+  "minimum_findings": 4
+}

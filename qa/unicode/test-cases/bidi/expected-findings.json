@@ -1,0 +1,34 @@
+{
+  "description": "Bidirectional override test cases",
+  "expected_findings": [
+    {
+      "category": "bidirectional_override",
+      "severity": "critical",
+      "character": "U+202E",
+      "name": "RLO",
+      "description": "RLO is most dangerous - reverses text display"
+    },
+    {
+      "category": "bidirectional_override",
+      "severity": "high",
+      "character": "U+202B",
+      "name": "RLE",
+      "description": "RLE should be detected"
+    },
+    {
+      "category": "bidirectional_override",
+      "severity": "high",
+      "character": "U+202D",
+      "name": "LRO",
+      "description": "LRO should be detected"
+    },
+    {
+      "category": "bidirectional_override",
+      "severity": "medium",
+      "character": "U+202C",
+      "name": "PDF",
+      "description": "PDF should be detected"
+    }
+  ],
+  "minimum_findings": 4
+}

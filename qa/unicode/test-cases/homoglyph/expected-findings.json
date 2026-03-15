@@ -1,0 +1,30 @@
+{
+  "description": "Homoglyph attack pattern test cases",
+  "expected_findings": [
+    {
+      "category": "homoglyph",
+      "severity": "critical",
+      "script": "Cyrillic",
+      "confusable": "а",
+      "base": "a",
+      "description": "Cyrillic 'а' should be detected"
+    },
+    {
+      "category": "homoglyph",
+      "severity": "critical",
+      "script": "Cyrillic",
+      "confusable": "о",
+      "base": "o",
+      "description": "Cyrillic 'о' should be detected"
+    },
+    {
+      "category": "homoglyph",
+      "severity": "high",
+      "script": "Greek",
+      "confusable": "ο",
+      "base": "o",
+      "description": "Greek 'ο' should be detected"
+    }
+  ],
+  "minimum_findings": 5
+}

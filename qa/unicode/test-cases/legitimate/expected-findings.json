@@ -1,0 +1,11 @@
+{
+  "description": "Legitimate Unicode usage test cases - should NOT be flagged",
+  "expected_findings": [],
+  "minimum_findings": 0,
+  "maximum_findings": 0,
+  "notes": [
+    "Emoji are legitimate Unicode characters",
+    "CJK characters in comments and strings are legitimate",
+    "Non-ASCII identifiers are legitimate in i18n projects"
+  ]
+}

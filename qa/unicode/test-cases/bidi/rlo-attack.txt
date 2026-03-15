@@ -1,0 +1,14 @@
+# Bidirectional Override Attack Test
+
+# RLO (U+202E) - Reverses text display
+# This makes "txt.exe" appear as "exe.txt"
+filename: test‮.txt
+
+# RLE (U+202B) - Right-to-left embedding
+text: hello‫world
+
+# LRO (U+202D) - Left-to-right override
+text: test‭content
+
+# PDF (U+202C) - Pop directional formatting
+text: start‬end

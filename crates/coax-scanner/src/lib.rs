@@ -53,6 +53,7 @@ pub mod sarif_output;
 pub mod baseline;
 pub mod encoded_detection;
 pub mod cfg;
+pub mod unicode;
 
 pub use pattern_cache::{PatternCache, CompiledPattern, PatternConfig};
 pub use scanner::{Scanner, ScannerConfig};
@@ -64,6 +65,7 @@ pub use token_efficiency::{TokenEfficiencyConfig, calculate_token_efficiency, is
 pub use word_filter::{WordFilter, WordFilterConfig, WordFilterResult};
 pub use entropy_filter::{EntropyFilter, EntropyFilterConfig, EntropyFilterResult};
 pub use cfg::{CFGBuilder, BackwardSlicer, ForwardSlicer, SliceIntersection, CFG, VulnerabilitySlice, CfgFinding, EntryPoint, SinkPoint};
+pub use unicode::{UnicodeScanner, UnicodeConfig, UnicodeFinding, UnicodeCategory, Severity as UnicodeSeverity};
 
 /// Crate version
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

@@ -1,0 +1,11 @@
+/* Variation selector injection test */
+
+/* Class name with variation selector (U+FE00) */
+.secret‌ {
+    color: red;
+}
+
+/* Property with variation selector */
+.displ‌ay {
+    display: none;
+}

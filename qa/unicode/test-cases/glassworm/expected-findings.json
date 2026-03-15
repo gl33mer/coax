@@ -1,0 +1,24 @@
+{
+  "description": "Glassworm attack pattern test case",
+  "expected_findings": [
+    {
+      "category": "glassworm_pattern",
+      "severity": "critical",
+      "pattern_type": "decoder_pattern",
+      "description": "Should detect codePointAt pattern"
+    },
+    {
+      "category": "glassworm_pattern",
+      "severity": "critical",
+      "pattern_type": "eval_pattern",
+      "description": "Should detect eval() usage"
+    },
+    {
+      "category": "glassworm_pattern",
+      "severity": "high",
+      "pattern_type": "encoding_pattern",
+      "description": "Should detect Buffer.from hex decoding"
+    }
+  ],
+  "minimum_findings": 3
+}
