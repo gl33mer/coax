@@ -473,20 +473,25 @@ fn is_placeholder_value(value: &str) -> bool {
     lower.contains("test_")
 }
 
-/// Mask a secret for safe display
+/// Mask a secret for safe display (UTF-8 safe)
 pub fn mask_secret(secret: &str) -> String {
-    if secret.len() <= 8 {
+    let chars: Vec<char> = secret.chars().collect();
+    let len = chars.len();
+    
+    if len <= 8 {
         return secret.to_string();
     }
 
-    // Show first 4 and last 4 characters
+    // Show first 4 and last 4 characters (char-based, not byte-based)
     let visible_start = 4;
     let visible_end = 4;
 
-    let masked_len = secret.len() - visible_start - visible_end;
+    let masked_len = len - visible_start - visible_end;
     let masked = "*".repeat(masked_len);
 
-    format!("{}{}{}", &secret[..visible_start], masked, &secret[secret.len() - visible_end..])
+    let start: String = chars[..visible_start].iter().collect();
+    let end: String = chars[len - visible_end..].iter().collect();
+    format!("{}{}{}", start, masked, end)
 }
 
 #[cfg(test)]
@@ -562,6 +567,45 @@ mod tests {
         // "ghp_1234567890abcdefghij1234567890abcdefghij" has 44 chars: ghp_ + 36 asterisks + ghij
         assert_eq!(mask_secret("ghp_1234567890abcdefghij1234567890abcdefghij"), "ghp_************************************ghij");
         assert_eq!(mask_secret("short"), "short");
+    }
+
+    #[test]
+    fn test_unicode_handling() {
+        // Regression test for UTF-8 crash bug
+        // Previously crashed with: byte index 40 is not a char boundary; it is inside '）' (bytes 38..41)
+        
+        // Test masking with multi-byte UTF-8 characters (Chinese, Japanese, Korean)
+        let chinese_secret = "你好 AKIAIOSFODNN7EXAMPLE 世界";
+        let masked = mask_secret(chinese_secret);
+        assert!(masked.contains("***")); // Should have masking
+        assert!(!masked.is_empty());
+        
+        // Test extraction with Unicode comments
+        assert_eq!(
+            extract_secret(r#"AWS_KEY="AKIAIOSFODNN7EXAMPLE123"  # 中文注释"#, "AWS_ACCESS_KEY"),
+            Some("AKIA***************E123".to_string())
+        );
+        
+        // Test with Japanese characters
+        assert_eq!(
+            extract_secret(r#"api_key=sk_live_1234567890abcdefghij  # 日本語コメント"#, "STRIPE_SECRET_KEY"),
+            Some("sk_l******************************ghij".to_string())
+        );
+        
+        // Test with Korean characters  
+        assert_eq!(
+            extract_secret(r#"token=ghp_1234567890abcdefghij1234567890abcdefghij  # 한국어 주석"#, "GITHUB_PAT"),
+            Some("ghp_************************************ghij".to_string())
+        );
+        
+        // Test pure Unicode string masking
+        let pure_unicode = "你好世界_test_secret_123_你好世界";
+        let masked = mask_secret(pure_unicode);
+        assert!(masked.contains("***"));
+        
+        // Should not panic on any UTF-8 input
+        let result = mask_secret("🔑🔑🔑 super_secret_key 🔑🔑🔑");
+        assert!(!result.is_empty());
     }
 
     #[test]

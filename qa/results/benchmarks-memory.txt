@@ -1,0 +1,3 @@
+=== MEMORY BENCHMARKS ===
+
+Small repository (small-serde - 376 files):

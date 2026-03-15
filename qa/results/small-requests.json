@@ -1,3 +1,6 @@
+🔍 Coax - Scanning qa/test-repos/real-world/small-requests
+   43 patterns loaded
+
 {
   "findings": [
     {
@@ -20,7 +23,7 @@
       "severity": "medium"
     }
   ],
-  "scan_duration_ms": 455,
+  "scan_duration_ms": 504,
   "summary": {
     "by_severity": {
       "critical": 0,
@@ -29,7 +32,7 @@
       "medium": 1
     },
     "files_scanned": 57,
-    "scan_duration_ms": 455,
+    "scan_duration_ms": 504,
     "top_patterns": [
       {
         "count": 1,

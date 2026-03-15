@@ -1,3 +1,6 @@
+🔍 Coax - Scanning qa/test-repos/real-world/medium-express
+   43 patterns loaded
+
 {
   "findings": [
     {
@@ -96,7 +99,7 @@
       "severity": "high"
     }
   ],
-  "scan_duration_ms": 508,
+  "scan_duration_ms": 493,
   "summary": {
     "by_severity": {
       "critical": 0,
@@ -105,7 +108,7 @@
       "medium": 0
     },
     "files_scanned": 169,
-    "scan_duration_ms": 508,
+    "scan_duration_ms": 493,
     "top_patterns": [
       {
         "count": 5,

@@ -1,6 +1,9 @@
+🔍 Coax - Scanning qa/test-repos/real-world/medium-axios
+   43 patterns loaded
+
 {
   "findings": [],
-  "scan_duration_ms": 5353,
+  "scan_duration_ms": 6742,
   "summary": {
     "by_severity": {
       "critical": 0,
@@ -9,7 +12,7 @@
       "medium": 0
     },
     "files_scanned": 301,
-    "scan_duration_ms": 5353,
+    "scan_duration_ms": 6742,
     "top_patterns": [],
     "total_findings": 0
   },

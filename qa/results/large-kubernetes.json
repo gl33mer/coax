@@ -1,0 +1,7 @@
+🔍 Coax - Scanning qa/test-repos/real-world/large-kubernetes
+   43 patterns loaded
+
+
+thread '<unnamed>' (160320) panicked at crates/coax-scanner/src/context.rs:489:64:
+byte index 40 is not a char boundary; it is inside 'ン' (bytes 39..42) of `example.com/ᛒᚥᛏᛖᚥᚢとロビン",`
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

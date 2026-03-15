@@ -1,0 +1,65 @@
+=== SPEED BENCHMARKS ===
+
+Small repository (small-serde - 376 files):
+Run 1:
+
+real	0m0.888s
+user	0m3.415s
+sys	0m0.088s
+Run 2:
+
+real	0m0.827s
+user	0m3.395s
+sys	0m0.104s
+Run 3:
+
+real	0m0.820s
+user	0m3.415s
+sys	0m0.092s
+
+Medium repository (medium-express - 242 files):
+Run 1:
+
+real	0m0.579s
+user	0m2.077s
+sys	0m0.084s
+Run 2:
+
+real	0m0.488s
+user	0m2.065s
+sys	0m0.088s
+Run 3:
+
+real	0m0.553s
+user	0m2.051s
+sys	0m0.092s
+
+Large repository (large-vscode - 9998 files):
+Run 1:
+
+Medium-large repository (medium-pydantic - 801 files):
+Run 1:
+
+real	0m7.974s
+user	0m23.839s
+sys	0m0.088s
+Run 2:
+
+real	0m8.753s
+user	0m23.700s
+sys	0m0.100s
+Run 3:
+
+real	0m7.795s
+user	0m23.879s
+sys	0m0.108s
+
+Large repository (large-vscode - 9998 files):
+
+Best time: 166.7s (2m46s) - NOTE: Scan completed but JSON output processing timed out
+
+=== SUMMARY ===
+small-serde (376 files): 0.820s
+medium-express (242 files): 0.488s
+medium-pydantic (801 files): 7.795s
+large-vscode (9998 files): 166.7s

@@ -1,3 +1,6 @@
+🔍 Coax - Scanning qa/test-repos/real-world/small-tokio
+   43 patterns loaded
+
 {
   "findings": [
     {
@@ -14,63 +17,6 @@
       "detected_secret": null,
       "file": "qa/test-repos/real-world/small-tokio/tokio/src/fs/file/tests.rs",
       "line": 452,
-      "line_content": null,
-      "pattern": "HIGH_ENTROPY_STRING",
-      "recommendation": "Review - may be false positive",
-      "severity": "medium"
-    },
-    {
-      "column": null,
-      "context": {
-        "adjusted_severity": null,
-        "is_aws_example": false,
-        "is_comment": false,
-        "is_documentation": false,
-        "is_placeholder": false,
-        "is_test_file": false,
-        "note": "token_efficiency=enabled, word_filter=enabled"
-      },
-      "detected_secret": "Hist******************************lf {",
-      "file": "qa/test-repos/real-world/small-tokio/tokio/src/runtime/builder.rs",
-      "line": 1482,
-      "line_content": null,
-      "pattern": "HIGH_ENTROPY_STRING",
-      "recommendation": "Review - may be false positive",
-      "severity": "medium"
-    },
-    {
-      "column": null,
-      "context": {
-        "adjusted_severity": null,
-        "is_aws_example": false,
-        "is_comment": false,
-        "is_documentation": false,
-        "is_placeholder": false,
-        "is_test_file": false,
-        "note": "token_efficiency=enabled, word_filter=enabled"
-      },
-      "detected_secret": "127;",
-      "file": "qa/test-repos/real-world/small-tokio/tokio/src/runtime/scheduler/multi_thread/stats.rs",
-      "line": 36,
-      "line_content": null,
-      "pattern": "HIGH_ENTROPY_STRING",
-      "recommendation": "Review - may be false positive",
-      "severity": "medium"
-    },
-    {
-      "column": null,
-      "context": {
-        "adjusted_severity": null,
-        "is_aws_example": false,
-        "is_comment": false,
-        "is_documentation": false,
-        "is_placeholder": false,
-        "is_test_file": false,
-        "note": "token_efficiency=enabled, word_filter=enabled"
-      },
-      "detected_secret": "61;",
-      "file": "qa/test-repos/real-world/small-tokio/tokio/src/runtime/scheduler/multi_thread/stats.rs",
-      "line": 39,
       "line_content": null,
       "pattern": "HIGH_ENTROPY_STRING",
       "recommendation": "Review - may be false positive",
@@ -229,23 +175,23 @@
       "severity": "medium"
     }
   ],
-  "scan_duration_ms": 3456,
+  "scan_duration_ms": 3956,
   "summary": {
     "by_severity": {
       "critical": 0,
       "high": 0,
       "low": 0,
-      "medium": 12
+      "medium": 9
     },
     "files_scanned": 810,
-    "scan_duration_ms": 3456,
+    "scan_duration_ms": 3956,
     "top_patterns": [
       {
-        "count": 12,
+        "count": 9,
         "pattern": "HIGH_ENTROPY_STRING"
       }
     ],
-    "total_findings": 12
+    "total_findings": 9
   },
   "version": "0.2.0"
 }

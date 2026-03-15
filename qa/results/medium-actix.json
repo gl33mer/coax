@@ -1,3 +1,6 @@
+🔍 Coax - Scanning qa/test-repos/real-world/medium-actix
+   43 patterns loaded
+
 {
   "findings": [
     {
@@ -182,63 +185,6 @@
         "is_test_file": false,
         "note": "token_efficiency=enabled, word_filter=enabled"
       },
-      "detected_secret": "crea*******************************************ary(",
-      "file": "qa/test-repos/real-world/medium-actix/actix-multipart/src/test.rs",
-      "line": 151,
-      "line_content": null,
-      "pattern": "HIGH_ENTROPY_STRING",
-      "recommendation": "Review - may be false positive",
-      "severity": "medium"
-    },
-    {
-      "column": null,
-      "context": {
-        "adjusted_severity": null,
-        "is_aws_example": false,
-        "is_comment": false,
-        "is_documentation": false,
-        "is_placeholder": false,
-        "is_test_file": false,
-        "note": "token_efficiency=enabled, word_filter=enabled"
-      },
-      "detected_secret": "crea*******************************************ary(",
-      "file": "qa/test-repos/real-world/medium-actix/actix-multipart/src/test.rs",
-      "line": 175,
-      "line_content": null,
-      "pattern": "HIGH_ENTROPY_STRING",
-      "recommendation": "Review - may be false positive",
-      "severity": "medium"
-    },
-    {
-      "column": null,
-      "context": {
-        "adjusted_severity": null,
-        "is_aws_example": false,
-        "is_comment": false,
-        "is_documentation": false,
-        "is_placeholder": false,
-        "is_test_file": false,
-        "note": "token_efficiency=enabled, word_filter=enabled"
-      },
-      "detected_secret": "crat********************************************************ary(",
-      "file": "qa/test-repos/real-world/medium-actix/actix-multipart/src/multipart.rs",
-      "line": 550,
-      "line_content": null,
-      "pattern": "HIGH_ENTROPY_STRING",
-      "recommendation": "Review - may be false positive",
-      "severity": "medium"
-    },
-    {
-      "column": null,
-      "context": {
-        "adjusted_severity": null,
-        "is_aws_example": false,
-        "is_comment": false,
-        "is_documentation": false,
-        "is_placeholder": false,
-        "is_test_file": false,
-        "note": "token_efficiency=enabled, word_filter=enabled"
-      },
       "detected_secret": null,
       "file": "qa/test-repos/real-world/medium-actix/actix-multipart/src/multipart.rs",
       "line": 814,
@@ -261,44 +207,6 @@
       "detected_secret": null,
       "file": "qa/test-repos/real-world/medium-actix/actix-router/benches/router.rs",
       "line": 159,
-      "line_content": null,
-      "pattern": "HIGH_ENTROPY_STRING",
-      "recommendation": "Review - may be false positive",
-      "severity": "medium"
-    },
-    {
-      "column": null,
-      "context": {
-        "adjusted_severity": null,
-        "is_aws_example": false,
-        "is_comment": false,
-        "is_documentation": false,
-        "is_placeholder": false,
-        "is_test_file": false,
-        "note": "token_efficiency=enabled, word_filter=enabled"
-      },
-      "detected_secret": "====*********************************************************************====",
-      "file": "qa/test-repos/real-world/medium-actix/scripts/free-disk-space.sh",
-      "line": 27,
-      "line_content": null,
-      "pattern": "HIGH_ENTROPY_STRING",
-      "recommendation": "Review - may be false positive",
-      "severity": "medium"
-    },
-    {
-      "column": null,
-      "context": {
-        "adjusted_severity": null,
-        "is_aws_example": false,
-        "is_comment": false,
-        "is_documentation": false,
-        "is_placeholder": false,
-        "is_test_file": false,
-        "note": "token_efficiency=enabled, word_filter=enabled"
-      },
-      "detected_secret": "====*********************************************************************====",
-      "file": "qa/test-repos/real-world/medium-actix/scripts/free-disk-space.sh",
-      "line": 29,
       "line_content": null,
       "pattern": "HIGH_ENTROPY_STRING",
       "recommendation": "Review - may be false positive",
@@ -641,44 +549,6 @@
       "detected_secret": null,
       "file": "qa/test-repos/real-world/medium-actix/actix-web/src/types/either.rs",
       "line": 338,
-      "line_content": null,
-      "pattern": "HIGH_ENTROPY_STRING",
-      "recommendation": "Review - may be false positive",
-      "severity": "medium"
-    },
-    {
-      "column": null,
-      "context": {
-        "adjusted_severity": null,
-        "is_aws_example": false,
-        "is_comment": false,
-        "is_documentation": false,
-        "is_placeholder": false,
-        "is_test_file": false,
-        "note": "token_efficiency=enabled, word_filter=enabled"
-      },
-      "detected_secret": "&Ser************************r) {",
-      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/middleware/compress.rs",
-      "line": 310,
-      "line_content": null,
-      "pattern": "HIGH_ENTROPY_STRING",
-      "recommendation": "Review - may be false positive",
-      "severity": "medium"
-    },
-    {
-      "column": null,
-      "context": {
-        "adjusted_severity": null,
-        "is_aws_example": false,
-        "is_comment": false,
-        "is_documentation": false,
-        "is_placeholder": false,
-        "is_test_file": false,
-        "note": "token_efficiency=enabled, word_filter=enabled"
-      },
-      "detected_secret": "&Ser************************r) {",
-      "file": "qa/test-repos/real-world/medium-actix/actix-web/src/middleware/compress.rs",
-      "line": 321,
       "line_content": null,
       "pattern": "HIGH_ENTROPY_STRING",
       "recommendation": "Review - may be false positive",
@@ -1217,23 +1087,23 @@
       "severity": "medium"
     }
   ],
-  "scan_duration_ms": 889,
+  "scan_duration_ms": 1369,
   "summary": {
     "by_severity": {
       "critical": 0,
       "high": 0,
       "low": 0,
-      "medium": 64
+      "medium": 57
     },
     "files_scanned": 364,
-    "scan_duration_ms": 889,
+    "scan_duration_ms": 1369,
     "top_patterns": [
       {
-        "count": 64,
+        "count": 57,
         "pattern": "HIGH_ENTROPY_STRING"
       }
     ],
-    "total_findings": 64
+    "total_findings": 57
   },
   "version": "0.2.0"
 }
