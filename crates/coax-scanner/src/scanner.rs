@@ -14,7 +14,6 @@ use crate::secrets;
 use crate::context::ContextAnalyzer;
 use crate::token_efficiency::TokenEfficiencyConfig;
 use crate::word_filter::{WordFilter, WordFilterConfig};
-use crate::entropy_filter::EntropyFilter;
 use rayon::prelude::*;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -66,8 +65,6 @@ pub struct ScannerConfig {
     pub min_confidence: String,
     /// Load secrets-patterns-db patterns
     pub enable_secrets_patterns_db: bool,
-    /// Enable CFG-based vulnerability analysis
-    pub enable_cfg_analysis: bool,
 }
 
 impl Default for ScannerConfig {
@@ -113,7 +110,6 @@ impl Default for ScannerConfig {
             pattern_directory: None,
             min_confidence: "high".to_string(),
             enable_secrets_patterns_db: false,
-            enable_cfg_analysis: false,
         }
     }
 }
@@ -205,20 +201,12 @@ impl ScannerConfig {
     }
 
     /// Enable secrets-patterns-db patterns
-
-    /// Enable secrets-patterns-db patterns
     pub fn with_secrets_patterns_db(mut self, enabled: bool) -> Self {
         self.enable_secrets_patterns_db = enabled;
         self
     }
-
-    /// Enable CFG-based vulnerability analysis
-    pub fn with_cfg_analysis(mut self, enabled: bool) -> Self {
-        self.enable_cfg_analysis = enabled;
-        self
-    }
-
 }
+
 /// High-performance security scanner
 ///
 /// Uses pattern caching and parallel scanning for optimal performance.
@@ -456,37 +444,78 @@ impl Scanner {
     }
 
     /// Scan with CFG-based vulnerability analysis
+    /// 
+    /// This method performs control flow graph analysis to find
+    /// vulnerability paths from entry points to sink points.
+    /// 
+    /// # Returns
+    /// 
+    /// A vector of CfgFinding with vulnerability paths and context
     pub fn scan_with_cfg_analysis(&self, path: &Path) -> Vec<crate::cfg::CfgFinding> {
-        use crate::cfg::{CFGBuilder, SliceIntersection, entry_points, sinks};
+        use crate::cfg::{CFGBuilder, Language};
+        use crate::cfg::entry_points::detect_all as detect_entries;
+        use crate::cfg::sinks::detect_all as detect_sinks;
+        use crate::cfg::intersection::SliceIntersection;
         
         let mut all_findings = Vec::new();
-        let pattern_findings = self.scan_directory(path);
         
-        let mut findings_by_file: std::collections::HashMap<String, Vec<&crate::result::ScanResult>> = 
-            std::collections::HashMap::new();
+        // Collect all files to analyze
+        let files = self.collect_files(path);
         
-        for finding in &pattern_findings {
-            findings_by_file
-                .entry(finding.file.to_string_lossy().to_string())
-                .or_insert_with(Vec::new)
-                .push(finding);
-        }
-        
-        for (file_path, _file_findings) in &findings_by_file {
-            let path = Path::new(&file_path);
-            if let Ok(content) = std::fs::read_to_string(path) {
-                let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
-                if let Some(builder) = CFGBuilder::for_extension(ext) {
-                    if let Ok(cfg) = builder.build(&content) {
-                        let entries = entry_points::detect_all(&cfg);
-                        let sink_points = sinks::detect_all(&cfg);
-                        let paths = SliceIntersection::find_vulnerability_paths(&cfg, &entries, &sink_points);
-                        let cfg_findings = SliceIntersection::to_findings(paths, file_path);
-                        all_findings.extend(cfg_findings);
-                    }
-                }
+        for file_path in &files {
+            // Only analyze supported languages
+            let ext = file_path.extension()
+                .and_then(|e| e.to_str())
+                .unwrap_or("");
+            
+            let lang = Language::from_extension(ext);
+            if matches!(lang, Language::Unknown) {
+                continue;
             }
+            
+            // Read file content
+            let content = match std::fs::read_to_string(file_path) {
+                Ok(c) => c,
+                Err(_) => continue,
+            };
+            
+            // Build CFG - use language name string
+            let lang_name = match lang {
+                Language::Rust => "rust",
+                Language::Python => "python",
+                Language::JavaScript => "javascript",
+                Language::TypeScript => "typescript",
+                Language::Unknown => continue,
+            };
+            
+            let builder = match CFGBuilder::for_language(lang_name) {
+                Some(b) => b,
+                None => continue,
+            };
+            
+            let cfg = match builder.build(&content) {
+                Ok(c) => c,
+                Err(_) => continue,
+            };
+            
+            // Detect entry and sink points
+            let entries = detect_entries(&cfg);
+            let sinks = detect_sinks(&cfg);
+            
+            // Skip if no entries or sinks
+            if entries.is_empty() || sinks.is_empty() {
+                continue;
+            }
+            
+            // Find vulnerability paths
+            let paths = SliceIntersection::find_vulnerability_paths(&cfg, &entries, &sinks);
+            
+            // Convert to findings
+            let file_str = file_path.to_string_lossy().to_string();
+            let findings = SliceIntersection::to_findings(paths, &file_str);
+            all_findings.extend(findings);
         }
+        
         all_findings
     }
 }
@@ -556,6 +585,18 @@ fn scan_content_internal(
     };
 
     for (line_num, line) in content.lines().enumerate() {
+        // FP REDUCTION: Analyze context FIRST, before pattern matching
+        let context = if config.enable_context_detection {
+            context_analyzer.analyze(line, &file)
+        } else {
+            FindingContext::default()
+        };
+
+        // FP REDUCTION: Skip excluded findings EARLY (before pattern matching)
+        if config.enable_context_detection && context_analyzer.should_exclude(&context) {
+            continue;
+        }
+
         for pattern in cache.patterns() {
             if pattern.is_match(line) {
                 // Extract the potential secret
@@ -564,6 +605,19 @@ fn scan_content_internal(
                 } else {
                     None
                 };
+
+                // FP REDUCTION: Apply entropy pre-filter if secret was extracted
+                if let Some(ref secret_value) = secret {
+                    if crate::token_efficiency::is_likely_false_positive(secret_value) {
+                        tracing::debug!(
+                            "Filtered by entropy pre-filter: {} in {}:{}",
+                            pattern.name,
+                            file.display(),
+                            line_num + 1
+                        );
+                        continue;
+                    }
+                }
 
                 // Apply Betterleaks Token Efficiency Filter
                 if config.enable_token_efficiency {
@@ -595,36 +649,6 @@ fn scan_content_internal(
                     }
                 }
 
-
-                // Apply Entropy Filter for HIGH_ENTROPY_STRING pattern
-                // This uses multiple signals to reduce false positives
-                if pattern.name.as_ref() == "HIGH_ENTROPY_STRING" {
-                    if let Some(ref secret_value) = secret {
-                        let entropy_filter = EntropyFilter::new();
-                        if !entropy_filter.is_likely_secret(secret_value, line) {
-                            tracing::debug!(
-                                "Filtered by entropy filter: {} in {}:{}",
-                                pattern.name,
-                                file.display(),
-                                line_num + 1
-                            );
-                            continue;
-                        }
-                    }
-                }
-
-                // Analyze context (if enabled)
-                let context = if config.enable_context_detection {
-                    context_analyzer.analyze(line, &file)
-                } else {
-                    FindingContext::default()
-                };
-
-                // Skip excluded findings (only if context detection is enabled)
-                if config.enable_context_detection && context_analyzer.should_exclude(&context) {
-                    continue;
-                }
-
                 let mut result = ScanResult::new(
                     file.clone(),
                     (line_num + 1) as u32,
@@ -646,7 +670,7 @@ fn scan_content_internal(
                 }
 
                 // Add context
-                result = result.with_context(context);
+                result = result.with_context(context.clone());
 
                 // Add Betterleaks filter metadata
                 if config.enable_token_efficiency || config.enable_word_filter {
@@ -692,8 +716,9 @@ fn get_top_patterns(results: &[ScanResult], limit: usize) -> Vec<crate::result::
 
 #[cfg(test)]
 mod tests {
-#[cfg(test)]
-mod tests {
+    use super::*;
+    use std::fs;
+    use tempfile::TempDir;
 
     #[test]
     fn test_scanner_creation() {
@@ -847,5 +872,4 @@ mod tests {
         let results = scanner.scan_directory(temp_dir.path());
         assert!(results.is_empty()); // Large file should be skipped
     }
-}
 }

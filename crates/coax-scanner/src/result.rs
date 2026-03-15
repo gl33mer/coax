@@ -153,19 +153,6 @@ pub struct SeverityCounts {
     pub low: u32,
 }
 
-
-impl ScanSummary {
-    /// Create from scan results and file count
-    pub fn from_results(results: &[ScanResult]) -> Self {
-        Self {
-            files_scanned: 0,
-            total_findings: results.len() as u32,
-            by_severity: SeverityCounts::from_results(results),
-            top_patterns: Vec::new(),
-            scan_duration_ms: 0,
-        }
-    }
-}
 impl SeverityCounts {
     /// Create from scan results
     pub fn from_results(results: &[ScanResult]) -> Self {

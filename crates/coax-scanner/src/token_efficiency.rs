@@ -18,6 +18,145 @@ lazy_static! {
     static ref TOKENIZER: Mutex<Option<CoreBPE>> = Mutex::new(None);
 }
 
+/// FP REDUCTION: Check if a string looks like code rather than a secret
+///
+/// This function detects common patterns that are likely code identifiers,
+/// file hashes, or encoded data rather than actual secrets.
+///
+/// # Arguments
+/// * `value` - The string to check
+///
+/// # Returns
+/// * `bool` - true if the string looks like code (should be filtered)
+pub fn looks_like_code(value: &str) -> bool {
+    // Check for base64 padding patterns (likely encoded data, not secrets)
+    if value.contains("==") || (value.ends_with('=') && value.len() > 50) {
+        return true; // Skip unless context says otherwise
+    }
+
+    // Check for common file hash patterns (64 char hex = SHA256)
+    if value.len() == 64 && value.chars().all(|c| c.is_ascii_hexdigit()) {
+        return true; // Likely a file hash, not secret
+    }
+
+    // Check for 40 char hex (SHA1) or 32 char hex (MD5)
+    if (value.len() == 40 || value.len() == 32) && value.chars().all(|c| c.is_ascii_hexdigit()) {
+        return true; // Likely a file hash, not secret
+    }
+
+    // Check for long function/method names (camelCase or snake_case)
+    // If it has underscores AND mixed case, likely a code identifier
+    if value.contains('_') {
+        let has_upper = value.chars().any(|c| c.is_uppercase());
+        let has_lower = value.chars().any(|c| c.is_lowercase());
+        if has_upper && has_lower {
+            return true; // Likely code identifier like MY_CONSTANT_value
+        }
+    }
+
+    // Check for data URI patterns (base64 encoded images, etc.)
+    if value.starts_with("data:") || value.contains("base64,") {
+        return true;
+    }
+
+    // Check for URL-encoded strings
+    if value.contains('%') && value.len() > 30 {
+        return true; // Likely URL-encoded data
+    }
+
+    // Check for strings that look like import paths or package names
+    if value.contains('/') && value.contains('.') {
+        return true; // Likely a path or package identifier
+    }
+
+    // Check for strings with multiple consecutive underscores (common in code)
+    if value.contains("__") || value.starts_with('_') || value.ends_with('_') {
+        return true;
+    }
+
+    false
+}
+
+/// FP REDUCTION: Check if a string contains common word patterns
+///
+/// This is a pre-filter that detects strings containing common English words
+/// or programming keywords that are likely false positives.
+///
+/// # Arguments
+/// * `value` - The string to check
+///
+/// # Returns
+/// * `bool` - true if the string contains common word patterns
+pub fn contains_common_word_patterns(value: &str) -> bool {
+    let lower = value.to_lowercase();
+
+    // Common English words that indicate false positives
+    let common_words = [
+        "the", "and", "that", "have", "for", "not", "with", "you", "this",
+        "from", "they", "say", "her", "she", "will", "one", "all", "would",
+        "what", "out", "about", "who", "get", "which", "when", "make", "can",
+        "like", "time", "just", "him", "know", "take", "people", "into",
+        "year", "your", "good", "some", "could", "them", "see", "other",
+        "then", "now", "look", "only", "come", "its", "over", "think",
+        "also", "back", "after", "use", "two", "how", "our", "work",
+        "first", "well", "way", "even", "new", "want", "because", "any",
+        "these", "give", "day", "most", "only", "example", "test", "sample",
+    ];
+
+    // Check if value contains common words as substrings
+    for word in &common_words {
+        if lower.contains(word) && value.len() > 20 {
+            // Only flag if the string is long enough to be suspicious
+            return true;
+        }
+    }
+
+    // Check for common programming patterns
+    if lower.contains("function") || lower.contains("method") ||
+       lower.contains("class") || lower.contains("interface") ||
+       lower.contains("module") || lower.contains("package") {
+        return true;
+    }
+
+    // Check for variable naming patterns
+    if lower.contains("var_") || lower.contains("temp_") ||
+       lower.contains("_value") || lower.contains("_data") ||
+       lower.contains("_string") || lower.contains("_text") {
+        return true;
+    }
+
+    false
+}
+
+/// FP REDUCTION: Combined pre-filter for false positive reduction
+///
+/// This function combines multiple heuristics to determine if a potential
+/// secret is likely a false positive BEFORE running expensive pattern matching.
+///
+/// # Arguments
+/// * `value` - The string to check
+///
+/// # Returns
+/// * `bool` - true if the string should be filtered out (likely false positive)
+pub fn is_likely_false_positive(value: &str) -> bool {
+    // Empty or very short strings
+    if value.len() < 8 {
+        return true;
+    }
+
+    // Check if it looks like code
+    if looks_like_code(value) {
+        return true;
+    }
+
+    // Check for common word patterns
+    if contains_common_word_patterns(value) {
+        return true;
+    }
+
+    false
+}
+
 /// Initialize the tokenizer (lazy, thread-safe)
 fn get_tokenizer() -> Option<CoreBPE> {
     let mut tokenizer = TOKENIZER.lock().ok()?;
@@ -54,13 +193,13 @@ fn get_tokenizer() -> Option<CoreBPE> {
 /// ```rust
 /// use coax_scanner::token_efficiency::calculate_token_efficiency;
 ///
-/// // Real API key - high efficiency (dense random characters)
+/// // Real API key - high efficiency
 /// let efficiency = calculate_token_efficiency("sk_live_1234567890abcdefghij1234567890abcdefghij");
-/// assert!(efficiency > 1.0);
+/// assert!(efficiency > 2.5);
 ///
-/// // Common word - typically lower efficiency
+/// // Common word - low efficiency
 /// let efficiency = calculate_token_efficiency("password");
-/// assert!(efficiency > 0.0);
+/// assert!(efficiency < 2.0);
 /// ```
 pub fn calculate_token_efficiency(secret: &str) -> f64 {
     // Handle empty strings
@@ -120,13 +259,11 @@ pub fn calculate_token_efficiency(secret: &str) -> f64 {
 /// ```rust
 /// use coax_scanner::token_efficiency::is_likely_secret;
 ///
-/// // Real API key - should pass token efficiency filter
+/// // Real API key
 /// assert!(is_likely_secret("sk_live_1234567890abcdefghij1234567890abcdefghij", None));
 ///
-/// // Short random string - may or may not pass depending on tokenization
-/// let result = is_likely_secret("password123", None);
-/// // Just verify the function works (actual result depends on BPE tokenization)
-/// assert!(result == result);
+/// // Common word (false positive)
+/// assert!(!is_likely_secret("password123", None));
 /// ```
 pub fn is_likely_secret(secret: &str, threshold: Option<f64>) -> bool {
     let analyzed = if secret.len() < 20 && secret.contains(|c| c == '\n' || c == '\r') {

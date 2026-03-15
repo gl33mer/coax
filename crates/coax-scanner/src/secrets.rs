@@ -390,26 +390,31 @@ pub mod categories {
     pub const GENERIC: &[SecretPattern] = &[
         SecretPattern {
             name: "GENERIC_PASSWORD",
+            // FP REDUCTION: Require actual quoted value, don't match function calls or variable references
             pattern: r"(?i)(password|passwd|pwd)\s*[:=]\s*[\x27\x22][^\x27\x22]{8,}[\x27\x22]",
-            severity: "high",
+            severity: "medium",  // FP REDUCTION: Reduced from high
             recommendation: "Use environment variables or secret manager",
             description: "Generic Password Assignment",
             cwe_id: Some("CWE-798"),
         },
         SecretPattern {
             name: "GENERIC_SECRET",
+            // FP REDUCTION: Require actual quoted value
             pattern: r"(?i)(password|secret|key|token)\s*[:=]\s*[\x27\x22][^\x27\x22]{8,}[\x27\x22]",
-            severity: "high",
+            severity: "medium",  // FP REDUCTION: Reduced from high
             recommendation: "Use environment variables or secret manager",
             description: "Generic Secret Assignment",
             cwe_id: Some("CWE-798"),
         },
         SecretPattern {
             name: "HIGH_ENTROPY_STRING",
-            pattern: r"[a-zA-Z0-9+/=_-]{40,}",
-            severity: "medium",
-            recommendation: "Review - may be false positive",
-            description: "High Entropy String (potential secret)",
+            // FP REDUCTION: Simpler pattern without lookbehind (not supported by regex crate)
+            // Matches: long alphanumeric strings (40+ chars) - reduced severity and disabled by default
+            // Use entropy filter in token_efficiency.rs for more sophisticated detection
+            pattern: r"[a-zA-Z0-9]{40,}",
+            severity: "low",  // FP REDUCTION: Reduced from medium
+            recommendation: "Review - likely false positive, check context and entropy",
+            description: "High Entropy String (potential secret) - DISABLED BY DEFAULT",
             cwe_id: Some("CWE-798"),
         },
     ];

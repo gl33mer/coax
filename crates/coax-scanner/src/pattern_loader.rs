@@ -25,7 +25,7 @@
 //!
 //! # Example
 //!
-//! ```rust,no_run
+//! ```rust
 //! use coax_scanner::PatternLoader;
 //! use std::path::Path;
 //!
@@ -232,12 +232,9 @@ impl PatternLoader {
     ///
     /// # Example
     ///
-    /// ```rust,no_run
-    /// # use coax_scanner::PatternLoader;
-    /// # use std::path::Path;
+    /// ```rust
     /// let mut loader = PatternLoader::new();
     /// loader.load_from_file(Path::new("patterns/aws.yml"))?;
-    /// # Ok::<(), coax_scanner::pattern_loader::PatternLoaderError>(())
     /// ```
     pub fn load_from_file(&mut self, path: &Path) -> Result<usize> {
         let content = fs::read_to_string(path).map_err(|e| PatternLoaderError::FileReadError {
@@ -251,9 +248,25 @@ impl PatternLoader {
                 source: e,
             })?;
 
-        let count = patterns_file.patterns.len();
+        let mut count = 0;
         for entry in patterns_file.patterns {
-            self.patterns.push(entry.to_pattern_config());
+            // FP REDUCTION: Validate pattern before adding
+            if Self::is_overly_broad_pattern(&entry.regex) {
+                tracing::warn!(
+                    "Skipping overly broad pattern '{}': {} (FP reduction)",
+                    entry.name,
+                    entry.regex
+                );
+                continue;
+            }
+
+            let config = entry.to_pattern_config();
+
+            // FP REDUCTION: Add word boundary to patterns without proper boundaries
+            let validated_config = Self::add_word_boundaries_if_needed(config);
+
+            self.patterns.push(validated_config);
+            count += 1;
         }
 
         self.loaded_files.push(path.to_path_buf());
@@ -261,16 +274,78 @@ impl PatternLoader {
         Ok(count)
     }
 
+    /// FP REDUCTION: Check if a regex pattern is overly broad
+    ///
+    /// Returns true if the pattern is likely to cause false positives:
+    /// - Contains .* without proper anchoring
+    /// - Is too short (< 10 chars) with wildcards
+    /// - Matches common programming constructs
+    fn is_overly_broad_pattern(regex: &str) -> bool {
+        // Skip empty patterns
+        if regex.is_empty() {
+            return true;
+        }
+
+        // Skip patterns that are just .* or similar
+        if regex == ".*" || regex == ".+" || regex == "*" || regex == "+" {
+            return true;
+        }
+
+        // Skip patterns with .* at both ends and very little content
+        if regex.starts_with(".*") && regex.ends_with(".*") && regex.len() < 20 {
+            return true;
+        }
+
+        // Skip patterns that match generic key=value without specificity
+        if regex.contains(".*") && regex.len() < 15 && (regex.contains("key") || regex.contains("secret") || regex.contains("password")) {
+            return true;
+        }
+
+        // Skip patterns with unanchored wildcards that match too much
+        if regex.starts_with(".*") && !regex.contains("[") && !regex.contains("{") {
+            if regex.matches(".*").count() > 2 {
+                return true;
+            }
+        }
+
+        false
+    }
+
+    /// FP REDUCTION: Add word boundaries to patterns if needed
+    ///
+    /// This helps prevent false positives from partial matches.
+    fn add_word_boundaries_if_needed(mut config: crate::pattern_cache::PatternConfig) -> crate::pattern_cache::PatternConfig {
+        // Don't modify already anchored patterns
+        if config.pattern.starts_with('^') || config.pattern.starts_with(r"\b") {
+            return config;
+        }
+
+        // Don't modify patterns with explicit boundaries
+        if config.pattern.starts_with("(?") || config.pattern.starts_with('[') {
+            return config;
+        }
+
+        // For short patterns (< 30 chars) without boundaries, add word boundary
+        if config.pattern.len() < 30 && !config.pattern.contains("\\b") {
+            // Only add if it doesn't already have implicit boundaries
+            if !config.pattern.starts_with("(?") && !config.pattern.contains("(?:") {
+                // Add word boundary at start for patterns that look like they need it
+                if config.pattern.chars().next().map_or(false, |c| c.is_ascii_alphanumeric()) {
+                    config.pattern = format!(r"\b{}", config.pattern);
+                }
+            }
+        }
+
+        config
+    }
+
     /// Load patterns from all YAML files in a directory (recursively)
     ///
     /// # Example
     ///
-    /// ```rust,no_run
-    /// # use coax_scanner::PatternLoader;
-    /// # use std::path::Path;
+    /// ```rust
     /// let mut loader = PatternLoader::new();
     /// loader.load_from_directory(Path::new("patterns/"))?;
-    /// # Ok::<(), coax_scanner::pattern_loader::PatternLoaderError>(())
     /// ```
     pub fn load_from_directory(&mut self, dir: &Path) -> Result<usize> {
         if !dir.exists() {
