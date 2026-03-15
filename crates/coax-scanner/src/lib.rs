@@ -49,6 +49,9 @@ pub mod pattern_loader;
 pub mod token_efficiency;
 pub mod word_filter;
 pub mod entropy_filter;
+pub mod sarif_output;
+pub mod baseline;
+pub mod encoded_detection;
 
 pub use pattern_cache::{PatternCache, CompiledPattern, PatternConfig};
 pub use scanner::{Scanner, ScannerConfig};
