@@ -154,16 +154,41 @@ pub fn generate_sarif(results: &[ScanResult], version: &str) -> SarifOutput {
     
     for result in results {
         if !rules_map.contains_key(&result.pattern) {
+            // Determine if this is a Unicode finding
+            let is_unicode = result.pattern.starts_with("UNICODE-");
+            
+            // Create appropriate tags
+            let mut tags = vec!["security".to_string()];
+            if is_unicode {
+                tags.push("unicode".to_string());
+                tags.push("obfuscation".to_string());
+            } else {
+                tags.push("secrets".to_string());
+            }
+
+            // Create help URI - use Glassworm reference for Unicode findings
+            let help_uri = if is_unicode {
+                match result.pattern.as_str() {
+                    "UNICODE-GLASSWORM_PATTERN" => Some("https://www.aikido.dev/blog/glassworm-returns".to_string()),
+                    "UNICODE-BIDIRECTIONAL_OVERRIDE" => Some("https://www.w3.org/TR/unicode140/".to_string()),
+                    "UNICODE-HOMOGLYPH" => Some("https://www.unicode.org/reports/tr39/".to_string()),
+                    "UNICODE-INVISIBLE_CHARACTER" => Some("https://www.unicode.org/charts/PDF/U2000.pdf".to_string()),
+                    _ => Some("https://github.com/gl33mer/coax/blob/main/docs/unicode-attacks.md".to_string()),
+                }
+            } else {
+                Some(format!("https://github.com/gl33mer/coax/rules/{}", result.pattern.to_lowercase()))
+            };
+
             let rule = SarifRule {
                 id: result.pattern.clone(),
                 name: result.pattern.clone(),
                 short_description: SarifMultiformatMessageString {
                     text: result.recommendation.clone(),
                 },
-                help_uri: Some(format!("https://github.com/gl33mer/coax/rules/{}", result.pattern.to_lowercase())),
+                help_uri,
                 properties: SarifRuleProperties {
                     security_severity: severity_to_score(&result.severity).to_string(),
-                    tags: vec!["security".to_string(), "secrets".to_string()],
+                    tags,
                 },
             };
             rules_map.insert(result.pattern.clone(), rule);

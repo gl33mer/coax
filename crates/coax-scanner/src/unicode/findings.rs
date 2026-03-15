@@ -165,6 +165,32 @@ impl UnicodeFinding {
     pub fn location(&self) -> SourceLocation {
         SourceLocation::new(&self.file, self.line, self.column)
     }
+
+    /// Convert UnicodeFinding to ScanResult for integration with main scanner
+    pub fn to_scan_result(&self) -> crate::ScanResult {
+        use std::path::PathBuf;
+        use crate::result::{ScanResult, FindingContext};
+
+        let mut note = format!("Unicode attack: {}", self.description);
+        if let Some(ref cwe) = self.cwe_id {
+            note.push_str(&format!(" (CWE-{})", cwe));
+        }
+
+        ScanResult {
+            file: PathBuf::from(&self.file),
+            line: self.line as u32,
+            column: Some(self.column as u32),
+            pattern: format!("UNICODE-{}", self.category.as_str().to_uppercase()),
+            severity: self.severity.as_str().to_string(),
+            recommendation: self.remediation.clone(),
+            detected_secret: None,
+            line_content: self.context.clone(),
+            context: FindingContext {
+                note: Some(note),
+                ..Default::default()
+            },
+        }
+    }
 }
 
 impl fmt::Display for UnicodeFinding {
