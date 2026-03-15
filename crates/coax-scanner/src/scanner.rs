@@ -4,10 +4,12 @@
 //! - Pattern compilation caching
 //! - Parallel file scanning using rayon
 //! - Configurable thread pool
+//! - Context detection for false positive reduction
 
 use crate::pattern_cache::{PatternCache, PatternConfig};
 use crate::result::{ScanResult, ScanSummary, SeverityCounts};
 use crate::secrets;
+use crate::context::ContextAnalyzer;
 use rayon::prelude::*;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -31,6 +33,18 @@ pub struct ScannerConfig {
     pub scan_hidden: bool,
     /// Follow symlinks
     pub follow_symlinks: bool,
+    /// Enable context-aware scanning (reduce false positives)
+    pub enable_context_detection: bool,
+    /// Exclude test files from results
+    pub exclude_test_files: bool,
+    /// Exclude documentation files from results
+    pub exclude_documentation: bool,
+    /// Exclude comments from results
+    pub exclude_comments: bool,
+    /// Exclude placeholder values
+    pub exclude_placeholders: bool,
+    /// Exclude AWS example keys
+    pub exclude_aws_examples: bool,
 }
 
 impl Default for ScannerConfig {
@@ -62,6 +76,12 @@ impl Default for ScannerConfig {
             include_line_content: false,
             scan_hidden: false,
             follow_symlinks: false,
+            enable_context_detection: true,
+            exclude_test_files: true,
+            exclude_documentation: true,
+            exclude_comments: true,
+            exclude_placeholders: true,
+            exclude_aws_examples: true,
         }
     }
 }
@@ -206,7 +226,7 @@ impl Scanner {
 
     /// Scan a single file
     pub fn scan_file(&self, path: &Path) -> Vec<ScanResult> {
-        scan_file_internal(path, &self.pattern_cache, self.config.include_line_content)
+        scan_file_internal(path, &self.pattern_cache, &self.config)
     }
 
     /// Scan content directly (for testing or custom use cases)
@@ -215,19 +235,19 @@ impl Scanner {
             content.to_string(),
             PathBuf::from(file_name),
             &self.pattern_cache,
-            self.config.include_line_content,
+            &self.config,
         )
     }
 
     /// Scan multiple files in parallel
     fn scan_files_parallel(&self, files: &[PathBuf]) -> Vec<ScanResult> {
         let cache = Arc::clone(&self.pattern_cache);
-        let include_line_content = self.config.include_line_content;
+        let config = self.config.clone();
 
         files
             .par_iter()
             .flat_map(move |path| {
-                scan_file_internal(path, &cache, include_line_content)
+                scan_file_internal(path, &cache, &config)
             })
             .collect()
     }
@@ -344,28 +364,43 @@ fn should_scan_extension(ext: &std::ffi::OsStr) -> bool {
 fn scan_file_internal(
     path: &Path,
     cache: &Arc<PatternCache>,
-    include_line_content: bool,
+    config: &ScannerConfig,
 ) -> Vec<ScanResult> {
     let content = match std::fs::read_to_string(path) {
         Ok(c) => c,
         Err(_) => return Vec::new(),
     };
 
-    scan_content_internal(content, path.to_path_buf(), cache, include_line_content)
+    scan_content_internal(content, path.to_path_buf(), cache, config)
 }
 
-/// Internal content scanning function
+/// Internal content scanning function with context detection
 fn scan_content_internal(
     content: String,
     file: PathBuf,
     cache: &Arc<PatternCache>,
-    include_line_content: bool,
+    config: &ScannerConfig,
 ) -> Vec<ScanResult> {
     let mut results = Vec::new();
+    let context_analyzer = ContextAnalyzer {
+        exclude_test_files: config.exclude_test_files,
+        exclude_documentation: config.exclude_documentation,
+        exclude_comments: config.exclude_comments,
+        exclude_placeholders: config.exclude_placeholders,
+        exclude_aws_examples: config.exclude_aws_examples,
+    };
 
     for (line_num, line) in content.lines().enumerate() {
         for pattern in cache.patterns() {
             if pattern.is_match(line) {
+                // Analyze context
+                let context = context_analyzer.analyze(line, &file);
+
+                // Skip excluded findings
+                if context_analyzer.should_exclude(&context) {
+                    continue;
+                }
+
                 let mut result = ScanResult::new(
                     file.clone(),
                     (line_num + 1) as u32,
@@ -374,9 +409,20 @@ fn scan_content_internal(
                     pattern.recommendation.to_string(),
                 );
 
-                if include_line_content {
+                // Add detected secret if pattern supports extraction
+                if pattern.extract_secret {
+                    if let Some(secret) = crate::context::extract_secret(line, &pattern.name) {
+                        result = result.with_detected_secret(secret);
+                    }
+                }
+
+                // Add line content if requested
+                if config.include_line_content {
                     result = result.with_line_content(line.trim().to_string());
                 }
+
+                // Add context
+                result = result.with_context(context);
 
                 results.push(result);
             }

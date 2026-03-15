@@ -23,6 +23,8 @@ impl SecretPattern {
             pattern: self.pattern,
             severity: self.severity,
             recommendation: self.recommendation,
+            extract_secret: true,
+            min_entropy: None,
         }
     }
 }

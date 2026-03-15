@@ -27,6 +27,9 @@ ignore = { workspace = true }
 # Optional: entropy calculation for high-entropy string detection
 base64 = { workspace = true }
 
+# Lazy static initialization
+lazy_static = { workspace = true }
+
 [dev-dependencies]
 # Benchmarking
 criterion = "0.5"

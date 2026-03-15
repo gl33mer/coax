@@ -218,6 +218,7 @@ dependencies = [
  "base64",
  "criterion",
  "ignore",
+ "lazy_static",
  "rayon",
  "regex",
  "serde",

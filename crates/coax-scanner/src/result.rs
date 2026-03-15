@@ -20,8 +20,31 @@ pub struct ScanResult {
     pub severity: String,
     /// Recommendation for remediation
     pub recommendation: String,
+    /// The actual detected secret (masked if sensitive)
+    pub detected_secret: Option<String>,
     /// The actual line content (optional, for reporting)
     pub line_content: Option<String>,
+    /// Context information about the finding
+    pub context: FindingContext,
+}
+
+/// Context information about a finding
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq, Hash)]
+pub struct FindingContext {
+    /// Whether the finding is in a comment
+    pub is_comment: bool,
+    /// Whether the finding is in a test file
+    pub is_test_file: bool,
+    /// Whether the finding is in documentation
+    pub is_documentation: bool,
+    /// Whether the finding appears to be a placeholder
+    pub is_placeholder: bool,
+    /// Whether the finding is an AWS example key
+    pub is_aws_example: bool,
+    /// Adjusted severity based on context
+    pub adjusted_severity: Option<String>,
+    /// Reason for severity adjustment or exclusion
+    pub note: Option<String>,
 }
 
 impl ScanResult {
@@ -40,7 +63,9 @@ impl ScanResult {
             pattern,
             severity,
             recommendation,
+            detected_secret: None,
             line_content: None,
+            context: FindingContext::default(),
         }
     }
 
@@ -50,9 +75,21 @@ impl ScanResult {
         self
     }
 
+    /// Create a scan result with detected secret
+    pub fn with_detected_secret(mut self, secret: String) -> Self {
+        self.detected_secret = Some(secret);
+        self
+    }
+
     /// Create a scan result with column information
     pub fn with_column(mut self, column: u32) -> Self {
         self.column = Some(column);
+        self
+    }
+
+    /// Create a scan result with context
+    pub fn with_context(mut self, context: FindingContext) -> Self {
+        self.context = context;
         self
     }
 

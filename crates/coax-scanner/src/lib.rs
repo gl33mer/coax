@@ -34,11 +34,13 @@ mod pattern_cache;
 mod scanner;
 mod secrets;
 mod result;
+mod context;
 
 pub use pattern_cache::{PatternCache, CompiledPattern, PatternConfig};
 pub use scanner::{Scanner, ScannerConfig};
-pub use result::{ScanResult, ScanSummary, SeverityCounts, PatternCount, OutputFormat};
+pub use result::{ScanResult, ScanSummary, SeverityCounts, PatternCount, OutputFormat, FindingContext};
 pub use secrets::SecretPattern;
+pub use context::{ContextAnalyzer, ExclusionPatterns};
 
 /// Crate version
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

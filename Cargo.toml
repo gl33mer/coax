@@ -45,6 +45,9 @@ tempfile = "3.9"
 # Base64 for entropy detection
 base64 = "0.21"
 
+# Lazy static initialization
+lazy_static = "1.4"
+
 [profile.bench]
 opt-level = 3
 lto = true

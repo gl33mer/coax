@@ -25,6 +25,28 @@ pub struct PatternConfig {
     pub severity: &'static str,
     /// Recommendation for remediation
     pub recommendation: &'static str,
+    /// Whether to extract the matched secret string (default: true)
+    #[serde(default = "default_true")]
+    pub extract_secret: bool,
+    /// Minimum entropy threshold for this pattern (optional, for high-entropy patterns)
+    pub min_entropy: Option<f64>,
+}
+
+fn default_true() -> bool {
+    true
+}
+
+impl Default for PatternConfig {
+    fn default() -> Self {
+        Self {
+            name: "UNKNOWN",
+            pattern: r".*",
+            severity: "low",
+            recommendation: "Review this finding".into(),
+            extract_secret: true,
+            min_entropy: None,
+        }
+    }
 }
 
 /// A compiled pattern ready for matching
@@ -41,6 +63,10 @@ pub struct CompiledPattern {
     pub severity: Arc<str>,
     /// Remediation recommendation
     pub recommendation: Arc<str>,
+    /// Whether to extract the matched secret string
+    pub extract_secret: bool,
+    /// Minimum entropy threshold for this pattern
+    pub min_entropy: Option<f64>,
 }
 
 impl CompiledPattern {
@@ -56,6 +82,8 @@ impl CompiledPattern {
                 .unwrap_or_else(|e| panic!("Invalid regex pattern '{}': {}", config.name, e)),
             severity: config.severity.into(),
             recommendation: config.recommendation.into(),
+            extract_secret: config.extract_secret,
+            min_entropy: config.min_entropy,
         }
     }
 
@@ -68,6 +96,8 @@ impl CompiledPattern {
             regex: Regex::new(config.pattern)?,
             severity: config.severity.into(),
             recommendation: config.recommendation.into(),
+            extract_secret: config.extract_secret,
+            min_entropy: config.min_entropy,
         })
     }
 
@@ -209,12 +239,14 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             pattern: r"AKIA[0-9A-Z]{16}",
             severity: "critical",
             recommendation: "Remove immediately and rotate the key via AWS IAM Console",
+            ..Default::default()
         },
         PatternConfig {
             name: "AWS_SECRET_KEY",
             pattern: r"(?i)(aws_secret_access_key|aws_secret_key)\s*[:=]\s*[\x27\x22]?[0-9a-zA-Z\/+]{40}[\x27\x22]?",
             severity: "critical",
             recommendation: "Remove immediately and rotate the secret via AWS IAM Console",
+            ..Default::default()
         },
         // GitHub Tokens
         PatternConfig {
@@ -222,18 +254,21 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             pattern: r"ghp_[a-zA-Z0-9]{36}",
             severity: "critical",
             recommendation: "Remove and regenerate the token in GitHub Settings",
+            ..Default::default()
         },
         PatternConfig {
             name: "GITHUB_OAUTH",
             pattern: r"gho_[a-zA-Z0-9]{36}",
             severity: "critical",
             recommendation: "Remove and revoke the OAuth token",
+            ..Default::default()
         },
         PatternConfig {
             name: "GITLAB_PAT",
             pattern: r"glpat-[a-zA-Z0-9_-]{20}",
             severity: "critical",
             recommendation: "Remove and revoke the GitLab token",
+            ..Default::default()
         },
         // Google Cloud
         PatternConfig {
@@ -241,12 +276,14 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             pattern: r"AIza[0-9A-Za-z\\-_]{35}",
             severity: "high",
             recommendation: "Remove and restrict API key usage in Google Cloud Console",
+            ..Default::default()
         },
         PatternConfig {
             name: "GCP_SERVICE_ACCOUNT",
             pattern: r#"(?i)"type"\s*:\s*"service_account""#,
             severity: "high",
             recommendation: "Remove and revoke service account credentials",
+            ..Default::default()
         },
         // Payment Processors
         PatternConfig {
@@ -254,12 +291,14 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             pattern: r"sk_live_[0-9a-zA-Z]{24,}",
             severity: "critical",
             recommendation: "Remove and rotate immediately in Stripe Dashboard",
+            ..Default::default()
         },
         PatternConfig {
             name: "SQUARE_ACCESS_TOKEN",
             pattern: r"sq0atp-[0-9a-zA-Z_-]{22}",
             severity: "critical",
             recommendation: "Remove and revoke in Square Developer Dashboard",
+            ..Default::default()
         },
         // Communication APIs
         PatternConfig {
@@ -267,36 +306,42 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             pattern: r"xox[baprs]-[0-9a-zA-Z]{10,48}",
             severity: "high",
             recommendation: "Remove and revoke the token in Slack Admin",
+            ..Default::default()
         },
         PatternConfig {
             name: "SENDGRID_API_KEY",
             pattern: r"SG\.[a-zA-Z0-9_-]{22}\.[a-zA-Z0-9_-]{43}",
             severity: "critical",
             recommendation: "Remove and regenerate in SendGrid Settings",
+            ..Default::default()
         },
         PatternConfig {
             name: "TWILIO_API_KEY",
             pattern: r"SK[0-9a-fA-F]{32}",
             severity: "critical",
             recommendation: "Remove and revoke in Twilio Console",
+            ..Default::default()
         },
         PatternConfig {
             name: "MAILGUN_API_KEY",
             pattern: r"key-[0-9a-zA-Z]{32}",
             severity: "critical",
             recommendation: "Remove and rotate in Mailgun Dashboard",
+            ..Default::default()
         },
         PatternConfig {
             name: "DISCORD_BOT_TOKEN",
             pattern: r"MT[a-zA-Z0-9_-]{23}\.[a-zA-Z0-9_-]{6}\.[a-zA-Z0-9_-]{27}",
             severity: "critical",
             recommendation: "Remove and regenerate in Discord Developer Portal",
+            ..Default::default()
         },
         PatternConfig {
             name: "TELEGRAM_BOT_TOKEN",
             pattern: r"[0-9]{9,10}:[a-zA-Z0-9_-]{35}",
             severity: "high",
             recommendation: "Remove and revoke bot via @BotFather",
+            ..Default::default()
         },
         // Database Connection Strings
         PatternConfig {
@@ -304,30 +349,35 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             pattern: r"(?i)postgresql://[^:]+:[^@]+@[^/]+/[a-zA-Z0-9_-]+",
             severity: "critical",
             recommendation: "Remove and rotate database credentials",
+            ..Default::default()
         },
         PatternConfig {
             name: "MONGODB_CONNECTION_STRING",
             pattern: r"(?i)mongodb(\+srv)?://[^:]+:[^@]+@[^/]+/?",
             severity: "critical",
             recommendation: "Remove and rotate MongoDB credentials",
+            ..Default::default()
         },
         PatternConfig {
             name: "MYSQL_CONNECTION_STRING",
             pattern: r"(?i)mysql://[^:]+:[^@]+@[^/]+/[a-zA-Z0-9_-]+",
             severity: "critical",
             recommendation: "Remove and rotate MySQL credentials",
+            ..Default::default()
         },
         PatternConfig {
             name: "REDIS_CONNECTION_STRING",
             pattern: r"(?i)redis://:[^@]+@[^/]+",
             severity: "critical",
             recommendation: "Remove and change Redis AUTH password",
+            ..Default::default()
         },
         PatternConfig {
             name: "AZURE_STORAGE_CONNECTION_STRING",
             pattern: r"(?i)DefaultEndpointsProtocol=https;AccountName=[^;]+;AccountKey=[A-Za-z0-9+/=]{88};",
             severity: "critical",
             recommendation: "Remove and regenerate key in Azure Portal",
+            ..Default::default()
         },
         // Package Manager Tokens
         PatternConfig {
@@ -335,12 +385,14 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             pattern: r"npm_[a-zA-Z0-9]{36}",
             severity: "critical",
             recommendation: "Remove and revoke in npm Access Tokens",
+            ..Default::default()
         },
         PatternConfig {
             name: "PYPI_API_TOKEN",
             pattern: r"pypi-[a-zA-Z0-9_-]{50,}",
             severity: "critical",
             recommendation: "Remove and revoke in PyPI Settings",
+            ..Default::default()
         },
         // AI/ML APIs
         PatternConfig {
@@ -348,18 +400,21 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             pattern: r"sk-proj-[a-zA-Z0-9]{48}",
             severity: "critical",
             recommendation: "Remove and revoke in OpenAI Platform",
+            ..Default::default()
         },
         PatternConfig {
             name: "ANTHROPIC_API_KEY",
             pattern: r"sk-ant-api[0-9]{2}-[a-zA-Z0-9_-]{49}",
             severity: "critical",
             recommendation: "Remove and revoke in Anthropic Console",
+            ..Default::default()
         },
         PatternConfig {
             name: "HUGGINGFACE_TOKEN",
             pattern: r"hf_[a-zA-Z0-9]{34}",
             severity: "critical",
             recommendation: "Remove and delete in Hugging Face Settings",
+            ..Default::default()
         },
         // Cloud Providers
         PatternConfig {
@@ -367,12 +422,14 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             pattern: r"(?i)heroku.*[\x27\x22][0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}[\x27\x22]",
             severity: "critical",
             recommendation: "Remove and regenerate in Heroku Settings",
+            ..Default::default()
         },
         PatternConfig {
             name: "DIGITALOCEAN_TOKEN",
             pattern: r"dop_v1_[a-f0-9]{64}",
             severity: "high",
             recommendation: "Remove and revoke in DigitalOcean Dashboard",
+            ..Default::default()
         },
         // Private Keys
         PatternConfig {
@@ -380,12 +437,14 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             pattern: r"-----BEGIN (RSA |EC |DSA |OPENSSH |ENCRYPTED )?PRIVATE KEY-----",
             severity: "critical",
             recommendation: "Remove immediately - private key exposed",
+            ..Default::default()
         },
         PatternConfig {
             name: "SSH_PRIVATE_KEY",
             pattern: r"-----BEGIN OPENSSH PRIVATE KEY-----",
             severity: "critical",
             recommendation: "Remove and revoke SSH key from all servers",
+            ..Default::default()
         },
         // Tokens and Sessions
         PatternConfig {
@@ -393,6 +452,7 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             pattern: r"eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*",
             severity: "high",
             recommendation: "Remove and invalidate session",
+            ..Default::default()
         },
         // Generic Secrets
         PatternConfig {
@@ -400,18 +460,24 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             pattern: r"(?i)(password|passwd|pwd)\s*[:=]\s*[\x27\x22][^\x27\x22]{8,}[\x27\x22]",
             severity: "high",
             recommendation: "Use environment variables or secret manager",
+            ..Default::default()
         },
         PatternConfig {
             name: "GENERIC_SECRET",
             pattern: r"(?i)(password|secret|key|token)\s*[:=]\s*[\x27\x22][^\x27\x22]{8,}[\x27\x22]",
             severity: "high",
             recommendation: "Use environment variables or secret manager",
+            ..Default::default()
         },
+        // Note: High entropy detection is disabled by default due to high false positive rate
+        // Enable only with manual review and tuned thresholds
         PatternConfig {
             name: "HIGH_ENTROPY_STRING",
             pattern: r"[a-zA-Z0-9+/=_-]{40,}",
-            severity: "medium",
-            recommendation: "Review - may be false positive",
+            severity: "low",
+            recommendation: "Review - may be false positive (entropy-based detection)",
+            extract_secret: false,  // Disabled by default
+            min_entropy: Some(4.5),  // Higher threshold
         },
     ]
 }
@@ -435,6 +501,7 @@ mod tests {
             pattern: r"AKIA[0-9A-Z]{16}",
             severity: "critical",
             recommendation: "Test",
+            ..Default::default()
         }];
 
         let cache = PatternCache::new(&patterns);
@@ -472,6 +539,7 @@ mod tests {
             pattern: r"[invalid(regex",
             severity: "high",
             recommendation: "Test",
+            ..Default::default()
         };
 
         let result = CompiledPattern::try_from_config(&pattern);

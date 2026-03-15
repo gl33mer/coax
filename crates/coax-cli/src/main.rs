@@ -340,23 +340,46 @@ fn format_text(
             _ => "•",
         };
 
+        // Show file:line:column
+        let column_str = result.column.map(|c| format!(":{}", c)).unwrap_or_default();
         output.push_str(&format!(
-            "{} {}:{}:{} - {} [{}]\n",
+            "{} {}:{}{} - {} [{}]\n",
             icon,
             result.file.display().to_string().cyan(),
             result.line.to_string().yellow(),
-            result.column.map(|c| c.to_string()).unwrap_or_default(),
+            column_str,
             result.pattern.yellow(),
             severity_color(&result.severity.to_uppercase()),
         ));
 
+        // Show detected secret if available
+        if let Some(secret) = &result.detected_secret {
+            output.push_str(&format!(
+                "   {} {}\n",
+                "String:".bold(),
+                secret.red()
+            ));
+        } else if let Some(content) = &result.line_content {
+            output.push_str(&format!(
+                "   {}\n",
+                content.dimmed()
+            ));
+        }
+
+        // Show recommendation
         output.push_str(&format!(
-            "   {}\n",
+            "   {} {}\n",
+            "Recommendation:".bold(),
             result.recommendation.dimmed()
         ));
 
-        if let Some(content) = &result.line_content {
-            output.push_str(&format!("   {}\n", content.dimmed()));
+        // Show context notes if available
+        if let Some(note) = &result.context.note {
+            output.push_str(&format!(
+                "   {} {}\n",
+                "Note:".bold(),
+                note.italic().dimmed()
+            ));
         }
 
         output.push('\n');
