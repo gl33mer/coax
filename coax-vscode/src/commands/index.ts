@@ -118,11 +118,60 @@ export function initializeCommands(context: vscode.ExtensionContext, callbacks: 
         vscode.commands.registerCommand('coax.ignoreFinding', async (uri: vscode.Uri, range: vscode.Range, code: string) => {
             // For now, just clear the diagnostic at this location
             const diagnostics = vscode.languages.getDiagnostics(uri);
-            const filtered = diagnostics.filter(d => 
+            const filtered = diagnostics.filter(d =>
                 !d.range.isEqual(range) || d.code !== code
             );
             vscode.languages.createDiagnosticCollection('coax').set(uri, filtered);
             vscode.window.showInformationMessage('Finding ignored for this session.');
+        })
+    );
+
+    // Add to Allowlist
+    context.subscriptions.push(
+        vscode.commands.registerCommand('coax.addToAllowlist', async (uri: vscode.Uri, diagnostic: vscode.Diagnostic) => {
+            const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+            if (!workspaceFolder) {
+                vscode.window.showErrorMessage('No workspace folder open. Please open a workspace to use allowlist.');
+                return;
+            }
+
+            const allowlistPath = vscode.Uri.joinPath(workspaceFolder.uri, '.coax.yaml');
+            const code = diagnostic.code as string || 'UNKNOWN';
+
+            try {
+                // Try to read existing allowlist
+                let allowlistContent = '';
+                try {
+                    const existingData = await vscode.workspace.fs.readFile(allowlistPath);
+                    allowlistContent = new TextDecoder().decode(existingData);
+                } catch {
+                    // File doesn't exist, create new
+                    allowlistContent = '# Coax Security Scanner Allowlist\n# Patterns here will be ignored\n\nallowlist:\n  patterns: []\n';
+                }
+
+                // Add pattern to allowlist (simple approach - append to patterns list)
+                const pattern = `  - pattern: ".*"  # ${code} at ${diagnostic.range.start.line + 1}:${diagnostic.range.start.character + 1}`;
+                const newContent = allowlistContent.replace(/(allowlist:\n\s*patterns: \[\])/, `$1\n${pattern}`);
+
+                // Write updated allowlist
+                await vscode.workspace.fs.writeFile(allowlistPath, new TextEncoder().encode(newContent));
+
+                // Open the file for user review
+                const doc = await vscode.workspace.openTextDocument(allowlistPath);
+                await vscode.window.showTextDocument(doc);
+
+                vscode.window.showInformationMessage(`Pattern added to .coax.yaml. Edit the pattern as needed and save.`);
+
+                // Clear the diagnostic
+                const diagnostics = vscode.languages.getDiagnostics(uri);
+                const filtered = diagnostics.filter(d =>
+                    !d.range.isEqual(diagnostic.range) || d.code !== diagnostic.code
+                );
+                vscode.languages.createDiagnosticCollection('coax').set(uri, filtered);
+
+            } catch (error) {
+                vscode.window.showErrorMessage(`Failed to update allowlist: ${error}`);
+            }
         })
     );
 

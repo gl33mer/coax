@@ -35,6 +35,10 @@ class CoaxCodeActionProvider implements vscode.CodeActionProvider {
             const removeAction = this.createRemoveAction(document, diagnostic);
             actions.push(removeAction);
 
+            // Add to allowlist action
+            const allowlistAction = this.createAllowlistAction(document, diagnostic, code);
+            actions.push(allowlistAction);
+
             // Type-specific actions
             if (code.includes('AWS')) {
                 const envAction = this.createEnvVarAction(document, diagnostic, 'AWS_ACCESS_KEY_ID');
@@ -133,6 +137,25 @@ class CoaxCodeActionProvider implements vscode.CodeActionProvider {
             command: 'coax.ignoreFinding',
             title: 'Ignore Finding',
             arguments: [document.uri, diagnostic.range, diagnostic.code],
+        };
+
+        return action;
+    }
+
+    private createAllowlistAction(
+        document: vscode.TextDocument,
+        diagnostic: vscode.Diagnostic,
+        code: string
+    ): vscode.CodeAction {
+        const action = new vscode.CodeAction(
+            'Add to allowlist (.coax.yaml)',
+            vscode.CodeActionKind.QuickFix
+        );
+
+        action.command = {
+            command: 'coax.addToAllowlist',
+            title: 'Add to Allowlist',
+            arguments: [document.uri, diagnostic.range, code],
         };
 
         return action;

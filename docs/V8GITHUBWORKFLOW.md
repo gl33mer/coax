@@ -1,0 +1,284 @@
+---
+
+# 📋 Document 2: GitHub Actions Cross-Platform Build Workflow
+
+```yaml
+# .github/workflows/build-vscode-extension.yml
+
+name: Build VS Code Extension
+
+on:
+  push:
+    tags:
+      - 'v0.8.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v0.8.1)'
+        required: true
+        default: 'v0.8.1'
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_VERSION: '1.75'
+
+jobs:
+  # ============================================
+  # Build Coax CLI for all platforms
+  # ============================================
+  build-cli-linux:
+    name: Build CLI (Linux x64)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-action@stable
+        with:
+          rust-version: ${{ env.RUST_VERSION }}
+
+      - name: Build Release Binary
+        run: cargo build --release --target x86_64-unknown-linux-gnu
+
+      - name: Prepare Binary
+        run: |
+          mkdir -p coax-vscode/bundled/linux-x64
+          cp target/x86_64-unknown-linux-gnu/release/coax coax-vscode/bundled/linux-x64/
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coax-linux-x64
+          path: coax-vscode/bundled/linux-x64/coax
+
+  build-cli-macos-x64:
+    name: Build CLI (macOS x64)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-action@stable
+        with:
+          rust-version: ${{ env.RUST_VERSION }}
+
+      - name: Build Release Binary
+        run: cargo build --release --target x86_64-apple-darwin
+
+      - name: Prepare Binary
+        run: |
+          mkdir -p coax-vscode/bundled/darwin-x64
+          cp target/x86_64-apple-darwin/release/coax coax-vscode/bundled/darwin-x64/
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coax-darwin-x64
+          path: coax-vscode/bundled/darwin-x64/coax
+
+  build-cli-macos-arm64:
+    name: Build CLI (macOS ARM64)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-action@stable
+        with:
+          rust-version: ${{ env.RUST_VERSION }}
+          targets: aarch64-apple-darwin
+
+      - name: Build Release Binary
+        run: cargo build --release --target aarch64-apple-darwin
+
+      - name: Prepare Binary
+        run: |
+          mkdir -p coax-vscode/bundled/darwin-arm64
+          cp target/aarch64-apple-darwin/release/coax coax-vscode/bundled/darwin-arm64/
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coax-darwin-arm64
+          path: coax-vscode/bundled/darwin-arm64/coax
+
+  build-cli-windows:
+    name: Build CLI (Windows x64)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-action@stable
+        with:
+          rust-version: ${{ env.RUST_VERSION }}
+          targets: x86_64-pc-windows-msvc
+
+      - name: Build Release Binary
+        run: cargo build --release --target x86_64-pc-windows-msvc
+
+      - name: Prepare Binary
+        run: |
+          mkdir -p coax-vscode/bundled/win32-x64
+          cp target/x86_64-pc-windows-msvc/release/coax.exe coax-vscode/bundled/win32-x64/
+        shell: bash
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coax-win32-x64
+          path: coax-vscode/bundled/win32-x64/coax.exe
+
+  # ============================================
+  # Build VSIX Package (includes all binaries)
+  # ============================================
+  build-extension:
+    name: Build VSIX Package
+    runs-on: ubuntu-latest
+    needs: [build-cli-linux, build-cli-macos-x64, build-cli-macos-arm64, build-cli-windows]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download All Binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: coax-vscode/bundled/
+          merge-multiple: true
+
+      - name: Verify Binaries
+        run: |
+          echo "=== Bundled Binaries ==="
+          ls -la coax-vscode/bundled/
+          find coax-vscode/bundled/ -type f -exec file {} \;
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: |
+          cd coax-vscode
+          npm ci
+
+      - name: Compile TypeScript
+        run: |
+          cd coax-vscode
+          npm run compile
+
+      - name: Package Extension
+        run: |
+          cd coax-vscode
+          npm install -g @vscode/vsce
+          vsce package --out coax-${{ github.ref_name }}.vsix
+
+      - name: Upload VSIX Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coax-extension
+          path: coax-vscode/coax-*.vsix
+
+  # ============================================
+  # Test Extension (Linux only for now)
+  # ============================================
+  test-extension:
+    name: Test Extension (Linux)
+    runs-on: ubuntu-latest
+    needs: build-extension
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download VSIX
+        uses: actions/download-artifact@v4
+        with:
+          name: coax-extension
+
+      - name: Install VS Code CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gpg
+          wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+          sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
+          echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y code
+
+      - name: Install Extension
+        run: code --install-extension coax-*.vsix
+
+      - name: Verify Installation
+        run: code --list-extensions | grep coax
+
+  # ============================================
+  # Create GitHub Release
+  # ============================================
+  publish-release:
+    name: Publish GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build-extension, test-extension]
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download VSIX
+        uses: actions/download-artifact@v4
+        with:
+          name: coax-extension
+
+      - name: Download All Binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: binaries/
+          merge-multiple: true
+
+      - name: List Release Assets
+        run: |
+          echo "=== VSIX Package ==="
+          ls -lh coax-*.vsix
+          echo "=== Binaries ==="
+          ls -lh binaries/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            coax-*.vsix
+            binaries/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================
+  # Notify for Marketplace Submission
+  # ============================================
+  notify-marketplace:
+    name: Notify Marketplace Ready
+    runs-on: ubuntu-latest
+    needs: publish-release
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Marketplace Instructions
+        run: |
+          echo "✅ Build Complete!"
+          echo ""
+          echo "📦 VSIX Package: coax-${{ github.ref_name }}.vsix"
+          echo "🔗 Download: https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}"
+          echo ""
+          echo "📝 Next Steps:"
+          echo "1. Download VSIX from release"
+          echo "2. Test on Windows (manual)"
+          echo "3. Community test on macOS (volunteers)"
+          echo "4. Submit to VS Code Marketplace"
+          echo ""
+          echo "⚠️ Unsigned Binary Warning:"
+          echo "- macOS: Users may see 'Cannot be opened' - right-click → Open"
+          echo "- Windows: Users may see 'Unknown Publisher' - click 'Run anyway'"
+          echo "- Document this in README.md"
+```
+

@@ -180,9 +180,9 @@ export async function scanFile(uri: vscode.Uri): Promise<Finding[]> {
 
     try {
         const args = ['scan', '-p', document.uri.fsPath, '--format', 'json'];
-        
+
         if (unicodeEnabled) {
-            args.push('--unicode-only');
+            args.push('--unicode-scan', 'true');
             args.push('--unicode-sensitivity', unicodeSensitivity);
         }
 
@@ -210,9 +210,9 @@ export async function scanWorkspace(): Promise<Finding[]> {
 
     try {
         const args = ['scan', '-p', vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '.', '--format', 'json'];
-        
+
         if (unicodeEnabled) {
-            args.push('--unicode-only');
+            args.push('--unicode-scan', 'true');
             args.push('--unicode-sensitivity', unicodeSensitivity);
         }
 

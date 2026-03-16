@@ -2,7 +2,7 @@
   "name": "coax",
   "displayName": "Coax Security Scanner",
   "description": "Real-time Unicode confusable and secret detection for VS Code",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "publisher": "gl33mer",
   "engines": {
     "vscode": "^1.85.0"

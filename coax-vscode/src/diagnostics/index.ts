@@ -41,8 +41,8 @@ export function updateDiagnostics(uri: vscode.Uri, findings: Finding[]): void {
         const range = new vscode.Range(
             Math.max(0, finding.line - 1),
             Math.max(0, finding.column - 1),
-            Math.max(0, finding.endLine - 1),
-            Math.max(0, finding.endColumn - 1)
+            Math.max(0, finding.endLine ?? finding.line - 1),
+            Math.max(0, finding.endColumn ?? finding.column - 1)
         );
 
         const diagnostic = new vscode.Diagnostic(
