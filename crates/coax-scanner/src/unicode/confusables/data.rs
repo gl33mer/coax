@@ -83,7 +83,7 @@ lazy_static! {
         // === LATIN 'k' CONFUSABLES ===
         map.insert('k', vec![
             ConfusableEntry { confusable: 'κ', base: 'k', script: "Greek", similarity: 0.95 },     // U+03BA
-            ConfusableEntry { confusable: 'k', base: 'k', script: "IPA", similarity: 0.9 },        // U+0138
+            ConfusableEntry { confusable: '\u{0138}', base: 'k', script: "IPA", similarity: 0.9 },  // U+0138 LATIN SMALL LETTER KRA
         ]);
         
         // === LATIN 'l' CONFUSABLES ===
