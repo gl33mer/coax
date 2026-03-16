@@ -190,3 +190,32 @@ mod tests {
         assert!(!is_high_risk_script('中'));  // Han (not high-risk for homoglyphs)
     }
 }
+
+/// Extract JavaScript/TypeScript/Python identifiers from a line
+pub fn extract_identifiers(line: &str) -> Vec<&str> {
+    lazy_static::lazy_static! {
+        static ref IDENTIFIER_PATTERN: regex::Regex = 
+            regex::Regex::new(r"\b[a-zA-Z_$][a-zA-Z0-9_$\u0080-\uFFFF]*\b").unwrap();
+    }
+    
+    IDENTIFIER_PATTERN
+        .find_iter(line)
+        .map(|m| m.as_str())
+        .collect()
+}
+
+/// Find the identifier containing a specific character position
+pub fn find_identifier_at_position<'a>(line: &'a str, char_pos: usize, identifiers: &[&'a str]) -> Option<&'a str> {
+    let byte_pos = line.char_indices().nth(char_pos)?.0;
+    
+    for id in identifiers {
+        if let Some(start) = line.find(id) {
+            let end = start + id.len();
+            if byte_pos >= start && byte_pos < end {
+                return Some(id);
+            }
+        }
+    }
+    
+    None
+}

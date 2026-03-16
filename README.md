@@ -204,4 +204,4 @@ MIT License - see [LICENSE](LICENSE) for details.
 **Made with ❤️ by the Coax Team**
 
 *Last updated: 2026-03-16*
-*Version: 0.7.0-dev*
+*Version: 0.7.4*
