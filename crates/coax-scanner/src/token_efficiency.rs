@@ -100,7 +100,8 @@ pub fn contains_common_word_patterns(value: &str) -> bool {
         "then", "now", "look", "only", "come", "its", "over", "think",
         "also", "back", "after", "use", "two", "how", "our", "work",
         "first", "well", "way", "even", "new", "want", "because", "any",
-        "these", "give", "day", "most", "only", "example", "test", "sample",
+        "these", "give", "day", "most", "only",
+        // NOTE: Removed "example", "test", "sample" - they appear in legitimate credentials
     ];
 
     // Check if value contains common words as substrings

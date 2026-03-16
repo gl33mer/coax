@@ -506,14 +506,43 @@ pub fn extract_secret(line: &str, pattern_name: &str) -> Option<String> {
 /// Check if a value is a placeholder
 fn is_placeholder_value(value: &str) -> bool {
     let lower = value.to_lowercase();
-    lower.contains("your-") ||
-    lower.contains("your_") ||
-    lower.contains("xxx") ||
-    lower.contains("changeme") ||
-    lower.contains("example") ||
-    lower.contains("placeholder") ||
-    lower.contains("test-") ||
-    lower.contains("test_")
+    
+    // Check for obvious placeholder patterns
+    let obvious_placeholders = [
+        "your-", "your_", "xxx", "changeme", "placeholder",
+        "test-", "test_", "fake", "dummy", "sample",
+    ];
+    
+    for placeholder in &obvious_placeholders {
+        if lower.contains(placeholder) {
+            return true;
+        }
+    }
+    
+    // Special handling for "example" - only flag if it's clearly a placeholder
+    // AWS uses EXAMPLE in documentation keys (AKIAIOSFODNN7EXAMPLE) which are real format
+    // Only flag if "example" appears with other placeholder indicators
+    if lower.contains("example") {
+        // Check if it looks like a real credential pattern (AWS, etc.)
+        // AWS Access Key IDs are 20 chars starting with AKIA, ABIA, ACCA, or ASIA
+        if value.len() == 20 && (value.starts_with("AKIA") || value.starts_with("ABIA") || value.starts_with("ACCA") || value.starts_with("ASIA")) {
+            return false; // Likely AWS key format, not a placeholder
+        }
+        // Check for other example patterns that are legitimate
+        if lower.contains("examplekey") || lower.contains("examplekeyid") {
+            return false; // AWS documentation format
+        }
+        // If "example" appears with other placeholder indicators, flag it
+        if lower.contains("example-") || lower.contains("example_") || lower.contains("-example") || lower.contains("_example") {
+            return true; // Hyphenated/underscored example is likely placeholder
+        }
+        // Standalone "example" in a long string is suspicious
+        if lower == "example" || lower == "example123" || lower == "example1" {
+            return true;
+        }
+    }
+    
+    false
 }
 
 /// Mask a secret for safe display

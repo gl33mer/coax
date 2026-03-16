@@ -686,6 +686,70 @@ fn scan_file_internal(
     scan_content_internal(content, path.to_path_buf(), cache, config, unicode_scanner)
 }
 
+/// Check if a pattern name indicates a known secret type (not generic)
+/// Known patterns have very low false positive rates and should bypass heuristic filters
+fn is_known_secret_pattern(pattern_name: &str) -> bool {
+    // AWS patterns
+    if pattern_name.starts_with("AWS_") {
+        return true;
+    }
+    // GitHub patterns
+    if pattern_name.starts_with("GITHUB_") {
+        return true;
+    }
+    // Stripe patterns
+    if pattern_name.starts_with("STRIPE_") {
+        return true;
+    }
+    // Google patterns
+    if pattern_name.starts_with("GOOGLE_") {
+        return true;
+    }
+    // Slack patterns
+    if pattern_name.starts_with("SLACK_") {
+        return true;
+    }
+    // Twilio patterns
+    if pattern_name.starts_with("TWILIO_") {
+        return true;
+    }
+    // SendGrid patterns
+    if pattern_name.starts_with("SENDGRID_") {
+        return true;
+    }
+    // npm patterns
+    if pattern_name.starts_with("NPM_") {
+        return true;
+    }
+    // Private keys
+    if pattern_name.contains("PRIVATE_KEY") || pattern_name.contains("RSA_") || pattern_name.contains("SSH_") {
+        return true;
+    }
+    // Database connection strings
+    if pattern_name.contains("CONNECTION") || pattern_name.contains("MONGO") || pattern_name.contains("POSTGRES") {
+        return true;
+    }
+    // Payment processors
+    if pattern_name.starts_with("PAYPAL_") || pattern_name.starts_with("SQUARE_") {
+        return true;
+    }
+    // Cloud providers
+    if pattern_name.starts_with("AZURE_") || pattern_name.starts_with("GCP_") {
+        return true;
+    }
+    // Communication APIs
+    if pattern_name.starts_with("MAILGUN_") || pattern_name.starts_with("MAILCHIMP_") {
+        return true;
+    }
+    // AI/ML APIs
+    if pattern_name.starts_with("OPENAI_") || pattern_name.starts_with("ANTHROPIC_") {
+        return true;
+    }
+    
+    // Generic patterns should go through filters
+    false
+}
+
 /// Internal content scanning function with context detection and Betterleaks filters
 fn scan_content_internal(
     content: String,
@@ -732,21 +796,29 @@ fn scan_content_internal(
                     None
                 };
 
-                // FP REDUCTION: Apply entropy pre-filter if secret was extracted
-                if let Some(ref secret_value) = secret {
-                    if crate::token_efficiency::is_likely_false_positive(secret_value) {
-                        tracing::debug!(
-                            "Filtered by entropy pre-filter: {} in {}:{}",
-                            pattern.name,
-                            file.display(),
-                            line_num + 1
-                        );
-                        continue;
+                // FIX: Known secret patterns bypass heuristic filters
+                // If a string matches a KNOWN pattern (AWS, GitHub, Stripe, etc.),
+                // it should NOT be discarded by generic heuristic filters.
+                // Heuristic filters are for GENERIC/UNKNOWN strings only.
+                let is_known_pattern = is_known_secret_pattern(&pattern.name);
+
+                // FP REDUCTION: Apply entropy pre-filter ONLY for unknown patterns
+                if !is_known_pattern {
+                    if let Some(ref secret_value) = secret {
+                        if crate::token_efficiency::is_likely_false_positive(secret_value) {
+                            tracing::debug!(
+                                "Filtered by entropy pre-filter: {} in {}:{}",
+                                pattern.name,
+                                file.display(),
+                                line_num + 1
+                            );
+                            continue;
+                        }
                     }
                 }
 
-                // Apply Betterleaks Token Efficiency Filter
-                if config.enable_token_efficiency {
+                // Apply Betterleaks Token Efficiency Filter ONLY for unknown patterns
+                if !is_known_pattern && config.enable_token_efficiency {
                     if let Some(ref secret_value) = secret {
                         if !config.token_efficiency_config.passes_filter(secret_value) {
                             tracing::debug!(
@@ -760,17 +832,19 @@ fn scan_content_internal(
                     }
                 }
 
-                // Apply Betterleaks Word Filter
-                if let Some(ref _filter) = word_filter {
-                    if let Some(ref secret_value) = secret {
-                        if !config.word_filter_config.passes_filter(secret_value) {
-                            tracing::debug!(
-                                "Filtered by word filter: {} in {}:{}",
-                                pattern.name,
-                                file.display(),
-                                line_num + 1
-                            );
-                            continue;
+                // Apply Betterleaks Word Filter ONLY for unknown patterns
+                if !is_known_pattern {
+                    if let Some(ref _filter) = word_filter {
+                        if let Some(ref secret_value) = secret {
+                            if !config.word_filter_config.passes_filter(secret_value) {
+                                tracing::debug!(
+                                    "Filtered by word filter: {} in {}:{}",
+                                    pattern.name,
+                                    file.display(),
+                                    line_num + 1
+                                );
+                                continue;
+                            }
                         }
                     }
                 }
