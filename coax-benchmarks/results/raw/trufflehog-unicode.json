@@ -1,0 +1,2 @@
+{"level":"info-0","ts":"2026-03-16T21:13:35Z","logger":"trufflehog","msg":"running source","source_manager_worker_id":"PTp4D","with_units":true}
+{"level":"info-0","ts":"2026-03-16T21:13:35Z","logger":"trufflehog","msg":"finished scanning","chunks":20,"bytes":19489,"verified_secrets":0,"unverified_secrets":0,"scan_duration":"9.650943ms","trufflehog_version":"3.93.8","verification_caching":{"Hits":0,"Misses":0,"HitsWasted":0,"AttemptsSaved":0,"VerificationTimeSpentMS":0}}

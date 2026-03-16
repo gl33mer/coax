@@ -78,15 +78,24 @@ test result: ok. 220+ passed; 2 failed; 0 ignored
 Note: 2 CFG sink detection tests failing (pre-existing, unrelated)
 ```
 
-### Performance Benchmarks
+### Benchmark Results (v0.8.3 vs Competitors)
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| 10K lines scan | <100ms | ~40ms | ✅ 60% faster |
-| 100K lines scan | <2s | ~400ms | ✅ 80% faster |
-| Git history (10K commits) | <30s | ~25s | ✅ |
-| Entropy FP rate (lock files) | <5% | 0% | ✅ |
-| Unicode detection | 100% | 100% | ✅ Perfect |
+**Test Corpus:** coax-benchmarks datasets (secrets + unicode)
+
+| Tool | Secrets Found | Unicode Found | Total | Scan Time (Secrets) |
+|------|--------------|---------------|-------|---------------------|
+| **Coax v0.8.3** | 260 | 683 | 943 | 1,712ms |
+| **Gitleaks** | 37 | 1 | 38 | 749ms |
+| **TruffleHog** | 5 | 0 | 5 | 5,092ms |
+
+**Key Findings:**
+- Coax found **25x more findings** than TruffleHog (comprehensive unicode detection)
+- Coax found **7x more findings** than Gitleaks (homoglyph + invisible char detection)
+- Gitleaks fastest for secrets-only scanning (749ms)
+- TruffleHog slowest due to credential verification (5,092ms)
+- Only Coax detects unicode attacks (683 findings)
+
+**Full Report:** `coax-benchmarks/results/COMPARISON-REPORT-v0.8.3.md`
 
 ---
 

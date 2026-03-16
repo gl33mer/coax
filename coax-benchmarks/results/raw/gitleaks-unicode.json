@@ -1,0 +1,22 @@
+[
+ {
+  "RuleID": "generic-api-key",
+  "Description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+  "StartLine": 26,
+  "EndLine": 26,
+  "StartColumn": 8,
+  "EndColumn": 33,
+  "Match": "api_key = \"sk_live_abc123\"",
+  "Secret": "sk_live_abc123",
+  "File": "/tmp/coax-benchmarking/datasets/unicode/invisible-chars/invisible_chars.txt",
+  "SymlinkFile": "",
+  "Commit": "",
+  "Entropy": 3.6644979,
+  "Author": "",
+  "Email": "",
+  "Date": "",
+  "Message": "",
+  "Tags": [],
+  "Fingerprint": "/tmp/coax-benchmarking/datasets/unicode/invisible-chars/invisible_chars.txt:generic-api-key:26"
+ }
+]
