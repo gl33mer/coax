@@ -1,9 +1,9 @@
-/home/shva/QwenDev/coax/target/debug/deps/zmij-c3888d3cb1e0eabd.d: /home/shva/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/lib.rs /home/shva/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/stdarch_x86.rs /home/shva/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/traits.rs
+/home/property.sightlines/CoaxDev/coax/target/debug/deps/zmij-c3888d3cb1e0eabd.d: /home/property.sightlines/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/lib.rs /home/property.sightlines/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/stdarch_x86.rs /home/property.sightlines/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/traits.rs
 
-/home/shva/QwenDev/coax/target/debug/deps/libzmij-c3888d3cb1e0eabd.rlib: /home/shva/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/lib.rs /home/shva/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/stdarch_x86.rs /home/shva/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/traits.rs
+/home/property.sightlines/CoaxDev/coax/target/debug/deps/libzmij-c3888d3cb1e0eabd.rlib: /home/property.sightlines/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/lib.rs /home/property.sightlines/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/stdarch_x86.rs /home/property.sightlines/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/traits.rs
 
-/home/shva/QwenDev/coax/target/debug/deps/libzmij-c3888d3cb1e0eabd.rmeta: /home/shva/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/lib.rs /home/shva/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/stdarch_x86.rs /home/shva/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/traits.rs
+/home/property.sightlines/CoaxDev/coax/target/debug/deps/libzmij-c3888d3cb1e0eabd.rmeta: /home/property.sightlines/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/lib.rs /home/property.sightlines/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/stdarch_x86.rs /home/property.sightlines/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/traits.rs
 
-/home/shva/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/lib.rs:
-/home/shva/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/stdarch_x86.rs:
-/home/shva/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/traits.rs:
+/home/property.sightlines/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/lib.rs:
+/home/property.sightlines/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/stdarch_x86.rs:
+/home/property.sightlines/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/zmij-1.0.21/src/traits.rs:

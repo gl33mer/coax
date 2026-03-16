@@ -7,6 +7,7 @@
 //! - Context detection for false positive reduction
 //! - Token efficiency filtering (Betterleaks algorithm)
 //! - Word filter using Aho-Corasick (Betterleaks algorithm)
+//! - Source Provider abstraction for scanning multiple content sources
 
 use crate::pattern_cache::{PatternCache, PatternConfig};
 use crate::result::{ScanResult, ScanSummary, SeverityCounts, FindingContext};
@@ -15,6 +16,10 @@ use crate::context::ContextAnalyzer;
 use crate::token_efficiency::TokenEfficiencyConfig;
 use crate::word_filter::{WordFilter, WordFilterConfig};
 use crate::unicode::{UnicodeConfig, UnicodeScanner};
+use crate::source_provider::{
+    SourceProvider, ContentLoader, ScanTarget, ContentType,
+    SourceProviderError, FileSystemProvider,
+};
 use rayon::prelude::*;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -337,31 +342,6 @@ impl Scanner {
         self.pattern_cache.len()
     }
 
-    /// Scan a directory for secrets
-    ///
-    /// Uses parallel file scanning for optimal performance.
-    pub fn scan_directory(&self, path: &Path) -> Vec<ScanResult> {
-        let start = Instant::now();
-
-        // Collect all files to scan
-        let files = self.collect_files(path);
-
-        // Scan files in parallel
-        let results = self.scan_files_parallel(&files);
-
-        let duration = start.elapsed();
-
-        // Log performance metrics in debug mode
-        tracing::debug!(
-            "Scanned {} files in {:?} ({} patterns)",
-            files.len(),
-            duration,
-            self.pattern_count()
-        );
-
-        results
-    }
-
     /// Scan a single file
     pub fn scan_file(&self, path: &Path) -> Vec<ScanResult> {
         scan_file_internal(path, &self.pattern_cache, &self.config, self.unicode_scanner.as_ref())
@@ -455,21 +435,14 @@ impl Scanner {
 
     /// Get scan summary with performance metrics
     pub fn scan_with_summary(&self, path: &Path) -> (Vec<ScanResult>, ScanSummary) {
-        let start = Instant::now();
-        let files = self.collect_files(path);
-        let files_count = files.len();
-        let results = self.scan_files_parallel(&files);
-        let duration = start.elapsed();
+        // Use the SourceProvider abstraction internally
+        let provider = FileSystemProvider::new(path.to_path_buf())
+            .with_max_file_size(self.config.max_file_size)
+            .with_skip_binary(true)
+            .with_exclude_patterns(self.config.exclude_patterns.clone())
+            .with_scan_hidden(self.config.scan_hidden);
 
-        let summary = ScanSummary {
-            files_scanned: files_count as u32,
-            total_findings: results.len() as u32,
-            by_severity: SeverityCounts::from_results(&results),
-            top_patterns: get_top_patterns(&results, 10),
-            scan_duration_ms: duration.as_millis() as u64,
-        };
-
-        (results, summary)
+        self.scan_source_provider_with_summary(&provider)
     }
 }
 
@@ -480,15 +453,15 @@ impl Scanner {
         let files = self.collect_files(path);
         let files_count = files.len();
         let all_results = self.scan_files_parallel(&files);
-        
+
         // Filter to only Unicode findings
         let unicode_results: Vec<ScanResult> = all_results
             .into_iter()
             .filter(|r| r.pattern.starts_with("UNICODE-"))
             .collect();
-        
+
         let duration = start.elapsed();
-        
+
         let summary = ScanSummary {
             files_scanned: files_count as u32,
             total_findings: unicode_results.len() as u32,
@@ -496,8 +469,178 @@ impl Scanner {
             top_patterns: get_top_patterns(&unicode_results, 10),
             scan_duration_ms: duration.as_millis() as u64,
         };
-        
+
         (unicode_results, summary)
+    }
+
+    /// Scan using a SourceProvider abstraction
+    ///
+    /// This method allows scanning from various sources (filesystem, git history, etc.)
+    /// by accepting any type that implements the `SourceProvider` and `ContentLoader` traits.
+    ///
+    /// # Arguments
+    ///
+    /// * `provider` - An Arc-wrapped SourceProvider that also implements ContentLoader
+    ///
+    /// # Returns
+    ///
+    /// A vector of scan results
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use coax_scanner::{Scanner, FileSystemProvider};
+    /// use std::sync::Arc;
+    /// use std::path::PathBuf;
+    ///
+    /// let scanner = Scanner::new();
+    /// let provider = Arc::new(FileSystemProvider::new(PathBuf::from("./src")));
+    /// let results = scanner.scan_source_provider(&provider);
+    /// ```
+    pub fn scan_source_provider<P>(&self, provider: &P) -> Vec<ScanResult>
+    where
+        P: SourceProvider + ContentLoader,
+    {
+        let start = Instant::now();
+
+        // Collect all targets from the provider
+        let targets: Vec<ScanTarget> = provider.enumerate().collect();
+        let targets_count = targets.len();
+
+        // Scan targets in parallel
+        let results = self.scan_targets_parallel(provider, &targets);
+
+        let duration = start.elapsed();
+
+        // Log performance metrics in debug mode
+        tracing::debug!(
+            "Scanned {} targets in {:?} ({} patterns)",
+            targets_count,
+            duration,
+            self.pattern_count()
+        );
+
+        results
+    }
+
+    /// Scan using a SourceProvider with summary
+    ///
+    /// Similar to `scan_source_provider` but also returns a summary with metrics.
+    pub fn scan_source_provider_with_summary<P>(&self, provider: &P) -> (Vec<ScanResult>, ScanSummary)
+    where
+        P: SourceProvider + ContentLoader,
+    {
+        let start = Instant::now();
+
+        let targets: Vec<ScanTarget> = provider.enumerate().collect();
+        let targets_count = targets.len();
+        let results = self.scan_targets_parallel(provider, &targets);
+        let duration = start.elapsed();
+
+        let summary = ScanSummary {
+            files_scanned: targets_count as u32,
+            total_findings: results.len() as u32,
+            by_severity: SeverityCounts::from_results(&results),
+            top_patterns: get_top_patterns(&results, 10),
+            scan_duration_ms: duration.as_millis() as u64,
+        };
+
+        (results, summary)
+    }
+
+    /// Scan multiple targets in parallel
+    fn scan_targets_parallel<P>(&self, provider: &P, targets: &[ScanTarget]) -> Vec<ScanResult>
+    where
+        P: SourceProvider + ContentLoader,
+    {
+        let cache = Arc::clone(&self.pattern_cache);
+        let config = self.config.clone();
+        let unicode_scanner = self.unicode_scanner.as_ref().map(|s| s as &UnicodeScanner);
+
+        targets
+            .par_iter()
+            .flat_map(move |target| {
+                // Skip binary content if configured
+                if provider.skip_binary() {
+                    if let Some(ContentType::Binary) = target.content_type {
+                        tracing::debug!(
+                            "Skipping binary target: {}",
+                            target.display_path()
+                        );
+                        return Vec::new();
+                    }
+                }
+
+                // Skip oversized content
+                if let Some(size) = target.size_hint {
+                    if size > provider.max_content_size() {
+                        tracing::debug!(
+                            "Skipping oversized target ({} bytes): {}",
+                            size,
+                            target.display_path()
+                        );
+                        return Vec::new();
+                    }
+                }
+
+                // Load content
+                match provider.load(target) {
+                    Ok(content) => {
+                        // Convert to string for scanning
+                        match content.into_string() {
+                            Ok(content_str) => scan_content_internal(
+                                content_str,
+                                PathBuf::from(target.display_path()),
+                                &cache,
+                                &config,
+                                unicode_scanner,
+                            ),
+                            Err(e) => {
+                                tracing::debug!(
+                                    "Failed to decode content as UTF-8 for {}: {}",
+                                    target.display_path(),
+                                    e
+                                );
+                                Vec::new()
+                            }
+                        }
+                    }
+                    Err(e) => {
+                        match e {
+                            SourceProviderError::BinaryContent(_) => {
+                                // Expected, already logged above
+                            }
+                            SourceProviderError::TooLarge { .. } => {
+                                // Expected, already logged above
+                            }
+                            _ => {
+                                tracing::debug!(
+                                    "Failed to load target {}: {}",
+                                    target.display_path(),
+                                    e
+                                );
+                            }
+                        }
+                        Vec::new()
+                    }
+                }
+            })
+            .collect()
+    }
+
+    /// Scan a directory using the SourceProvider abstraction (convenience method)
+    ///
+    /// This is a convenience wrapper that creates a FileSystemProvider internally.
+    /// For more control, use `scan_source_provider` directly.
+    pub fn scan_directory(&self, path: &Path) -> Vec<ScanResult> {
+        // Use the SourceProvider abstraction internally
+        let provider = FileSystemProvider::new(path.to_path_buf())
+            .with_max_file_size(self.config.max_file_size)
+            .with_skip_binary(true)
+            .with_exclude_patterns(self.config.exclude_patterns.clone())
+            .with_scan_hidden(self.config.scan_hidden);
+
+        self.scan_source_provider(&provider)
     }
 }
 

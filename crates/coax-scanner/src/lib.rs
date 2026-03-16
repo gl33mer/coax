@@ -54,6 +54,7 @@ pub mod baseline;
 pub mod encoded_detection;
 pub mod cfg;
 pub mod unicode;
+pub mod source_provider;
 
 pub use pattern_cache::{PatternCache, CompiledPattern, PatternConfig};
 pub use scanner::{Scanner, ScannerConfig};
@@ -66,6 +67,10 @@ pub use word_filter::{WordFilter, WordFilterConfig, WordFilterResult};
 pub use entropy_filter::{EntropyFilter, EntropyFilterConfig, EntropyFilterResult};
 pub use cfg::{CFGBuilder, BackwardSlicer, ForwardSlicer, SliceIntersection, CFG, VulnerabilitySlice, CfgFinding, EntryPoint, SinkPoint};
 pub use unicode::{UnicodeScanner, UnicodeConfig, UnicodeFinding, UnicodeCategory, Severity as UnicodeSeverity};
+pub use source_provider::{
+    SourceProvider, ContentLoader, ScanTarget, ScanOrigin, ScanContent, ContentType,
+    FileSystemProvider, GitHistoryProvider, SourceProviderError, SourceProviderResult,
+};
 
 /// Crate version
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

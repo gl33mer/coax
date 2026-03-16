@@ -79,6 +79,22 @@ enum Commands {
         /// Only scan for Unicode attacks (skip secret detection)
         #[arg(long)]
         unicode_only: bool,
+
+        /// Scan git history for secrets (all commits)
+        #[arg(long)]
+        git_history: bool,
+
+        /// Limit git history scan to last N commits
+        #[arg(long, requires = "git_history")]
+        commits: Option<usize>,
+
+        /// Scan git history since date (YYYY-MM-DD)
+        #[arg(long, requires = "git_history")]
+        since: Option<String>,
+
+        /// Scan git commit range (e.g., main..feature)
+        #[arg(long, requires = "git_history")]
+        range: Option<String>,
     },
 
     /// Generate threat model
@@ -169,6 +185,10 @@ fn main() -> Result<()> {
             unicode_scan,
             unicode_sensitivity,
             unicode_only,
+            git_history,
+            commits,
+            since,
+            range,
         } => run_scan(
             path,
             format.into(),
@@ -181,6 +201,10 @@ fn main() -> Result<()> {
             unicode_scan,
             unicode_sensitivity,
             unicode_only,
+            git_history,
+            commits,
+            since,
+            range,
         ),
         Commands::ThreatModel {
             path,
@@ -227,6 +251,10 @@ fn run_scan(
     unicode_scan: bool,
     unicode_sensitivity: String,
     unicode_only: bool,
+    git_history: bool,
+    commits: Option<usize>,
+    since: Option<String>,
+    range: Option<String>,
 ) -> Result<()> {
     // Validate path
     if !path.exists() {
@@ -270,12 +298,21 @@ fn run_scan(
             "   {} patterns loaded",
             scanner.pattern_count().to_string().yellow()
         );
+        if git_history {
+            eprintln!("   Mode: {}", "Git History".cyan());
+            if let Some(n) = commits {
+                eprintln!("   Commit limit: {}", n);
+            }
+        }
         eprintln!();
     }
 
     // Run scan
     let start = Instant::now();
-    let (results, summary) = if unicode_only {
+    let (results, summary) = if git_history {
+        // Git history mode
+        run_git_history_scan(&scanner, &path, commits, since, range, unicode_scan, &unicode_sensitivity)?
+    } else if unicode_only {
         // Unicode-only mode - skip secret scanning
         scanner.scan_unicode_only(&path)
     } else {
@@ -344,6 +381,58 @@ fn run_scan(
     }
 
     Ok(())
+}
+
+/// Run git history scan
+fn run_git_history_scan(
+    scanner: &Scanner,
+    path: &PathBuf,
+    commits: Option<usize>,
+    since: Option<String>,
+    range: Option<String>,
+    _unicode_scan: bool,
+    _unicode_sensitivity: &str,
+) -> Result<(Vec<ScanResult>, coax_scanner::ScanSummary)> {
+    use coax_scanner::source_provider::{GitHistoryProvider, SourceProvider};
+    use chrono::{NaiveDate, TimeZone};
+
+    // Create git history provider
+    let mut provider = GitHistoryProvider::new(path)
+        .map_err(|e| anyhow::anyhow!("Failed to open git repository: {}", e))?;
+
+    // Check for shallow clone
+    if provider.is_shallow() && !cli_quiet() {
+        eprintln!(
+            "{} {}",
+            "⚠️".bold().yellow(),
+            "Warning: Shallow clone detected. Git history is incomplete.".bold()
+        );
+        eprintln!("   Run: git fetch --unshallow");
+        eprintln!();
+    }
+
+    // Apply options
+    if let Some(limit) = commits {
+        provider = provider.with_commit_limit(limit);
+    }
+
+    if let Some(since_str) = since {
+        if let Ok(date) = NaiveDate::parse_from_str(&since_str, "%Y-%m-%d") {
+            let dt = chrono::Utc.from_utc_datetime(&date.and_hms_opt(0, 0, 0).unwrap());
+            provider = provider.with_since(dt);
+        } else {
+            anyhow::bail!("Invalid date format. Use YYYY-MM-DD");
+        }
+    }
+
+    if let Some(commit_range) = range {
+        provider = provider.with_range(commit_range);
+    }
+
+    // Scan git history
+    let (results, summary) = scanner.scan_source_provider_with_summary(&provider);
+
+    Ok((results, summary))
 }
 
 /// Format results based on output format

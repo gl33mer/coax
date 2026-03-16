@@ -53,6 +53,9 @@ tiktoken-rs = "0.9.1"
 # Word filter (Aho-Corasick algorithm from Betterleaks)
 aho-corasick = "1.1.4"
 
+# Git support (for GitHistoryProvider)
+git2 = "0.18"
+
 [dev-dependencies]
 # Benchmarking
 criterion = "0.5"
