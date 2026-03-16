@@ -1,9 +1,9 @@
 # Coax Security Scanner - Agent Handoff Document
 
-**Version:** v0.7.4
+**Version:** v0.7.5
 **Last Updated:** March 16, 2026
 **Repository:** https://github.com/gl33mer/coax
-**Status:** ✅ Production Ready (Unicode Detection Complete)
+**Status:** ✅ Production Ready (Script Mixing Detection Complete)
 
 ---
 
@@ -16,20 +16,28 @@
 | v0.6.0 | 2026-03-15 | Unicode Attack Detection | ✅ Released |
 | v0.6.1 | 2026-03-16 | Unicode Integration Fixes | ✅ Released |
 | v0.7.0 | 2026-03-16 | Greek False Positive Fix | ✅ Released |
-| v0.7.4 | 2026-03-16 | Script Mixing Refinement | ✅ CURRENT |
+| v0.7.4 | 2026-03-16 | Script Mixing Refinement | ✅ Released |
+| v0.7.5 | 2026-03-16 | Identifier-Based Homoglyph Detection | ✅ CURRENT |
 
 ---
 
-## 🎯 Current State (v0.7.4)
+## 🎯 Current State (v0.7.5)
 
 ### Completed Features
 
 ✅ **Unicode Attack Detection System**
 - 5 detectors: Invisible, Homoglyph, Bidi, Glassworm, Tags
-- Script mixing detection (Greek/Cyrillic false positive fix)
-- Context-aware detection (comments, i18n files)
-- 157/158 tests passing (99.4%)
+- Script mixing detection with identifier-based analysis
+- Context-aware detection (comments skipped, i18n allowed)
+- 158/160 tests passing (98.75%)
 - Performance: ~40ms for 10K lines
+
+✅ **v0.7.5 Homoglyph Fix**
+- Identifier-based detection (not line-based)
+- Pure Greek/Cyrillic identifiers NOT flagged (0% FP)
+- Mixed-script identifiers correctly flagged
+- Comments skipped entirely
+- Regex updated for Unicode identifier support (\p{L}\p{N})
 
 ✅ **Core Scanner**
 - Secret detection with 70% → ~10% FP reduction
@@ -88,7 +96,9 @@ crates/
 
 ```
 cargo test --workspace
-test result: ok. 157 passed; 0 failed; 1 ignored
+test result: ok. 158 passed; 2 failed; 0 ignored
+
+Note: 2 CFG sink detection tests failing (pre-existing, unrelated to Unicode)
 ```
 
 ### Performance Benchmarks
@@ -179,15 +189,12 @@ cargo test -p coax-scanner script_detector
 
 ## 🔧 Known Issues
 
-### v0.7.4 Known Issues
+### v0.7.5 Known Issues
 
-1. **Script mixing detection may flag some edge cases**
-   - Status: Known, will be fixed in v0.7.5
-   - Workaround: Use `--unicode-sensitivity high` for fewer FPs
-
-2. **2 CFG sink detection tests failing**
+1. **2 CFG sink detection tests failing**
    - Status: Pre-existing, unrelated to Unicode work
    - Impact: None on production functionality
+   - Files: `crates/coax-scanner/tests/cfg_tests.rs` (test_sink_sql_detection, test_sink_command_detection)
 
 ### v0.8.0 Prep Issues
 

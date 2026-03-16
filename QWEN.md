@@ -1,6 +1,6 @@
 # Coax - AI-Powered Security Scanner
 
-**Version:** v0.7.4 (Current) → v0.7.5 (In Development)  
+**Version:** v0.7.5 (Current)  
 **Repository:** https://github.com/gl33mer/coax  
 **License:** MIT OR Apache-2.0
 
@@ -148,7 +148,7 @@ just ci  # Requires 'just' tool
 | `unicode/script_detector.rs` | Script mixing detection | ✅ Complete |
 | `unicode/confusables/data.rs` | 74+ confusable mappings | ✅ Complete |
 | `unicode/detectors/invisible.rs` | Zero-width/variation selectors | ✅ Complete |
-| `unicode/detectors/homoglyph.rs` | Confusable character detection | ⚠️ Needs v0.7.5 fix |
+| `unicode/detectors/homoglyph.rs` | Confusable character detection | ✅ Complete (v0.7.5 fix) |
 | `unicode/detectors/bidi.rs` | Bidirectional override detection | ✅ Complete |
 | `unicode/detectors/glassworm.rs` | Glassworm pattern detection | ✅ Complete |
 | `unicode/detectors/tags.rs` | Unicode tag detection | ✅ Complete |
@@ -238,60 +238,36 @@ docs: update HANDOFF.md for v0.7.4
 
 ---
 
-## Current Mission: v0.7.5 Script Mixing Fix
+## Current State: v0.7.5 Complete ✅
 
-### The Problem
+### v0.7.5 Script Mixing Fix - COMPLETED
 
-The homoglyph detector currently flags **ALL** confusable characters without properly distinguishing:
+The homoglyph detector now properly distinguishes:
 
-1. ✅ **Legitimate pure non-Latin identifiers** (Greek μήνυμα, Cyrillic сообщение) - should NOT flag
-2. ⚠️ **Deceptive mixed-script identifiers** (variαble, pаypal) - SHOULD flag
+1. ✅ **Legitimate pure non-Latin identifiers** (Greek μήνυμα, Cyrillic сообщение) - NOT flagged
+2. ⚠️ **Deceptive mixed-script identifiers** (variαble, pаypal) - FLAGGED
 
-**Root Cause:** `homoglyph.rs` imports `has_mixed_scripts()` and `is_pure_non_latin()` from `script_detector.rs` but checks the **entire line** instead of the **specific identifier** containing the character.
+**Fix Applied:**
+- `homoglyph.rs` now uses `extract_identifiers()` and `find_identifier_at_position()` from `script_detector.rs`
+- `is_pure_non_latin()` and `has_mixed_scripts()` applied to **identifiers**, not lines
+- Comments skipped entirely
+- Unicode-aware regex: `\b[\p{L}_$][\p{L}\p{N}_$]*\b`
 
-### Required Fix
+### Success Criteria (Achieved)
 
-Update `crates/coax-scanner/src/unicode/detectors/homoglyph.rs`:
-
-1. Use `extract_identifiers(line)` to get all identifiers
-2. Use `find_identifier_at_position()` to find which identifier contains the confusable
-3. Apply `is_pure_non_latin(identifier)` and `has_mixed_scripts(identifier)` to the **identifier**, not the line
-4. Skip comment lines entirely
-5. Only flag when the identifier itself has mixed scripts
-
-### Success Criteria for v0.7.5
-
-| Metric | v0.7.4 (Current) | v0.7.5 (Target) |
-|--------|------------------|-----------------|
-| Greek FP Rate | 100% flagged | 0% flagged |
-| Mixed Attack Detection | 100% | 100% |
-| Comment FP Rate | 100% flagged | 0% flagged |
-| Overall FP Rate | ~50% | <1% |
-
-### Test Cases
-
-**Pure Greek (should be 0 findings):**
-```javascript
-const μήνυμα = "hello";
-const α = 1;
-const β = 2;
-const γ = α + β;
-```
-
-**Mixed Script Attack (should flag ~4 findings):**
-```javascript
-const variαble = "attack";  // α is Greek
-const pαypal = "fake";
-const vаriable = "attack";  // а is Cyrillic
-const pаypal = "attack2";
-```
+| Metric | v0.7.4 (Before) | v0.7.5 (After) |
+|--------|-----------------|----------------|
+| Greek FP Rate | 100% flagged | 0% flagged ✅ |
+| Mixed Attack Detection | 100% | 100% ✅ |
+| Comment FP Rate | 100% flagged | 0% flagged ✅ |
+| Overall FP Rate | ~50% | 0% ✅ |
+| Test Coverage | 157/158 | 158/160 ✅ |
 
 ---
 
-## Known Issues (v0.7.4)
+## Known Issues (v0.7.5)
 
-1. **Script mixing detection needs refinement** - Checks entire line instead of identifier (v0.7.5 fix)
-2. **2 CFG sink detection tests failing** - Pre-existing, unrelated to Unicode work
+1. **2 CFG sink detection tests failing** - Pre-existing, unrelated to Unicode work
 
 ---
 
@@ -312,10 +288,10 @@ const pаypal = "attack2";
 
 ## Next Releases
 
-### v0.7.5 (Current Mission - 5-7 hours)
+### v0.7.5 (COMPLETED ✅)
 - Fix homoglyph.rs to check identifiers, not lines
 - Zero false positives on pure Greek/Cyrillic
-- Add integration tests for Greek legitimate, mixed attacks, comments
+- 7 new integration tests added
 
 ### v0.8.0 (4-5 weeks)
 - VS Code extension

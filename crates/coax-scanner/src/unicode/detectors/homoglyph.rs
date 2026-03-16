@@ -10,7 +10,9 @@ use crate::unicode::findings::{UnicodeFinding, UnicodeCategory, Severity};
 use crate::unicode::confusables::data::{
     get_base_char, is_confusable, get_confusable_script, get_similarity,
 };
-use crate::unicode::script_detector::{has_mixed_scripts, is_pure_non_latin};
+use crate::unicode::script_detector::{
+    has_mixed_scripts, is_pure_non_latin, extract_identifiers, find_identifier_at_position,
+};
 use std::collections::HashMap;
 
 /// A confusable match result
@@ -54,36 +56,61 @@ impl HomoglyphDetector {
         let mut findings = Vec::new();
 
         for (line_num, line) in content.lines().enumerate() {
+            // Skip comment lines entirely
+            let trimmed = line.trim();
+            if trimmed.starts_with("//") ||
+               trimmed.starts_with("#") ||
+               trimmed.starts_with("/*") ||
+               trimmed.starts_with("*") ||
+               trimmed.starts_with("<!--") {
+                continue;
+            }
+
+            // Extract identifiers from the line for context-aware detection
+            let identifiers = extract_identifiers(line);
+
             for (col_num, ch) in line.chars().enumerate() {
                 if let Some(match_result) = self.is_confusable(ch) {
                     if match_result.confidence < self.min_confidence {
                         continue;
                     }
-                    
-                    // Check for legitimate non-Latin identifiers (skip pure Greek/Cyrillic)
-                    if !has_mixed_scripts(&line.chars().collect::<String>()) && is_pure_non_latin(&line.chars().collect::<String>()) {
-                        continue;
+
+                    // Find which identifier contains this character
+                    let identifier = find_identifier_at_position(line, col_num, &identifiers);
+
+                    if let Some(id) = identifier {
+                        // SKIP pure non-Latin (legitimate i18n like Greek μήνυμα, Cyrillic сообщение)
+                        if is_pure_non_latin(id) {
+                            continue;
+                        }
+
+                        // Only flag if identifier has mixed scripts (deceptive attack)
+                        if !has_mixed_scripts(id) {
+                            continue;
+                        }
+
+                        // FLAG: Mixed script identifier (the actual attack)
+                        let code_point = ch as u32;
+                        let severity = self.determine_severity(&match_result);
+
+                        let finding = UnicodeFinding::new(
+                            file_path,
+                            line_num + 1,
+                            col_num + 1,
+                            code_point,
+                            ch,
+                            UnicodeCategory::Homoglyph,
+                            severity,
+                            &self.get_description_for_identifier(&match_result, id),
+                            &self.get_remediation_for_identifier(&match_result, id),
+                        )
+                        .with_cwe_id("CWE-172")
+                        .with_reference("https://docs.github.com/en/security")
+                        .with_context(id);
+
+                        findings.push(finding);
                     }
-
-                    let code_point = ch as u32;
-                    let severity = self.determine_severity(&match_result);
-
-                    let finding = UnicodeFinding::new(
-                        file_path,
-                        line_num + 1,
-                        col_num + 1,
-                        code_point,
-                        ch,
-                        UnicodeCategory::Homoglyph,
-                        severity,
-                        &self.get_description(&match_result),
-                        &self.get_remediation(&match_result),
-                    )
-                    .with_cwe_id("CWE-172")
-                    .with_reference("https://docs.github.com/en/security")
-                    .with_context(&self.get_context(line, col_num));
-
-                    findings.push(finding);
+                    // If not in an identifier (e.g., in a string literal or comment), don't flag
                 }
             }
         }
@@ -149,6 +176,18 @@ impl HomoglyphDetector {
         )
     }
 
+    /// Get description for identifier-based detection
+    fn get_description_for_identifier(&self, match_result: &ConfusableMatch, identifier: &str) -> String {
+        format!(
+            "Mixed script identifier: '{}' contains '{}' (U+{:04X}) from {} script confusable with '{}'",
+            identifier,
+            match_result.suspicious_char,
+            match_result.suspicious_char as u32,
+            match_result.script_source,
+            match_result.base_char
+        )
+    }
+
     /// Get remediation guidance
     fn get_remediation(&self, match_result: &ConfusableMatch) -> String {
         format!(
@@ -159,6 +198,18 @@ impl HomoglyphDetector {
             match_result.script_source,
             match_result.suspicious_char,
             match_result.base_char
+        )
+    }
+
+    /// Get remediation for identifier-based detection
+    fn get_remediation_for_identifier(&self, match_result: &ConfusableMatch, identifier: &str) -> String {
+        format!(
+            "Use pure Latin or pure non-Latin identifiers, not mixed scripts. \
+             Replace '{}' with a consistent script. The character '{}' ({} script) \
+             appears to be intentionally mixed with Latin characters to create a deceptive identifier.",
+            identifier,
+            match_result.suspicious_char,
+            match_result.script_source
         )
     }
 

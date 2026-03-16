@@ -194,10 +194,10 @@ mod tests {
 /// Extract JavaScript/TypeScript/Python identifiers from a line
 pub fn extract_identifiers(line: &str) -> Vec<&str> {
     lazy_static::lazy_static! {
-        static ref IDENTIFIER_PATTERN: regex::Regex = 
-            regex::Regex::new(r"\b[a-zA-Z_$][a-zA-Z0-9_$\u0080-\uFFFF]*\b").unwrap();
+        static ref IDENTIFIER_PATTERN: regex::Regex =
+            regex::Regex::new(r"\b[\p{L}_$][\p{L}\p{N}_$]*\b").unwrap();
     }
-    
+
     IDENTIFIER_PATTERN
         .find_iter(line)
         .map(|m| m.as_str())
