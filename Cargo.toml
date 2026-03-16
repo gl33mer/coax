@@ -9,10 +9,10 @@ members = [
 
 [workspace.package]
 name = "coax"
-version = "0.7.4"
+version = "0.8.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/gl33mer/coax"
+repository = "https://github.com/PropertySightlines/coax"
 readme = "README.md"
 keywords = ["security", "scanner", "secrets", "vulnerability", "cli"]
 categories = ["development-tools", "command-line-utilities"]

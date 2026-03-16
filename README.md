@@ -2,10 +2,11 @@
 
 **Detect secrets, Unicode attacks, and vulnerabilities in your codebase.**
 
-[![Version](https://img.shields.io/badge/version-0.7.0--dev-blue)](https://github.com/gl33mer/coax)
+[![Version](https://img.shields.io/badge/version-0.8.0-blue)](https://github.com/PropertySightlines/coax)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-157%20passing-brightgreen)](https://github.com/gl33mer/coax/actions)
-[![Unicode Detection](https://img.shields.io/badge/unicode-100%25%20detection-purple)](https://github.com/gl33mer/coax)
+[![Tests](https://img.shields.io/badge/tests-158%20passing-brightgreen)](https://github.com/PropertySightlines/coax/actions)
+[![Unicode Detection](https://img.shields.io/badge/unicode-100%25%20detection-purple)](https://github.com/PropertySightlines/coax)
+[![VS Code Extension](https://img.shields.io/badge/vscode-0.8.0-blueviolet)](https://github.com/PropertySightlines/coax/tree/main/coax-vscode)
 
 ---
 
@@ -22,16 +23,17 @@ Coax is a fast, accurate security scanner that detects:
 - ✅ **<50ms scan time** for 10K lines
 - ✅ **Zero false positives** on legitimate i18n content
 - ✅ **Local-only scanning** (no cloud required)
+- ✅ **VS Code Extension** for real-time developer feedback
 
 ---
 
 ## 🚀 Quick Start
 
-### Install
+### Install CLI
 
 ```bash
 # From source
-git clone https://github.com/gl33mer/coax.git
+git clone https://github.com/PropertySightlines/coax.git
 cd coax
 cargo build --release
 sudo cp target/release/coax /usr/local/bin/
@@ -39,6 +41,18 @@ sudo cp target/release/coax /usr/local/bin/
 # Verify installation
 coax --version
 ```
+
+### Install VS Code Extension
+
+```bash
+# Install the VSIX package
+code --install-extension coax-vscode/coax-0.8.0.vsix
+```
+
+Or manually in VS Code:
+1. Open Extensions (`Ctrl+Shift+X`)
+2. Click `...` menu → "Install from VSIX"
+3. Select `coax-vscode/coax-0.8.0.vsix`
 
 ### Basic Usage
 
