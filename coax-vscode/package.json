@@ -1,0 +1,196 @@
+{
+  "name": "coax",
+  "displayName": "Coax Security Scanner",
+  "description": "Real-time Unicode confusable and secret detection for VS Code",
+  "version": "0.8.0",
+  "publisher": "gl33mer",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Security"
+  ],
+  "keywords": [
+    "security",
+    "secrets",
+    "unicode",
+    "homoglyph",
+    "scanner",
+    "vulnerability"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "coax.scanCurrentFile",
+        "title": "Scan Current File",
+        "category": "Coax",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "coax.scanWorkspace",
+        "title": "Scan Workspace",
+        "category": "Coax",
+        "icon": "$(folder-opened)"
+      },
+      {
+        "command": "coax.showFindings",
+        "title": "Show Findings",
+        "category": "Coax",
+        "icon": "$(list-unordered)"
+      },
+      {
+        "command": "coax.settings",
+        "title": "Settings",
+        "category": "Coax",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "coax.clearFindings",
+        "title": "Clear Findings",
+        "category": "Coax",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "coax.about",
+        "title": "About Coax",
+        "category": "Coax",
+        "icon": "$(info)"
+      }
+    ],
+    "configuration": {
+      "title": "Coax Security Scanner",
+      "properties": {
+        "coax.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Coax security scanning",
+          "scope": "window"
+        },
+        "coax.binaryPath": {
+          "type": "string",
+          "default": "",
+          "description": "Custom path to Coax binary (leave empty to use bundled)",
+          "scope": "application"
+        },
+        "coax.scanOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically scan files on save",
+          "scope": "window"
+        },
+        "coax.scanOnOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically scan files when opened",
+          "scope": "window"
+        },
+        "coax.unicode.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Unicode attack detection",
+          "scope": "window"
+        },
+        "coax.unicode.sensitivity": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"],
+          "default": "high",
+          "description": "Unicode detection sensitivity level",
+          "scope": "window"
+        },
+        "coax.severityThreshold": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low", "none"],
+          "default": "medium",
+          "description": "Minimum severity level to display",
+          "scope": "window"
+        },
+        "coax.exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/node_modules/**",
+            "**/vendor/**",
+            "**/*.lock",
+            "**/dist/**",
+            "**/build/**",
+            "**/target/**",
+            "**/__pycache__/**"
+          ],
+          "description": "File patterns to exclude from scanning (glob syntax)",
+          "scope": "window"
+        },
+        "coax.maxFileSize": {
+          "type": "number",
+          "default": 10485760,
+          "description": "Maximum file size to scan in bytes (default: 10MB)",
+          "scope": "window"
+        },
+        "coax.scanTimeout": {
+          "type": "number",
+          "default": 30000,
+          "description": "Scan timeout in milliseconds (default: 30s)",
+          "scope": "application"
+        },
+        "coax.debounceDelay": {
+          "type": "number",
+          "default": 500,
+          "description": "Debounce delay for scan-on-save in milliseconds",
+          "scope": "window"
+        }
+      }
+    },
+    "menus": {
+      "editor/title": [
+        {
+          "command": "coax.scanCurrentFile",
+          "group": "navigation",
+          "when": "resourceSet"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "coax.scanCurrentFile",
+          "group": "security",
+          "when": "resourceSet"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "@vscode/vsce": "^2.22.0",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "minimatch": "^9.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gl33mer/coax.git"
+  },
+  "homepage": "https://github.com/gl33mer/coax",
+  "bugs": {
+    "url": "https://github.com/gl33mer/coax/issues"
+  },
+  "license": "MIT"
+}
