@@ -1,0 +1,31 @@
+<!-- BiDi Attacks in HTML/Java - True Positives -->
+<!-- BiDi in HTML comments and attributes -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- U+202E in comment -->
+    <!--‮This comment has BiDi‬-->
+    
+    <!-- BiDi in script tag -->
+    <script>
+        //‮const admin = true;‬
+        var user = "guest"; //‮//‭"admin"
+    </script>
+    
+    <!-- BiDi in attribute value -->
+    <div data-value="normal‮‮‮">Content</div>
+    
+    <!-- BiDi in style -->
+    <style>
+        .hidden { display: none; } /*‮//‭block‬*/
+    </style>
+</head>
+<body>
+    <!-- BiDi in element content -->
+    <p id="status">Active‮‮‮</p>
+    
+    <!-- BiDi in href -->
+    <a href="https://example.com‮/admin">Link</a>
+</body>
+</html>

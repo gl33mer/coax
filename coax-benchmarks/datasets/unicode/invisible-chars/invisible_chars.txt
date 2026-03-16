@@ -1,0 +1,32 @@
+# Invisible Character Attacks - True Positives
+# Zero-width and invisible Unicode characters that should be detected
+
+# Zero-Width Space (U+200B) in identifier
+const user = "admin";  # Contains ZWSP between 'u' and 's'
+
+# Zero-Width Non-Joiner (U+200C)
+const pass‌word = "secret";  # ZWNJ in the middle
+
+# Zero-Width Joiner (U+200D)
+const admin‍ = "attacker";  # ZWJ after 'n'
+
+# Word Joiner (U+2060)
+const token⁠ = "stolen";  # Word Joiner invisible
+
+# Multiple zero-width characters
+const secret_value = "exposed";  # ZWSP + ZWJ + ZWNJ
+
+# Zero-width in string literal
+const message = "Hello World";  # ZWSP in "World"
+
+# Invisible characters in comment
+# This is a normal comment  # Contains ZWSP
+
+# Zero-width at end of line
+const api_key = "sk_live_abc123";  # ZWSP at end
+
+# Variation Selector (U+FE00-U+FE0F)
+text︀ = "modified";  # Variation Selector-1
+
+# Tag characters (U+E0000-U+E007F) - invisible formatting
+text󠁡 = "tagged";  # Tag character

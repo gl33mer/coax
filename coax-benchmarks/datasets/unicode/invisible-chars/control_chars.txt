@@ -1,0 +1,35 @@
+# Null Bytes and Control Characters - True Positives
+# Control characters that should be detected
+
+# Null byte (U+0000) in string
+text = "hello world";  # Null byte in middle
+
+# Tab characters used for alignment (can be suspicious)
+aligned = "value";
+
+# Form Feed (U+000C)
+text = "page break";
+
+# Vertical Tab (U+000B)
+text = "vertical";
+
+# Control characters in identifier
+const var = "test";  # Contains control char
+
+# Unicode control pictures (displayed but represent control)
+# U+2400 series: ␀ ␁ ␂ ␃ ␄ ␅ ␆ ␇ ␈ ␉ ␊ ␋ ␌ ␍ ␎ ␏
+
+# Byte Order Mark (U+FEFF) in middle of file
+text = "content";  # BOM/ZWNBSP before text
+
+# Non-breaking spaces (U+00A0) used deceptively
+const x = 1;  # NBSP instead of regular space
+
+# Mathematical spaces (various widths)
+text = "spaced";  # U+2000 EN QUAD
+
+# Hair Space (U+200A) - very thin space
+text = "hair";  # Hair space
+
+# Narrow No-Break Space (U+202F)
+text = "narrow";  # NNBSP

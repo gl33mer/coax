@@ -1,0 +1,39 @@
+# Arabic and Hebrew Text - Safe i18n
+# Legitimate RTL language text in code - should NOT be flagged
+
+# Arabic comments and strings
+# مرحبا بالعالم - Hello World in Arabic
+
+arabic_greeting = "مرحباً"  # "Marhaban" = Hello
+arabic_welcome = "أهلاً وسهلاً"  # "Ahlan wa sahlan" = Welcome
+
+# Arabic in configuration
+arabic_config = {
+    "اللغة": "العربية",  # "al-lugha" = language
+    "المنطقة": "السعودية",  # "al-mintaqa" = region
+    "العملة": "SAR"  # "al-umla" = currency
+}
+
+# Hebrew comments and strings
+# שלום עולם - Hello World in Hebrew
+
+hebrew_greeting = "שלום"  # "Shalom" = Hello/Peace
+hebrew_welcome = "ברוכים הבאים"  # "Bruchim haba'im" = Welcome
+
+# Hebrew in configuration
+hebrew_config = {
+    "שפה": "עברית",  # "safa" = language
+    "אזור": "ישראל",  # "ezor" = region
+    "מטבע": "ILS"  # "matbea" = currency
+}
+
+# Persian/Farsi text
+persian_greeting = "سلام"  # "Salam" = Hello
+persian_welcome = "خوش آمدید"  # "Khosh amadid" = Welcome
+
+# Urdu text
+urdu_greeting = "ہیلو"  # "Hello"
+urdu_welcome = "خوش آمدید"  # "Welcome"
+
+# Note: These are legitimate i18n strings, not BiDi attacks
+# They use standard RTL text without override characters

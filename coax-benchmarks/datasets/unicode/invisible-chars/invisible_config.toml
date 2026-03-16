@@ -1,0 +1,28 @@
+# Invisible Characters in Configuration - True Positives
+# Hidden characters in config files
+
+[settings]
+# ZWSP in key name
+us‌er = "admin"  # ZWSP in "user"
+p‌assword = "secret"  # ZWSP in "password"
+
+[api]
+# Zero-width in values
+t‌o‌k‌e‌n = "abc123"  # ZWSP between each char
+e‌n‌d‌p‌o‌i‌n‌t = "/api"
+
+[paths]
+# Variation selectors
+b‌a‌s‌e = "/home"  # ZWSP in "base"
+d‌a‌t‌a = "/var"  # ZWSP in "data"
+
+[security]
+# Combining characters
+h‌a‌s‌h = "sha256"  # ZWSP throughout
+s‌a‌l‌t = "random"  # ZWSP throughout
+
+# Soft hyphen in URL
+url = "https://example.com/path"  # SH in path
+
+# Invisible at end of values
+secret = "value"  # ZWSP at end

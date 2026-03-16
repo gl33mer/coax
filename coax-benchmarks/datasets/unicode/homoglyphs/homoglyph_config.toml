@@ -1,0 +1,26 @@
+# Homoglyph Attacks in Configuration - True Positives
+# Mixed script in config files
+
+[database]
+# Cyrillic 'а' in key name
+hоst = "evil.example.com"  # Cyrillic 'о'
+pоrt = 5432  # Cyrillic 'о'
+usеr = "attacker"  # Cyrillic 'е'
+pаssword = "stolen"  # Cyrillic 'а'
+
+[api]
+# Greek characters that look Latin
+endpοint = "https://evil.api.com"  # Greek 'ο'
+tοken_url = "/auth"  # Greek 'ο'
+аpi_version = "v1"  # Cyrillic 'а'
+
+[security]
+# Mixed scripts
+аuth_еndpοint = "https://malicious.com"
+sеcrеt_kеy = "compromised"  # All Cyrillic 'е'
+
+[paths]
+# Looks like normal paths but with homoglyphs
+bаse_path = "/api"  # Cyrillic 'а'
+lоgin_path = "/login"  # Cyrillic 'о'
+аdmin_path = "/admin"  # Cyrillic 'а'
