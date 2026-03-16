@@ -303,6 +303,14 @@ impl ContextAnalyzer {
 
     /// Check if a file is a test file
     pub fn is_test_file(&self, path: &Path) -> bool {
+        // Skip /tmp directory - it's for temporary files, not test files
+        if let Some(parent) = path.parent() {
+            let path_str = parent.to_string_lossy();
+            if path_str == "/tmp" || path_str.starts_with("/tmp/") {
+                return false;
+            }
+        }
+        
         // Check file name patterns
         if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
             if TEST_FILE_PATTERNS.iter().any(|p| p.is_match(name)) {
@@ -331,6 +339,14 @@ impl ContextAnalyzer {
 
     /// Check if a file is documentation
     pub fn is_documentation(&self, path: &Path) -> bool {
+        // Skip /tmp directory - it's for temporary files
+        if let Some(parent) = path.parent() {
+            let path_str = parent.to_string_lossy();
+            if path_str == "/tmp" || path_str.starts_with("/tmp/") {
+                return false;
+            }
+        }
+        
         if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
             return DOC_EXTENSIONS.iter().any(|&e| e == ext);
         }
