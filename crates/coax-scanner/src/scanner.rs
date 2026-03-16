@@ -782,8 +782,16 @@ fn scan_content_internal(
             FindingContext::default()
         };
 
+        // CRITICAL FIX: Known secret patterns should NEVER be suppressed by file-type heuristics.
+        // A secret is a secret whether it's in a test file, documentation, or /tmp.
+        // We check if ANY known pattern matches this line BEFORE deciding to skip.
+        let has_known_pattern_match = cache.patterns().iter()
+            .filter(|p| is_known_secret_pattern(&p.name))
+            .any(|p| p.is_match(line));
+        
         // FP REDUCTION: Skip excluded findings EARLY (before pattern matching)
-        if config.enable_context_detection && context_analyzer.should_exclude(&context) {
+        // BUT: Never skip if a known secret pattern matches this line
+        if !has_known_pattern_match && config.enable_context_detection && context_analyzer.should_exclude(&context) {
             continue;
         }
 
