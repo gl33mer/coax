@@ -473,6 +473,34 @@ impl Scanner {
     }
 }
 
+impl Scanner {
+    /// Scan only for Unicode attacks (skip secret detection)
+    pub fn scan_unicode_only(&self, path: &Path) -> (Vec<ScanResult>, ScanSummary) {
+        let start = Instant::now();
+        let files = self.collect_files(path);
+        let files_count = files.len();
+        let all_results = self.scan_files_parallel(&files);
+        
+        // Filter to only Unicode findings
+        let unicode_results: Vec<ScanResult> = all_results
+            .into_iter()
+            .filter(|r| r.pattern.starts_with("UNICODE-"))
+            .collect();
+        
+        let duration = start.elapsed();
+        
+        let summary = ScanSummary {
+            files_scanned: files_count as u32,
+            total_findings: unicode_results.len() as u32,
+            by_severity: SeverityCounts::from_results(&unicode_results),
+            top_patterns: get_top_patterns(&unicode_results, 10),
+            scan_duration_ms: duration.as_millis() as u64,
+        };
+        
+        (unicode_results, summary)
+    }
+}
+
 impl Default for Scanner {
     fn default() -> Self {
         Self::new()

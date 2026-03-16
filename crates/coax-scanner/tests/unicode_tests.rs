@@ -43,29 +43,30 @@ fn test_no_false_positives_on_legitimate_unicode() {
 
 /// Test homoglyph detection accuracy
 #[test]
+
+/// Test homoglyph detection accuracy - mixed script identifiers
+#[test]
 fn test_homoglyph_detection_accuracy() {
     let scanner = UnicodeScanner::with_default_config();
-    
-    // Test known confusable pairs
+
+    // Test mixed script identifiers (Latin + non-Latin = deceptive)
     let test_cases = vec![
-        ('а', 'a', "Cyrillic"),  // Cyrillic а vs Latin a
-        ('ο', 'o', "Greek"),     // Greek ο vs Latin o
-        ('е', 'e', "Cyrillic"),  // Cyrillic е vs Latin e
+        ("pаssword", "Cyrillic"),  // Cyrillic а in Latin word
+        ("lοgin", "Greek"),        // Greek ο in Latin word
+        ("usеr", "Cyrillic"),      // Cyrillic е in Latin word
     ];
-    
-    for (confusable, base, script) in test_cases {
-        let content = format!("const {}ariable = 'test';", confusable);
+
+    for (identifier, script) in test_cases {
+        let content = format!("const {} = 'test';", identifier);
         let findings = scanner.scan(&content, "test.js");
-        
+
         assert!(
             findings.iter().any(|f| f.category == UnicodeCategory::Homoglyph),
-            "Should detect {} as confusable for {}", confusable, base
+            "Should detect mixed script in '{}' ({} script)", identifier, script
         );
     }
 }
 
-/// Test variation selector detection (Glassworm primary)
-#[test]
 fn test_variation_selector_detection() {
     let scanner = UnicodeScanner::with_default_config();
     

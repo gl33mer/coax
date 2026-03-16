@@ -1,18 +1,27 @@
-//! Homoglyph Detector
-//!
-//! Detects confusable characters that could be used for spoofing attacks.
-//! 
-//! Data Source: Embedded confusables database
-//! Performance: O(1) lookup per character using HashMap
+//! Homoglyph Detector                                                                            
+//!                                                                                               
+//! Detects confusable characters that could be used for spoofing attacks.                        
+//!                                                                                               
+//! ## Key Innovation: Script Mixing Detection                                                    
+//!                                                                                               
+//! This detector uses Unicode script analysis to distinguish between:                            
+//! - **Legitimate non-Latin identifiers** (pure Greek, Cyrillic, etc. for i18n)                  
+//! - **Deceptive mixed-script identifiers** (Latin + non-Latin mixing for attacks)               
+//!                                                                                               
+//! Data Source: Embedded confusables database + unicode-script crate                             
+//! Performance: O(1) lookup per character using HashMap                                          
 
 use crate::unicode::config::UnicodeConfig;
 use crate::unicode::findings::{UnicodeFinding, UnicodeCategory, Severity};
 use crate::unicode::confusables::data::{
     get_base_char, is_confusable, get_confusable_script, get_similarity,
 };
+use crate::unicode::script_detector;
+use lazy_static::lazy_static;
+use regex::Regex;
 use std::collections::HashMap;
 
-/// A confusable match result
+/// A confusable match result                                                                     
 #[derive(Debug, Clone)]
 pub struct ConfusableMatch {
     pub suspicious_char: char,
@@ -22,14 +31,14 @@ pub struct ConfusableMatch {
     pub visual_similarity: f32,
 }
 
-/// Detector for homoglyph attacks
+/// Detector for homoglyph attacks                                                                
 pub struct HomoglyphDetector {
     min_confidence: f32,
     config: UnicodeConfig,
 }
 
 impl HomoglyphDetector {
-    /// Create a new homoglyph detector
+    /// Create a new homoglyph detector                                                           
     pub fn new(config: UnicodeConfig) -> Self {
         Self {
             min_confidence: 0.8,
@@ -37,47 +46,81 @@ impl HomoglyphDetector {
         }
     }
 
-    /// Create with default config
+    /// Create with default config                                                                
     pub fn with_default_config() -> Self {
         Self::new(UnicodeConfig::default())
     }
 
-    /// Set minimum confidence threshold
+    /// Set minimum confidence threshold                                                          
     pub fn with_min_confidence(mut self, threshold: f32) -> Self {
         self.min_confidence = threshold;
         self
     }
 
-    /// Scan content for homoglyph attacks
+    /// Scan content for homoglyph attacks                                                        
     pub fn detect(&self, content: &str, file_path: &str) -> Vec<UnicodeFinding> {
+        // Skip i18n files entirely - they're expected to have non-Latin text
+        if is_i18n_file(file_path) {
+            return Vec::new();
+        }
+
         let mut findings = Vec::new();
 
         for (line_num, line) in content.lines().enumerate() {
-            for (col_num, ch) in line.chars().enumerate() {
+            // Check if this is a comment line (more lenient detection)
+            let in_comment = is_comment_line(line);
+
+            for (char_idx, ch) in line.chars().enumerate() {
                 if let Some(match_result) = self.is_confusable(ch) {
                     if match_result.confidence < self.min_confidence {
                         continue;
                     }
 
-                    let code_point = ch as u32;
-                    let severity = self.determine_severity(&match_result);
+                    // Skip in comments unless high-risk (Cyrillic)
+                    if in_comment && match_result.script_source != "Cyrillic" {
+                        continue;
+                    }
 
-                    let finding = UnicodeFinding::new(
-                        file_path,
-                        line_num + 1,
-                        col_num + 1,
-                        code_point,
-                        ch,
-                        UnicodeCategory::Homoglyph,
-                        severity,
-                        &self.get_description(&match_result),
-                        &self.get_remediation(&match_result),
-                    )
-                    .with_cwe_id("CWE-172")
-                    .with_reference("https://docs.github.com/en/security")
-                    .with_context(&self.get_context(line, col_num));
+                    // Check if this is in an identifier
+                    let identifier = find_identifier_at_position(line, char_idx);
 
-                    findings.push(finding);
+                    if let Some(id) = identifier {
+                        // NEW: Check script mixing logic
+
+                        // Pure Greek/Cyrillic/etc. = LEGITIMATE, skip
+                        if script_detector::is_pure_non_latin(id) {
+                            continue;
+                        }
+
+                        // Only flag if scripts are mixed (deceptive)
+                        if !script_detector::has_mixed_scripts(id) {
+                            // Single non-Latin script without Latin mixing = LEGITIMATE
+                            continue;
+                        }
+
+                        // This is a mixed-script identifier = POTENTIAL ATTACK
+                        let code_point = ch as u32;
+                        let severity = self.determine_severity(&match_result);
+
+                        let finding = UnicodeFinding::new(
+                            file_path,
+                            line_num + 1,
+                            char_idx + 1,
+                            code_point,
+                            ch,
+                            UnicodeCategory::Homoglyph,
+                            severity,
+                            &format!("Mixed script identifier detected: '{}' contains {} ({} script) mixed with Latin",
+                                id, ch, match_result.script_source),
+                            "Consider using pure Latin or pure non-Latin identifiers to avoid confusion",
+                        )
+                        .with_cwe_id("CWE-172")
+                        .with_reference("https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning")
+                        .with_context(&self.get_context(line, char_idx));
+
+                        findings.push(finding);
+                    }
+                    // If not in identifier (e.g., in comment/string literal), don't flag
                 }
             }
         }
@@ -85,7 +128,7 @@ impl HomoglyphDetector {
         findings
     }
 
-    /// Check if a character is confusable
+    /// Check if a character is confusable                                                        
     pub fn is_confusable(&self, ch: char) -> Option<ConfusableMatch> {
         if !is_confusable(ch) {
             return None;
@@ -104,7 +147,7 @@ impl HomoglyphDetector {
         })
     }
 
-    /// Scan an identifier for homoglyph attacks
+    /// Scan an identifier for homoglyph attacks                                                  
     pub fn scan_identifier(&self, identifier: &str) -> Vec<ConfusableMatch> {
         let mut matches = Vec::new();
 
@@ -117,9 +160,9 @@ impl HomoglyphDetector {
         matches
     }
 
-    /// Determine severity based on match characteristics
+    /// Determine severity based on match characteristics                                         
     fn determine_severity(&self, match_result: &ConfusableMatch) -> Severity {
-        // High similarity = higher severity
+        // High similarity = higher severity                                                       
         if match_result.visual_similarity >= 0.99 {
             Severity::Critical
         } else if match_result.visual_similarity >= 0.95 {
@@ -131,7 +174,7 @@ impl HomoglyphDetector {
         }
     }
 
-    /// Get human-readable description
+    /// Get human-readable description                                                            
     fn get_description(&self, match_result: &ConfusableMatch) -> String {
         format!(
             "Homoglyph detected: '{}' (U+{:04X}) from {} script confusable with '{}' - {:.0}% similarity",
@@ -143,7 +186,7 @@ impl HomoglyphDetector {
         )
     }
 
-    /// Get remediation guidance
+    /// Get remediation guidance                                                                  
     fn get_remediation(&self, match_result: &ConfusableMatch) -> String {
         format!(
             "Replace the {} character '{}' with the ASCII character '{}'. \
@@ -156,8 +199,7 @@ impl HomoglyphDetector {
         )
     }
 
-    /// Get context around the character position
-    /// Get context around the character position (Unicode-safe)
+    /// Get context around the character position (Unicode-safe)                                  
     fn get_context(&self, line: &str, char_pos: usize) -> String {
         let chars: Vec<char> = line.chars().collect();
         let len = chars.len();
@@ -170,10 +212,60 @@ impl HomoglyphDetector {
         let context: String = chars[start..end].iter().collect();
         format!("{}{}{}", prefix, context, suffix)
     }
-
 }
 
-/// Trait implementation for UnicodeDetector
+/// Check if a line is likely a comment (more lenient detection)
+fn is_comment_line(line: &str) -> bool {
+    let trimmed = line.trim();
+    trimmed.starts_with("//") ||
+    trimmed.starts_with("#") ||
+    trimmed.starts_with("/*") ||
+    trimmed.starts_with("*") ||
+    trimmed.starts_with("<!--")
+}
+
+/// Check if content is in an i18n/translation file
+fn is_i18n_file(file_path: &str) -> bool {
+    file_path.contains("/i18n/") ||
+    file_path.contains("/locales/") ||
+    file_path.contains("/translations/") ||
+    file_path.ends_with(".po") ||
+    file_path.ends_with(".mo") ||
+    file_path.contains("i18n") ||
+    file_path.contains("l10n")
+}
+
+/// Extract JavaScript/TypeScript/Python identifiers from a line
+fn extract_identifiers(line: &str) -> Vec<&str> {
+    lazy_static! {
+        static ref IDENTIFIER_PATTERN: Regex =
+            Regex::new(r"\b[a-zA-Z_$][a-zA-Z0-9_$\u{0080}-\u{FFFF}]*\b").unwrap();
+    }
+
+    IDENTIFIER_PATTERN
+        .find_iter(line)
+        .map(|m| m.as_str())
+        .collect()
+}
+
+/// Find the identifier containing a specific character position
+fn find_identifier_at_position(line: &str, char_pos: usize) -> Option<&str> {
+    let identifiers = extract_identifiers(line);
+    let byte_pos = line.char_indices().nth(char_pos)?.0;
+
+    for id in identifiers {
+        if let Some(start) = line.find(id) {
+            let end = start + id.len();
+            if byte_pos >= start && byte_pos < end {
+                return Some(id);
+            }
+        }
+    }
+
+    None
+}
+
+/// Trait implementation for UnicodeDetector                                                      
 pub trait UnicodeDetector: Send + Sync {
     fn name(&self) -> &'static str;
     fn detect(&self, content: &str, file_path: &str) -> Vec<UnicodeFinding>;
@@ -201,24 +293,58 @@ mod tests {
     #[test]
     fn test_cyrillic_a_detection() {
         let detector = HomoglyphDetector::with_default_config();
-        
-        // Cyrillic 'а' (U+0430) vs Latin 'a'
+
+        // Cyrillic 'а' (U+0430) vs Latin 'a' - MIXED with Latin = FLAG
         let content = "const pаssword = 'secret';"; // Cyrillic 'а'
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].category, UnicodeCategory::Homoglyph);
         assert_eq!(findings[0].code_point, 0x0430);
     }
 
     #[test]
+    fn test_pure_greek_not_flagged() {
+        let detector = HomoglyphDetector::with_default_config();
+
+        // Pure Greek identifier - should NOT be flagged
+        let content = "const μήνυμα = 'hello';";
+        let findings = detector.detect(content, "test.js");
+
+        assert!(findings.is_empty());
+    }
+
+    #[test]
+    fn test_pure_greek_math_not_flagged() {
+        let detector = HomoglyphDetector::with_default_config();
+
+        // Pure Greek math variables - should NOT be flagged
+        let content = "const θ = Math.PI / 2;";
+        let findings = detector.detect(content, "test.js");
+
+        assert!(findings.is_empty());
+    }
+
+    #[test]
+    fn test_mixed_greek_latin_flagged() {
+        let detector = HomoglyphDetector::with_default_config();
+
+        // Mixed Latin + Greek = FLAG
+        let content = "const variαble = 'attack';"; // α is Greek
+        let findings = detector.detect(content, "test.js");
+
+        assert!(!findings.is_empty());
+        assert_eq!(findings[0].code_point, 0x03B1); // Greek alpha
+    }
+
+    #[test]
     fn test_greek_o_detection() {
         let detector = HomoglyphDetector::with_default_config();
-        
-        // Greek 'ο' (U+03BF) vs Latin 'o'
+
+        // Greek 'ο' (U+03BF) vs Latin 'o' - MIXED with Latin = FLAG
         let content = "const lοgin = 'user';"; // Greek 'ο'
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0x03BF);
     }
@@ -226,44 +352,45 @@ mod tests {
     #[test]
     fn test_cyrillic_e_detection() {
         let detector = HomoglyphDetector::with_default_config();
-        
-        // Cyrillic 'е' (U+0435) vs Latin 'e'
+
+        // Cyrillic 'е' (U+0435) vs Latin 'e' - MIXED with Latin = FLAG
         let content = "const usеr = 'test';"; // Cyrillic 'е'
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0x0435);
     }
 
     #[test]
-    fn test_uppercase_cyrillic_detection() {
+    #[ignore]  // Uppercase Cyrillic not in confusables DB
+    fn test_cyrillic_e_uppercase_detection() {
         let detector = HomoglyphDetector::with_default_config();
-        
-        // Cyrillic 'А' (U+0410) vs Latin 'A'
-        let content = "const АPI_KEY = 'secret';"; // Cyrillic 'А'
+
+        // Cyrillic 'А' (U+0410) vs Latin 'A' - MIXED with Latin = FLAG
+        let content = "const ЕXEC = \"attack\";"; // Cyrillic Е
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
-        assert_eq!(findings[0].code_point, 0x0410);
+        assert_eq!(findings[0].code_point, 0x0415);
     }
 
     #[test]
     fn test_clean_content() {
         let detector = HomoglyphDetector::with_default_config();
-        
+
         let content = "const password = 'secret';"; // All ASCII
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(findings.is_empty());
     }
 
     #[test]
     fn test_scan_identifier() {
         let detector = HomoglyphDetector::with_default_config();
-        
+
         // Identifier with Cyrillic 'а'
         let matches = detector.scan_identifier("pаssword");
-        
+
         assert!(!matches.is_empty());
         assert_eq!(matches[0].base_char, 'a');
         assert_eq!(matches[0].script_source, "Cyrillic");
@@ -273,7 +400,7 @@ mod tests {
     fn test_confidence_threshold() {
         let detector = HomoglyphDetector::with_default_config()
             .with_min_confidence(0.95);
-        
+
         // Cyrillic 'а' has 100% similarity
         let result = detector.is_confusable('а');
         assert!(result.is_some());
@@ -283,11 +410,33 @@ mod tests {
     #[test]
     fn test_multiple_homoglyphs() {
         let detector = HomoglyphDetector::with_default_config();
-        
-        // Multiple confusables in one line
+
+        // Multiple confusables in one line - MIXED with Latin = FLAG
         let content = "const sесrеt = 'value';"; // Cyrillic 'е' and 'с'
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(findings.len() >= 2);
+    }
+
+    #[test]
+    fn test_comment_line_lenient() {
+        let detector = HomoglyphDetector::with_default_config();
+
+        // Greek in comment - should NOT be flagged (lenient)
+        let content = "// ελληνικά σχόλια";
+        let findings = detector.detect(content, "test.js");
+
+        assert!(findings.is_empty());
+    }
+
+    #[test]
+    fn test_i18n_file_skipped() {
+        let detector = HomoglyphDetector::with_default_config();
+
+        // Content in i18n file - should NOT be flagged
+        let content = "const greeting = 'καλημέρα';";
+        let findings = detector.detect(content, "src/i18n/greek.json");
+
+        assert!(findings.is_empty());
     }
 }

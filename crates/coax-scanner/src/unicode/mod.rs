@@ -62,6 +62,7 @@ pub mod findings;
 pub mod ranges;
 pub mod confusables;
 pub mod detectors;
+pub mod script_detector;
 pub mod scanner;
 
 pub use config::{
@@ -101,6 +102,17 @@ pub use confusables::data::{
     is_confusable,
     get_confusable_script,
     get_similarity,
+};
+
+// Script detection utilities
+pub use script_detector::{
+    get_script,
+    has_mixed_scripts,
+    is_pure_non_latin,
+    is_pure_latin,
+    get_scripts_in_identifier,
+    is_high_risk_script,
+    script_to_string,
 };
 
 pub use detectors::{

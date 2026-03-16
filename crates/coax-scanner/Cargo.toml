@@ -45,6 +45,7 @@ lazy_static = { workspace = true }
 # Unicode support
 unicode-segmentation = "1.12"
 unicode_names2 = "1.3"
+unicode-script = "0.5"
 
 # Token efficiency (BPE-based detection from Betterleaks)
 tiktoken-rs = "0.9.1"

@@ -275,7 +275,13 @@ fn run_scan(
 
     // Run scan
     let start = Instant::now();
-    let (results, summary) = scanner.scan_with_summary(&path);
+    let (results, summary) = if unicode_only {
+        // Unicode-only mode - skip secret scanning
+        scanner.scan_unicode_only(&path)
+    } else {
+        // Normal mode - scan secrets + unicode
+        scanner.scan_with_summary(&path)
+    };
     let duration = start.elapsed();
 
     // Format output
