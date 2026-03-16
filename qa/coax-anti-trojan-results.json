@@ -1,0 +1,3781 @@
+🔍 Coax - Scanning anti-trojan-source
+   43 patterns loaded
+
+{
+  "findings": [
+    {
+      "column": 20,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Glassworm attack pattern detected: decoder_pattern (confidence: 70%) (CWE-CWE-956)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/constants.js",
+      "line": 47,
+      "line_content": "String.fromCodePoint(",
+      "pattern": "UNICODE-GLASSWORM_PATTERN",
+      "recommendation": "HIGH: This code shows patterns consistent with Glassworm-style attacks.",
+      "severity": "high"
+    },
+    {
+      "column": 26,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Glassworm attack pattern detected: decoder_pattern (confidence: 75%) (CWE-CWE-956)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 62,
+      "line_content": "codePointAt(0)",
+      "pattern": "UNICODE-GLASSWORM_PATTERN",
+      "recommendation": "HIGH: This code shows patterns consistent with Glassworm-style attacks.",
+      "severity": "high"
+    },
+    {
+      "column": 26,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Glassworm attack pattern detected: decoder_pattern (confidence: 75%) (CWE-CWE-956)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 86,
+      "line_content": "codePointAt(0)",
+      "pattern": "UNICODE-GLASSWORM_PATTERN",
+      "recommendation": "HIGH: This code shows patterns consistent with Glassworm-style attacks.",
+      "severity": "high"
+    },
+    {
+      "column": 8,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 38,
+      "line_content": " * Check if a code point be...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 8,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 50,
+      "line_content": " * Check if a code point be...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 8,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 58,
+      "line_content": " * Check if a character is ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 10,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 69,
+      "line_content": "  // Check if it's a Format c...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 10,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 74,
+      "line_content": "  // Check if it's a Control ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 10,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 100,
+      "line_content": "  // Check if it's a variatio...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 50,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 100,
+      "line_content": "...n selector or other known confusable",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 13,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 114,
+      "line_content": " * Falls back to generic descrip...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 53,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 114,
+      "line_content": "...tions if not in our known list",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 10,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 153,
+      "line_content": "  // Check if it's a variatio...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 10,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/unicode-categories.js",
+      "line": 162,
+      "line_content": "  // Check if it's a control ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 40,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Variation selector detected (U+FE0F) - commonly used in Glassworm attacks (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 194,
+      "line_content": "...sCritical ? '❌' : '⚠️'",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the variation selector. If this is intentional (e.g., emoji skin tone), verify the character is not being used to hide malicious content. Review the surrounding code for decoder patterns.",
+      "severity": "critical"
+    },
+    {
+      "column": 55,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 42,
+      "line_content": "...Code point string like \"U+202E\"",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 11,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 60,
+      "line_content": " * Get risk description for a ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 55,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 61,
+      "line_content": "...Code point string like \"U+202E\"",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 16,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 64,
+      "line_content": "function getRiskDescription(codePoi...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 12,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 67,
+      "line_content": "  const riskMap = {",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 13,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 79,
+      "line_content": "  return riskMap[codePoint] || '...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 52,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 164,
+      "line_content": "...ith spaces and ^ marker",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 34,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 241,
+      "line_content": "...rectional Text Attack Detected'",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 16,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 267,
+      "line_content": "      const risk = getRiskDescripti...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 26,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 267,
+      "line_content": "... const risk = getRiskDescription(finding...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 52,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 268,
+      "line_content": "...AL}  ${colorize('Risk:', COLORS.GRAY)} $...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 76,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/formatter.js",
+      "line": 268,
+      "line_content": "... COLORS.GRAY)} ${risk}`)",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 30,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Glassworm attack pattern detected: decoder_pattern (confidence: 70%) (CWE-CWE-956)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/main.js",
+      "line": 47,
+      "line_content": "codePointAt(0)",
+      "pattern": "UNICODE-GLASSWORM_PATTERN",
+      "recommendation": "HIGH: This code shows patterns consistent with Glassworm-style attacks.",
+      "severity": "high"
+    },
+    {
+      "column": 8,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/main.js",
+      "line": 10,
+      "line_content": " * Check if text contains c...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 57,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/main.js",
+      "line": 12,
+      "line_content": "...t - The text to check",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 34,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/main.js",
+      "line": 20,
+      "line_content": "...ath for boolean check - maintain backwar...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 50,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/main.js",
+      "line": 20,
+      "line_content": "...check - maintain backward compatibility",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 17,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/main.js",
+      "line": 27,
+      "line_content": "    // Also check by category",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 14,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/main.js",
+      "line": 49,
+      "line_content": "      // Check if char is in expl...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 8,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/main.js",
+      "line": 70,
+      "line_content": " * Check files for confusab...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 66,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/main.js",
+      "line": 72,
+      "line_content": "...f file paths to check",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 7,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/main.js",
+      "line": 106,
+      "line_content": "// Backward Compatibility ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 22,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/src/main.js",
+      "line": 109,
+      "line_content": ".../ To remain non-breaking for downstream ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 77,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 5,
+      "line_content": "...ct and prevent attacks that use confusab...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 187,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 5,
+      "line_content": "... Trojan Source attacks, which exploit bi...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 253,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 5,
+      "line_content": "... well as other attacks like glassworm th...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 258,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 5,
+      "line_content": "... as other attacks like glassworm that us...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 97,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 8,
+      "line_content": "...directional text markers, zero-width cha...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 122,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 9,
+      "line_content": "...ters by category, making the tool future...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 281,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 14,
+      "line_content": "... to mitigate the risk of attacks that ca...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 291,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 14,
+      "line_content": "...te the risk of attacks that can be used ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 38,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 19,
+      "line_content": "...olean detection (backward compatible)",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 86,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 22,
+      "line_content": "... other tools and workflows with both sim...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 21,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 24,
+      "line_content": "*   **Pre-commit Hook:** A pre-commit ho...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 42,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 24,
+      "line_content": "...:** A pre-commit hook to prevent committ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 138,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 25,
+      "line_content": "...nal dependencies, making detection futur...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 72,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 30,
+      "line_content": "...rce*` functions, backward-compatible ali...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 14,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 37,
+      "line_content": "## How it Works",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 13,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 39,
+      "line_content": "The tool works in two complement...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 28,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 42,
+      "line_content": "...directional text markers (U+202A-U+202E,...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 38,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 47,
+      "line_content": "...ed Detection**: Checks each character ag...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 100,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/project.md",
+      "line": 51,
+      "line_content": "...lean result (for backward compatibility)...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 137,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 5,
+      "line_content": "... characters and checks for their presenc...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 22,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 29,
+      "line_content": "...   `U+00A0`: No-Break Space",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 33,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 32,
+      "line_content": "...: Zero Width No-Break Space",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 20,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 39,
+      "line_content": "In addition to checking against an expl...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 124,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 41,
+      "line_content": "...directional text markers, invisible form...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 129,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 47,
+      "line_content": "... dependencies. It makes the detection fu...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 87,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 51,
+      "line_content": "... which provides two key functions:",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 65,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 53,
+      "line_content": "...)`: This function takes a string of sour...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 110,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 53,
+      "line_content": "...de as input and checks for confusable ch...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 71,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 63,
+      "line_content": "...)`: This function takes an array of file...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 115,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 63,
+      "line_content": "...hs as input and checks each file for con...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 38,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 75,
+      "line_content": "...ructured into a few key components:",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 16,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 85,
+      "line_content": "To preserve backward compatibility ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 60,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 85,
+      "line_content": "...downstream tools (like the ESLint plugin...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 34,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/docs/design.md",
+      "line": 90,
+      "line_content": "... exist to avoid breaking existing consum...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 4,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/SECURITY.md",
+      "line": 9,
+      "line_content": "We kindly ask you to re...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 13,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/SECURITY.md",
+      "line": 9,
+      "line_content": "We kindly ask you to refrain fro...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 126,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/SECURITY.md",
+      "line": 9,
+      "line_content": "... team members at risk.",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 40,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/SECURITY.md",
+      "line": 17,
+      "line_content": "...ty issue to the [Snyk Security Team](htt...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 68,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/SECURITY.md",
+      "line": 17,
+      "line_content": "...ty Team](https://snyk.io/vulnerability-d...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 148,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/SECURITY.md",
+      "line": 17,
+      "line_content": "...curity issue and work with all involved ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 42,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/CODE_OF_CONDUCT.md",
+      "line": 6,
+      "line_content": "...tainers pledge to making participation i...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 75,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/CODE_OF_CONDUCT.md",
+      "line": 27,
+      "line_content": "...l or political attacks",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 32,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/CODE_OF_CONDUCT.md",
+      "line": 37,
+      "line_content": "...d are expected to take appropriate and f...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 35,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/CODE_OF_CONDUCT.md",
+      "line": 41,
+      "line_content": "...s, commits, code, wiki edits, issues, an...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 57,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/bin/anti-trojan-source.js",
+      "line": 15,
+      "line_content": "...ern of files to check.",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 44,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/bin/anti-trojan-source.js",
+      "line": 63,
+      "line_content": "...that lint-staged works",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 27,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/bin/anti-trojan-source.js",
+      "line": 66,
+      "line_content": "... otherwise, fall back to processing any ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 39,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Glassworm attack pattern detected: decoder_pattern (confidence: 75%) (CWE-CWE-956)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/glassworm-detection.test.js",
+      "line": 50,
+      "line_content": "String.fromCodePoint(",
+      "pattern": "UNICODE-GLASSWORM_PATTERN",
+      "recommendation": "HIGH: This code shows patterns consistent with Glassworm-style attacks.",
+      "severity": "high"
+    },
+    {
+      "column": 39,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Glassworm attack pattern detected: decoder_pattern (confidence: 75%) (CWE-CWE-956)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/glassworm-detection.test.js",
+      "line": 56,
+      "line_content": "String.fromCodePoint(",
+      "pattern": "UNICODE-GLASSWORM_PATTERN",
+      "recommendation": "HIGH: This code shows patterns consistent with Glassworm-style attacks.",
+      "severity": "high"
+    },
+    {
+      "column": 39,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Glassworm attack pattern detected: decoder_pattern (confidence: 75%) (CWE-CWE-956)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/glassworm-detection.test.js",
+      "line": 62,
+      "line_content": "String.fromCodePoint(",
+      "pattern": "UNICODE-GLASSWORM_PATTERN",
+      "recommendation": "HIGH: This code shows patterns consistent with Glassworm-style attacks.",
+      "severity": "high"
+    },
+    {
+      "column": 53,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/glassworm-detection.test.js",
+      "line": 33,
+      "line_content": "...tween words that looks like normal space",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 58,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/glassworm-detection.test.js",
+      "line": 33,
+      "line_content": "... words that looks like normal space",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 79,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/simple-detection.test.js",
+      "line": 11,
+      "line_content": "...c and also this greek question mark ; wh...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 93,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/simple-detection.test.js",
+      "line": 11,
+      "line_content": "...s greek question mark ; which isnt ;'",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 44,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Variation selector detected (U+FE0F) - commonly used in Glassworm attacks (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/formatter.test.js",
+      "line": 119,
+      "line_content": "...Contain('(1 issue) ⚠️')",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the variation selector. If this is intentional (e.g., emoji skin tone), verify the character is not being used to hide malicious content. Review the surrounding code for decoder patterns.",
+      "severity": "critical"
+    },
+    {
+      "column": 57,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/formatter.test.js",
+      "line": 226,
+      "line_content": "...rectional Text Attack Detected')",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 14,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/formatter.test.js",
+      "line": 489,
+      "line_content": "      // Check that the lines hav...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 14,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/formatter.test.js",
+      "line": 534,
+      "line_content": "      // Check alignment",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 26,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: RLO (U+202E) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source-complex1.ts",
+      "line": 13,
+      "line_content": "...ccessLevel !== 'user‮ ⁦// Check if admin...",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the bidirectional control character. These are commonly used to reverse text display and hide malicious content. Review the actual byte sequence of the file to understand the true content.",
+      "severity": "critical"
+    },
+    {
+      "column": 26,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: RLO (U+202E) [MOST DANGEROUS - reverses text display] (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source-complex1.ts",
+      "line": 13,
+      "line_content": "...ccessLevel !== 'user‮ ⁦// Check if admin...",
+      "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE",
+      "recommendation": "IMMEDIATE ACTION: Remove this RLO character immediately. It reverses text display and is commonly used to hide malicious content. For example, 'exe.txt' with RLO becomes 'txt.exe' when displayed. Review the actual byte sequence of the file using a hex editor.",
+      "severity": "critical"
+    },
+    {
+      "column": 28,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: LRI (U+2066) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source-complex1.ts",
+      "line": 13,
+      "line_content": "...essLevel !== 'user‮ ⁦// Check if admin⁩ ...",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the bidirectional control character. These are commonly used to reverse text display and hide malicious content. Review the actual byte sequence of the file to understand the true content.",
+      "severity": "high"
+    },
+    {
+      "column": 46,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: PDI (U+2069) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source-complex1.ts",
+      "line": 13,
+      "line_content": "...‮ ⁦// Check if admin⁩ ⁦') {",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the bidirectional control character. These are commonly used to reverse text display and hide malicious content. Review the actual byte sequence of the file to understand the true content.",
+      "severity": "high"
+    },
+    {
+      "column": 48,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: LRI (U+2066) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source-complex1.ts",
+      "line": 13,
+      "line_content": "...⁦// Check if admin⁩ ⁦') {",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the bidirectional control character. These are commonly used to reverse text display and hide malicious content. Review the actual byte sequence of the file to understand the true content.",
+      "severity": "high"
+    },
+    {
+      "column": 28,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: LRI (U+2066) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source-complex1.ts",
+      "line": 13,
+      "line_content": "...essLevel !== 'user‮ ⁦// Check if admin⁩ ...",
+      "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE",
+      "recommendation": "Remove the bidirectional control character unless there's a legitimate reason for it (e.g., proper RTL language support). Review the context to ensure it's not being used to hide content.",
+      "severity": "medium"
+    },
+    {
+      "column": 36,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source-complex1.ts",
+      "line": 13,
+      "line_content": "... !== 'user‮ ⁦// Check if admin⁩ ⁦') {",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 46,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: PDI (U+2069) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source-complex1.ts",
+      "line": 13,
+      "line_content": "...‮ ⁦// Check if admin⁩ ⁦') {",
+      "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE",
+      "recommendation": "Remove the bidirectional control character unless there's a legitimate reason for it (e.g., proper RTL language support). Review the context to ensure it's not being used to hide content.",
+      "severity": "medium"
+    },
+    {
+      "column": 48,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: LRI (U+2066) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source-complex1.ts",
+      "line": 13,
+      "line_content": "...⁦// Check if admin⁩ ⁦') {",
+      "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE",
+      "recommendation": "Remove the bidirectional control character unless there's a legitimate reason for it (e.g., proper RTL language support). Review the context to ensure it's not being used to hide content.",
+      "severity": "medium"
+    },
+    {
+      "column": 25,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: RLO (U+202E) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source.js",
+      "line": 2,
+      "line_content": "...accessLevel != \"user‮ ⁦// Check if admin...",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the bidirectional control character. These are commonly used to reverse text display and hide malicious content. Review the actual byte sequence of the file to understand the true content.",
+      "severity": "critical"
+    },
+    {
+      "column": 25,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: RLO (U+202E) [MOST DANGEROUS - reverses text display] (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source.js",
+      "line": 2,
+      "line_content": "...accessLevel != \"user‮ ⁦// Check if admin...",
+      "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE",
+      "recommendation": "IMMEDIATE ACTION: Remove this RLO character immediately. It reverses text display and is commonly used to hide malicious content. For example, 'exe.txt' with RLO becomes 'txt.exe' when displayed. Review the actual byte sequence of the file using a hex editor.",
+      "severity": "critical"
+    },
+    {
+      "column": 27,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: LRI (U+2066) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source.js",
+      "line": 2,
+      "line_content": "...cessLevel != \"user‮ ⁦// Check if admin⁩ ...",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the bidirectional control character. These are commonly used to reverse text display and hide malicious content. Review the actual byte sequence of the file to understand the true content.",
+      "severity": "high"
+    },
+    {
+      "column": 45,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: PDI (U+2069) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source.js",
+      "line": 2,
+      "line_content": "...‮ ⁦// Check if admin⁩ ⁦\") {",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the bidirectional control character. These are commonly used to reverse text display and hide malicious content. Review the actual byte sequence of the file to understand the true content.",
+      "severity": "high"
+    },
+    {
+      "column": 47,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: LRI (U+2066) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source.js",
+      "line": 2,
+      "line_content": "...⁦// Check if admin⁩ ⁦\") {",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the bidirectional control character. These are commonly used to reverse text display and hide malicious content. Review the actual byte sequence of the file to understand the true content.",
+      "severity": "high"
+    },
+    {
+      "column": 27,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: LRI (U+2066) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source.js",
+      "line": 2,
+      "line_content": "...cessLevel != \"user‮ ⁦// Check if admin⁩ ...",
+      "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE",
+      "recommendation": "Remove the bidirectional control character unless there's a legitimate reason for it (e.g., proper RTL language support). Review the context to ensure it's not being used to hide content.",
+      "severity": "medium"
+    },
+    {
+      "column": 35,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source.js",
+      "line": 2,
+      "line_content": "...l != \"user‮ ⁦// Check if admin⁩ ⁦\") {",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 45,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: PDI (U+2069) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source.js",
+      "line": 2,
+      "line_content": "...‮ ⁦// Check if admin⁩ ⁦\") {",
+      "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE",
+      "recommendation": "Remove the bidirectional control character unless there's a legitimate reason for it (e.g., proper RTL language support). Review the context to ensure it's not being used to hide content.",
+      "severity": "medium"
+    },
+    {
+      "column": 47,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: LRI (U+2066) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-trojan-source.js",
+      "line": 2,
+      "line_content": "...⁦// Check if admin⁩ ⁦\") {",
+      "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE",
+      "recommendation": "Remove the bidirectional control character unless there's a legitimate reason for it (e.g., proper RTL language support). Review the context to ensure it's not being used to hide content.",
+      "severity": "medium"
+    },
+    {
+      "column": 37,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/false-trojan-source.js",
+      "line": 2,
+      "line_content": "...!= \"user\") { // Check if admin",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 26,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-nbsp.js",
+      "line": 13,
+      "line_content": "... API_KEY = \"default_key\"",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 22,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Zero-width character detected: ZWSP (U+200B) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-glassworm.js",
+      "line": 1,
+      "line_content": "...onst a = 'hello' + '​' + 'world';",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the zero-width character. These characters are invisible but can be used to inject hidden content or bypass security checks.",
+      "severity": "critical"
+    },
+    {
+      "column": 22,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Variation selector detected (U+FE0F) - commonly used in Glassworm attacks (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-glassworm.js",
+      "line": 3,
+      "line_content": "...onst c = 'hello' + '️' + 'world';",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the variation selector. If this is intentional (e.g., emoji skin tone), verify the character is not being used to hide malicious content. Review the surrounding code for decoder patterns.",
+      "severity": "critical"
+    },
+    {
+      "column": 14,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Variation selector detected (U+E0100) - commonly used in Glassworm attacks (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-extended-vs.js",
+      "line": 6,
+      "line_content": "  const value󠄀 = input.trim()",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the variation selector. If this is intentional (e.g., emoji skin tone), verify the character is not being used to hide malicious content. Review the surrounding code for decoder patterns.",
+      "severity": "critical"
+    },
+    {
+      "column": 15,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Variation selector detected (U+E0150) - commonly used in Glassworm attacks (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-extended-vs.js",
+      "line": 9,
+      "line_content": "  const result󠅐 = value.toUpperCas...",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the variation selector. If this is intentional (e.g., emoji skin tone), verify the character is not being used to hide malicious content. Review the surrounding code for decoder patterns.",
+      "severity": "critical"
+    },
+    {
+      "column": 14,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Variation selector detected (U+E01EF) - commonly used in Glassworm attacks (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/__fixtures__/true-extended-vs.js",
+      "line": 12,
+      "line_content": "  const final󠇯 = result",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the variation selector. If this is intentional (e.g., emoji skin tone), verify the character is not being used to hide malicious content. Review the surrounding code for decoder patterns.",
+      "severity": "critical"
+    },
+    {
+      "column": 23,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/backward-compat.test.js",
+      "line": 2,
+      "line_content": "... Tests to ensure backward compatibility ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 60,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/backward-compat.test.js",
+      "line": 2,
+      "line_content": "...ty aliases still work.",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 30,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/backward-compat.test.js",
+      "line": 6,
+      "line_content": "...writeFileSync, unlinkSync } from 'fs'",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 14,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/backward-compat.test.js",
+      "line": 9,
+      "line_content": "describe('backward compatibility ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 19,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/backward-compat.test.js",
+      "line": 14,
+      "line_content": "    // parity check",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 10,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/backward-compat.test.js",
+      "line": 29,
+      "line_content": "    unlinkSync(tmpFile)",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 28,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Glassworm attack pattern detected: decoder_pattern (confidence: 75%) (CWE-CWE-956)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/category-detection.test.js",
+      "line": 97,
+      "line_content": "String.fromCodePoint(",
+      "pattern": "UNICODE-GLASSWORM_PATTERN",
+      "recommendation": "HIGH: This code shows patterns consistent with Glassworm-style attacks.",
+      "severity": "high"
+    },
+    {
+      "column": 28,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Glassworm attack pattern detected: decoder_pattern (confidence: 75%) (CWE-CWE-956)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/category-detection.test.js",
+      "line": 98,
+      "line_content": "String.fromCodePoint(",
+      "pattern": "UNICODE-GLASSWORM_PATTERN",
+      "recommendation": "HIGH: This code shows patterns consistent with Glassworm-style attacks.",
+      "severity": "high"
+    },
+    {
+      "column": 18,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/__tests__/category-detection.test.js",
+      "line": 13,
+      "line_content": "    // Test some known Format charact...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 40,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: RLO (U+202E) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 201,
+      "line_content": "...accessLevel != \"user‮ ⁦// Check if admin...",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the bidirectional control character. These are commonly used to reverse text display and hide malicious content. Review the actual byte sequence of the file to understand the true content.",
+      "severity": "critical"
+    },
+    {
+      "column": 40,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: RLO (U+202E) [MOST DANGEROUS - reverses text display] (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 201,
+      "line_content": "...accessLevel != \"user‮ ⁦// Check if admin...",
+      "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE",
+      "recommendation": "IMMEDIATE ACTION: Remove this RLO character immediately. It reverses text display and is commonly used to hide malicious content. For example, 'exe.txt' with RLO becomes 'txt.exe' when displayed. Review the actual byte sequence of the file using a hex editor.",
+      "severity": "critical"
+    },
+    {
+      "column": 42,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: LRI (U+2066) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 201,
+      "line_content": "...cessLevel != \"user‮ ⁦// Check if admin⁩ ...",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the bidirectional control character. These are commonly used to reverse text display and hide malicious content. Review the actual byte sequence of the file to understand the true content.",
+      "severity": "high"
+    },
+    {
+      "column": 60,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: PDI (U+2069) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 201,
+      "line_content": "...‮ ⁦// Check if admin⁩ ⁦\") {'",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the bidirectional control character. These are commonly used to reverse text display and hide malicious content. Review the actual byte sequence of the file to understand the true content.",
+      "severity": "high"
+    },
+    {
+      "column": 62,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: LRI (U+2066) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 201,
+      "line_content": "...⁦// Check if admin⁩ ⁦\") {'",
+      "pattern": "UNICODE-INVISIBLE_CHARACTER",
+      "recommendation": "Remove the bidirectional control character. These are commonly used to reverse text display and hide malicious content. Review the actual byte sequence of the file to understand the true content.",
+      "severity": "high"
+    },
+    {
+      "column": 29,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 6,
+      "line_content": "... trojan source attacks that employ unico...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 62,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 6,
+      "line_content": "...y unicode bidi attacks to inject malicio...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 37,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 14,
+      "line_content": "...://www.npmjs.org/package/anti-trojan-sou...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 37,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 15,
+      "line_content": "...://www.npmjs.org/package/anti-trojan-sou...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 37,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 16,
+      "line_content": "...://www.npmjs.org/package/anti-trojan-sou...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 70,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 17,
+      "line_content": "...n-source/actions?workflow=CI\"><img src=\"...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 140,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 17,
+      "line_content": "...ti-trojan-source/workflows/CI/badge.svg\"...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 23,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 19,
+      "line_content": "...<a href=\"https://snyk.io/test/github/lir...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 90,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 19,
+      "line_content": "...img src=\"https://snyk.io/test/github/lir...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 38,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 25,
+      "line_content": "...[trojan source attacks](https://trojanso...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 100,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 25,
+      "line_content": "...y unicode bidi attacks to inject malicio...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 151,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 25,
+      "line_content": "... well as other attacks that use confusab...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 209,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 25,
+      "line_content": "...h as glassworm attacks). The tool uses b...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 28,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 31,
+      "line_content": "...plugin [inspired work](https://github.co...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 32,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 42,
+      "line_content": "...ry-based approach makes the detection **...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 110,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 46,
+      "line_content": "...d in malicious attacks that `anti-trojan...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 8,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 48,
+      "line_content": "| Attack Type              ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 124,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 53,
+      "line_content": "...ters by category, making detection futur...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 67,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 57,
+      "line_content": "...ode characters attacks, dubbed [Trojan S...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 229,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 57,
+      "line_content": "...l supply chain attacks where adversaries...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 475,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 57,
+      "line_content": "...sed in similar attacks.",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 198,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 59,
+      "line_content": "...tps://github.com/nickboucher/trojan-sour...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 25,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 77,
+      "line_content": "...[Simple boolean check](#simple-boolean-c...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 48,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 77,
+      "line_content": "...#simple-boolean-check)",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 27,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 79,
+      "line_content": "... as a pre-commit hook](#use-as-a-pre-com...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 54,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 79,
+      "line_content": "...-as-a-pre-commit-hook)",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 35,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 87,
+      "line_content": "...ource` is an npm package that supports d...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 14,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 116,
+      "line_content": "Note: For backward compatibility,...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 35,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 146,
+      "line_content": "... (isAdmin) { // Check permissions",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 25,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 150,
+      "line_content": "...Code reviews**: Quickly identify where i...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 18,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 185,
+      "line_content": "- **Automated workflows**: Trigger sp...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 23,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 193,
+      "line_content": "... Simple boolean check",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 64,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 195,
+      "line_content": "...tents to detect (backward compatible):",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 42,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: LRI (U+2066) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 201,
+      "line_content": "...cessLevel != \"user‮ ⁦// Check if admin⁩ ...",
+      "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE",
+      "recommendation": "Remove the bidirectional control character unless there's a legitimate reason for it (e.g., proper RTL language support). Review the context to ensure it's not being used to hide content.",
+      "severity": "medium"
+    },
+    {
+      "column": 50,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 201,
+      "line_content": "...l != \"user‮ ⁦// Check if admin⁩ ⁦\") {'",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 60,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: PDI (U+2069) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 201,
+      "line_content": "...‮ ⁦// Check if admin⁩ ⁦\") {'",
+      "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE",
+      "recommendation": "Remove the bidirectional control character unless there's a legitimate reason for it (e.g., proper RTL language support). Review the context to ensure it's not being used to hide content.",
+      "severity": "medium"
+    },
+    {
+      "column": 62,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Bidirectional control character detected: LRI (U+2066) (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 201,
+      "line_content": "...⁦// Check if admin⁩ ⁦\") {'",
+      "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE",
+      "recommendation": "Remove the bidirectional control character unless there's a legitimate reason for it (e.g., proper RTL language support). Review the context to ensure it's not being used to hide content.",
+      "severity": "medium"
+    },
+    {
+      "column": 18,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 242,
+      "line_content": "You can also check multiple files at ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 26,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 261,
+      "line_content": "... as a pre-commit hook",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 81,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 263,
+      "line_content": ".../pre-commit.com) hook, try this sample c...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 8,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/README.md",
+      "line": 269,
+      "line_content": "    hooks:",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 27,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/CONTRIBUTING.md",
+      "line": 3,
+      "line_content": "...ada: First off, thanks for taking the ti...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 36,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/CONTRIBUTING.md",
+      "line": 3,
+      "line_content": "...t off, thanks for taking the time to con...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 3,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/CONTRIBUTING.md",
+      "line": 18,
+      "line_content": "Make sure the code you...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 103,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/CONTRIBUTING.md",
+      "line": 28,
+      "line_content": "...a git pre-commit hook to enforce them.",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 45,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 4,
+      "line_content": "... trojan source attacks that employ unico...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 78,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 4,
+      "line_content": "...y unicode bidi attacks to inject malicio...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 42,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 26,
+      "line_content": "... && npm run lint:lockfile\",",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 14,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 28,
+      "line_content": "    \"lint:lockfile\": \"lockfile-li...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 26,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 28,
+      "line_content": "...lint:lockfile\": \"lockfile-lint --path pa...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 47,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 28,
+      "line_content": "...file-lint --path package-lock.json --val...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 55,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 28,
+      "line_content": "...t --path package-lock.json --validate-ht...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 21,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 34,
+      "line_content": "    \"install-git-hooks\": \"husky install ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 30,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 34,
+      "line_content": "...all-git-hooks\": \"husky install && chmod ...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 58,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 34,
+      "line_content": "...ll && chmod 755 .husky/*\"",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 4,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 42,
+      "line_content": "  \"keywords\": [",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 25,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 48,
+      "line_content": "...\"bidirectional attacks\",",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 16,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 49,
+      "line_content": "    \"bidi attacks\",",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 11,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 52,
+      "line_content": "    \"attacks\",",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 9,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 84,
+      "line_content": "    \"husky\": \"^7.0.4\",",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 9,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 87,
+      "line_content": "    \"lockfile-lint\": \"^4.6.2...",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    },
+    {
+      "column": 45,
+      "context": {
+        "adjusted_severity": null,
+        "is_aws_example": false,
+        "is_comment": false,
+        "is_documentation": false,
+        "is_placeholder": false,
+        "is_test_file": false,
+        "note": "Unicode attack: Homoglyph detected: 'k' (U+006B) from IPA script confusable with 'k' - 90% similarity (CWE-CWE-172)"
+      },
+      "detected_secret": null,
+      "file": "anti-trojan-source/package.json",
+      "line": 178,
+      "line_content": "...ossible-timing-attacks\": \"error\",",
+      "pattern": "UNICODE-HOMOGLYPH",
+      "recommendation": "Replace the IPA character 'k' with the ASCII character 'k'. This appears to be a homoglyph attack where visually similar characters are used to spoof identifiers. Review the context to determine if this is intentional (e.g., i18n) or malicious.",
+      "severity": "medium"
+    }
+  ],
+  "scan_duration_ms": 56,
+  "summary": {
+    "by_severity": {
+      "critical": 13,
+      "high": 18,
+      "low": 0,
+      "medium": 166
+    },
+    "files_scanned": 24,
+    "scan_duration_ms": 56,
+    "top_patterns": [
+      {
+        "count": 157,
+        "pattern": "UNICODE-HOMOGLYPH"
+      },
+      {
+        "count": 19,
+        "pattern": "UNICODE-INVISIBLE_CHARACTER"
+      },
+      {
+        "count": 12,
+        "pattern": "UNICODE-BIDIRECTIONAL_OVERRIDE"
+      },
+      {
+        "count": 9,
+        "pattern": "UNICODE-GLASSWORM_PATTERN"
+      }
+    ],
+    "total_findings": 197
+  },
+  "version": "0.6.2"
+}

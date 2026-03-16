@@ -157,15 +157,20 @@ impl HomoglyphDetector {
     }
 
     /// Get context around the character position
+    /// Get context around the character position (Unicode-safe)
     fn get_context(&self, line: &str, char_pos: usize) -> String {
+        let chars: Vec<char> = line.chars().collect();
+        let len = chars.len();
         let start = char_pos.saturating_sub(20);
-        let end = (char_pos + 20).min(line.len());
-        
+        let end = (char_pos + 20).min(len);
+
         let prefix = if start > 0 { "..." } else { "" };
-        let suffix = if end < line.len() { "..." } else { "" };
-        
-        format!("{}{}{}", prefix, &line[start..end], suffix)
+        let suffix = if end < len { "..." } else { "" };
+
+        let context: String = chars[start..end].iter().collect();
+        format!("{}{}{}", prefix, context, suffix)
     }
+
 }
 
 /// Trait implementation for UnicodeDetector
