@@ -3,9 +3,9 @@
 **Last Updated:** 2026-03-15
 **Session:** Phase 3 P1 COMPLETE (TUI, Threat Model, CFG)
 **Context Window:** ~50% (healthy)
-**Status:** 🟢 Operational - v0.4.0
+**Status:** 🟢 Operational - v0.7.4
 **Directory:** `/home/shva/QwenDev/devshield-internal/coax`
-**Binary:** `./target/release/coax` (v0.4.0, 3.4MB)
+**Binary:** `./target/release/coax` (v0.7.4, 3.4MB)
 **Repository:** https://github.com/gl33mer/coax
 
 ---
@@ -18,7 +18,7 @@
 
 ### Current Version
 
-- **Version:** 0.4.0
+- **Version:** 0.7.4
 - **Release Date:** 2026-03-15
 - **Phase:** Phase 3 P1 (TUI, Threat Model, CFG)
 - **License:** MIT OR Apache-2.0
@@ -385,7 +385,7 @@ test result: ok. 90 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 
 ## 📈 Performance Metrics
 
-### Current Benchmarks (v0.4.0)
+### Current Benchmarks (v0.7.4)
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
@@ -688,7 +688,7 @@ coax scan --help
 | Priority | Task | Effort | Status |
 |----------|------|--------|--------|
 | **P1-1** | QA and benchmarking | 4 hours | ⏳ TODO |
-| **P1-2** | Release v0.4.0 preparation | 2 hours | ⏳ TODO |
+| **P1-2** | Release v0.7.4 preparation | 2 hours | ⏳ TODO |
 | **P1-3** | Documentation cleanup | 2 hours | ⏳ TODO |
 | **P1-4** | Performance optimization | 3 hours | ⏳ TODO |
 
@@ -864,7 +864,7 @@ let patterns = loader.get_patterns();
 ---
 
 *Last updated: 2026-03-15*
-*Next session: QA, Benchmarking, Release v0.4.0 Preparation*
+*Next session: QA, Benchmarking, Release v0.7.4 Preparation*
 *Directory: `/home/shva/QwenDev/devshield-internal/coax`*
-*Binary: `./target/release/coax` v0.4.0*
+*Binary: `./target/release/coax` v0.7.4*
 *Context: ~50% (healthy)*
