@@ -14,7 +14,7 @@ module.exports = {
     
     // Discord Bot Token
     discord: {
-        token: "MTIzNDU2Nzg5MDEyMzQ1Njc4OQ.EXAMPLEPLACEHOLDER"
+        token: "MTIzNDU2Nzg5MDEyMzQ1Njc4OQ.AbCdEf.GhIjKlMnOpQrStUvWxYz1234567890"
     },
     
     // Telegram Bot Token
