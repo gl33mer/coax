@@ -16,11 +16,11 @@ pub fn render_finding_detail(frame: &mut Frame, app: &mut App, area: Rect) {
         .direction(Direction::Vertical)
         .margin(1)
         .constraints([
-            Constraint::Length(3),  // Title
-            Constraint::Length(6),  // Finding info
-            Constraint::Min(8),     // Code preview
-            Constraint::Length(4),  // Recommendation
-            Constraint::Length(3),  // Actions
+            Constraint::Length(3), // Title
+            Constraint::Length(6), // Finding info
+            Constraint::Min(8),    // Code preview
+            Constraint::Length(4), // Recommendation
+            Constraint::Length(3), // Actions
         ])
         .split(area);
 
@@ -84,8 +84,8 @@ fn render_detail_title(frame: &mut Frame, finding: &crate::app::Finding, area: R
         Span::raw(format!(" ({:?})", finding.severity)),
     ]);
 
-    let paragraph = Paragraph::new(text)
-        .block(Block::default().borders(Borders::ALL).title("Finding"));
+    let paragraph =
+        Paragraph::new(text).block(Block::default().borders(Borders::ALL).title("Finding"));
 
     frame.render_widget(paragraph, area);
 }
@@ -111,13 +111,16 @@ fn render_finding_info(frame: &mut Frame, finding: &crate::app::Finding, area: R
             Span::raw(location),
         ]),
         Line::from(vec![
-            Span::styled("Confidence: ", Style::default().add_modifier(Modifier::BOLD)),
+            Span::styled(
+                "Confidence: ",
+                Style::default().add_modifier(Modifier::BOLD),
+            ),
             Span::raw(confidence),
         ]),
     ];
 
-    let paragraph = Paragraph::new(lines)
-        .block(Block::default().borders(Borders::ALL).title("Details"));
+    let paragraph =
+        Paragraph::new(lines).block(Block::default().borders(Borders::ALL).title("Details"));
 
     frame.render_widget(paragraph, area);
 }
@@ -128,9 +131,12 @@ fn render_code_preview(frame: &mut Frame, finding: &crate::app::Finding, area: R
     // Add code context if available
     if let Some(context) = &finding.code_context {
         for ctx_line in &context.before {
-            lines.push(Line::from(format!("{:4}: {}", ctx_line.number, ctx_line.content)));
+            lines.push(Line::from(format!(
+                "{:4}: {}",
+                ctx_line.number, ctx_line.content
+            )));
         }
-        
+
         // Highlight the finding line
         lines.push(Line::from(vec![
             Span::styled(
@@ -142,9 +148,12 @@ fn render_code_preview(frame: &mut Frame, finding: &crate::app::Finding, area: R
                 Style::default().bg(Color::DarkGray).fg(Color::Yellow),
             ),
         ]));
-        
+
         for ctx_line in &context.after {
-            lines.push(Line::from(format!("{:4}: {}", ctx_line.number, ctx_line.content)));
+            lines.push(Line::from(format!(
+                "{:4}: {}",
+                ctx_line.number, ctx_line.content
+            )));
         }
     } else if let Some(content) = &finding.line_content {
         // Just show the line content
@@ -176,7 +185,11 @@ fn render_recommendation(frame: &mut Frame, finding: &crate::app::Finding, area:
     };
 
     let paragraph = Paragraph::new(text)
-        .block(Block::default().borders(Borders::ALL).title("Recommendation"))
+        .block(
+            Block::default()
+                .borders(Borders::ALL)
+                .title("Recommendation"),
+        )
         .wrap(Wrap { trim: true })
         .style(if finding.false_positive || finding.ignored {
             Style::default().fg(Color::Gray)
@@ -189,7 +202,7 @@ fn render_recommendation(frame: &mut Frame, finding: &crate::app::Finding, area:
 
 fn render_detail_actions(frame: &mut Frame, app: &App, area: Rect) {
     let finding = app.selected_finding();
-    
+
     let actions = if let Some(f) = finding {
         if f.false_positive || f.ignored {
             vec![

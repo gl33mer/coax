@@ -1,7 +1,7 @@
 //! Unicode Scanner - Main Entry Point
 //!
 //! Primary entry point for Unicode attack detection.
-//! 
+//!
 //! Architecture Notes:
 //! - Thread-safe for parallel scanning
 //! - Configurable detectors
@@ -9,14 +9,10 @@
 //! - Includes scan statistics
 
 use crate::unicode::config::UnicodeConfig;
-use crate::unicode::findings::{UnicodeFinding, UnicodeCategory, Severity, UnicodeScanStats};
 use crate::unicode::detectors::{
-    InvisibleCharDetector,
-    HomoglyphDetector,
-    BidiDetector,
-    GlasswormDetector,
-    UnicodeTagDetector,
+    BidiDetector, GlasswormDetector, HomoglyphDetector, InvisibleCharDetector, UnicodeTagDetector,
 };
+use crate::unicode::findings::{Severity, UnicodeCategory, UnicodeFinding, UnicodeScanStats};
 use std::sync::Arc;
 
 /// Primary entry point for Unicode attack detection
@@ -91,7 +87,8 @@ impl UnicodeScanner {
 
         // Sort findings by severity (critical first) and then by location
         all_findings.sort_by(|a, b| {
-            b.severity.cmp(&a.severity)
+            b.severity
+                .cmp(&a.severity)
                 .then_with(|| a.line.cmp(&b.line))
                 .then_with(|| a.column.cmp(&b.column))
         });
@@ -153,7 +150,7 @@ impl UnicodeScanner {
             (cp >= 0xFE00 && cp <= 0xFE0F) ||  // Variation selectors
             (cp >= 0x200B && cp <= 0x200F) ||  // Zero-width
             (cp >= 0x202A && cp <= 0x202E) ||  // Bidi
-            (cp >= 0xE0000 && cp <= 0xE007F)   // Tags
+            (cp >= 0xE0000 && cp <= 0xE007F) // Tags
         })
     }
 
@@ -166,7 +163,7 @@ impl UnicodeScanner {
     /// Deduplicate findings (same file, line, column, code_point)
     pub fn deduplicate_findings(findings: Vec<UnicodeFinding>) -> Vec<UnicodeFinding> {
         use std::collections::HashSet;
-        
+
         let mut seen = HashSet::new();
         let mut deduped = Vec::new();
 
@@ -207,7 +204,8 @@ impl ScanSessionStats {
 
     pub fn from_findings(findings: &[UnicodeFinding], duration_ms: u64) -> Self {
         let mut stats = Self {
-            total_files: findings.iter()
+            total_files: findings
+                .iter()
                 .map(|f| &f.file)
                 .collect::<std::collections::HashSet<_>>()
                 .len(),
@@ -242,57 +240,65 @@ mod tests {
     #[test]
     fn test_full_scan_variation_selector() {
         let scanner = UnicodeScanner::with_default_config();
-        
+
         let content = "const secret\u{FE00}Key = 'value';";
         let findings = scanner.scan(content, "test.js");
-        
+
         assert!(!findings.is_empty());
-        assert!(findings.iter().any(|f| f.category == UnicodeCategory::InvisibleCharacter));
+        assert!(findings
+            .iter()
+            .any(|f| f.category == UnicodeCategory::InvisibleCharacter));
     }
 
     #[test]
     fn test_full_scan_homoglyph() {
         let scanner = UnicodeScanner::with_default_config();
-        
+
         let content = "const pаssword = 'secret';"; // Cyrillic 'а'
         let findings = scanner.scan(content, "test.js");
-        
+
         assert!(!findings.is_empty());
-        assert!(findings.iter().any(|f| f.category == UnicodeCategory::Homoglyph));
+        assert!(findings
+            .iter()
+            .any(|f| f.category == UnicodeCategory::Homoglyph));
     }
 
     #[test]
     fn test_full_scan_bidi() {
         let scanner = UnicodeScanner::with_default_config();
-        
+
         let content = "const file = \"test\u{202E}exe\";";
         let findings = scanner.scan(content, "test.js");
-        
+
         assert!(!findings.is_empty());
-        assert!(findings.iter().any(|f| f.category == UnicodeCategory::BidirectionalOverride));
+        assert!(findings
+            .iter()
+            .any(|f| f.category == UnicodeCategory::BidirectionalOverride));
     }
 
     #[test]
     fn test_full_scan_glassworm() {
         let scanner = UnicodeScanner::with_default_config();
-        
+
         let content = r#"
             const codes = "secret".split('').map(c => c.codePointAt(0));
             eval(String.fromCharCode(...codes));
         "#;
         let findings = scanner.scan(content, "test.js");
-        
+
         assert!(!findings.is_empty());
-        assert!(findings.iter().any(|f| f.category == UnicodeCategory::GlasswormPattern));
+        assert!(findings
+            .iter()
+            .any(|f| f.category == UnicodeCategory::GlasswormPattern));
     }
 
     #[test]
     fn test_clean_content() {
         let scanner = UnicodeScanner::with_default_config();
-        
+
         let content = "const normal = 'hello world';";
         let findings = scanner.scan(content, "test.js");
-        
+
         assert!(findings.is_empty());
     }
 
@@ -312,15 +318,27 @@ mod tests {
     #[test]
     fn test_deduplication() {
         let finding1 = UnicodeFinding::new(
-            "test.js", 1, 5, 0xFE00, '\u{FE00}',
-            UnicodeCategory::InvisibleCharacter, Severity::Critical,
-            "test", "fix"
+            "test.js",
+            1,
+            5,
+            0xFE00,
+            '\u{FE00}',
+            UnicodeCategory::InvisibleCharacter,
+            Severity::Critical,
+            "test",
+            "fix",
         );
         let finding2 = finding1.clone(); // Duplicate
         let finding3 = UnicodeFinding::new(
-            "test.js", 2, 10, 0xFE01, '\u{FE01}',
-            UnicodeCategory::InvisibleCharacter, Severity::Critical,
-            "test", "fix"
+            "test.js",
+            2,
+            10,
+            0xFE01,
+            '\u{FE01}',
+            UnicodeCategory::InvisibleCharacter,
+            Severity::Critical,
+            "test",
+            "fix",
         );
 
         let findings = vec![finding1.clone(), finding2, finding3];

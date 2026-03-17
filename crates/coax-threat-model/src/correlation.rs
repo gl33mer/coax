@@ -3,7 +3,10 @@
 //! This module provides correlation between security findings and threat models,
 //! enabling enhanced threat analysis based on scan results.
 
-use crate::model::{Asset, AssetKind, EntryPoint, Impact, Likelihood, Sensitivity, Severity, StrideCategory, Threat, ThreatModel};
+use crate::model::{
+    Asset, AssetKind, EntryPoint, Impact, Likelihood, Sensitivity, Severity, StrideCategory,
+    Threat, ThreatModel,
+};
 use crate::stride::{
     calculate_risk_score, categorize_finding_stride, determine_impact, determine_likelihood,
 };
@@ -33,9 +36,7 @@ pub fn correlate_findings_with_threats(
             let impact = calculate_impact(finding);
             let risk_score = calculate_risk_score(likelihood, impact);
 
-            let exploited_ep = related_entry_points
-                .first()
-                .map(|ep| ep.name.clone());
+            let exploited_ep = related_entry_points.first().map(|ep| ep.name.clone());
 
             threats.push(Threat {
                 id: format!("THR-{:03}", threats.len() + 1),
@@ -143,9 +144,11 @@ pub fn enhance_threat_model(model: &mut ThreatModel, findings: &[ScanResult]) {
         };
 
         // Avoid duplicates
-        if !model.assets.iter().any(|a| {
-            a.name == asset.name && a.location == asset.location
-        }) {
+        if !model
+            .assets
+            .iter()
+            .any(|a| a.name == asset.name && a.location == asset.location)
+        {
             model.assets.push(asset);
         }
     }
@@ -277,8 +280,8 @@ pub fn get_priority_recommendations(threats: &[Threat]) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::path::PathBuf;
     use coax_scanner::FindingContext;
+    use std::path::PathBuf;
 
     #[test]
     fn test_correlate_findings() {

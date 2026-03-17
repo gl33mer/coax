@@ -4,7 +4,7 @@
 //! representation and vulnerability path analysis.
 
 use petgraph::graph::{DiGraph, NodeIndex};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 /// Control Flow Graph representing program execution paths
@@ -49,7 +49,8 @@ impl BasicBlock {
         if stmt.line > self.line_end {
             self.line_end = stmt.line;
         }
-        self.variables_defined.extend(stmt.variables_defined.clone());
+        self.variables_defined
+            .extend(stmt.variables_defined.clone());
         self.variables_used.extend(stmt.variables_used.clone());
         self.statements.push(stmt);
     }
@@ -228,7 +229,8 @@ impl VulnerabilitySlice {
     pub fn add_node(&mut self, node: NodeIndex, block: &BasicBlock) {
         self.nodes.push(node);
         self.variables.extend(block.variables_used.iter().cloned());
-        self.variables.extend(block.variables_defined.iter().cloned());
+        self.variables
+            .extend(block.variables_defined.iter().cloned());
         if block.line_start > 0 {
             self.line_numbers.push(block.line_start);
         }

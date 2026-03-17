@@ -1,11 +1,14 @@
 //! Integration tests for coax-threat-model crate
 
-use coax_threat_model::{
-    correlate_findings_with_threats, generate_dfd, format_threat_model,
-    GeneratorConfig, OutputFormat, ThreatModelGenerator,
-    model::{EntryPoint, EntryPointKind, Impact, Likelihood, Severity, StrideCategory, Threat, ThreatModel},
-};
 use coax_scanner::Scanner;
+use coax_threat_model::{
+    correlate_findings_with_threats, format_threat_model, generate_dfd,
+    model::{
+        EntryPoint, EntryPointKind, Impact, Likelihood, Severity, StrideCategory, Threat,
+        ThreatModel,
+    },
+    GeneratorConfig, OutputFormat, ThreatModelGenerator,
+};
 use std::fs;
 use tempfile::TempDir;
 
@@ -140,10 +143,7 @@ const GITHUB_TOKEN = "ghp_1234567890abcdefghij1234567890abcdefghij";
     let scanner = Scanner::with_default_patterns();
     let (findings, _) = scanner.scan_with_summary(temp_dir.path());
 
-    assert!(
-        !findings.is_empty(),
-        "Expected findings from secret scan"
-    );
+    assert!(!findings.is_empty(), "Expected findings from secret scan");
 
     // Create entry points
     let entry_points = vec![EntryPoint {
@@ -159,10 +159,7 @@ const GITHUB_TOKEN = "ghp_1234567890abcdefghij1234567890abcdefghij";
     // Correlate findings with entry points
     let threats = correlate_findings_with_threats(&findings, &entry_points);
 
-    assert!(
-        !threats.is_empty(),
-        "Expected threats from correlation"
-    );
+    assert!(!threats.is_empty(), "Expected threats from correlation");
 
     // Check STRIDE categories
     for threat in &threats {

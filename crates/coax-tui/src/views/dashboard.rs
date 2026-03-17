@@ -45,7 +45,10 @@ fn render_repository_info(frame: &mut Frame, app: &App, area: Rect) {
     let text = vec![
         Line::from(vec![
             Span::styled("🛡️ ", Style::default().fg(Color::Blue)),
-            Span::styled(" Coax Security Dashboard", Style::default().add_modifier(Modifier::BOLD)),
+            Span::styled(
+                " Coax Security Dashboard",
+                Style::default().add_modifier(Modifier::BOLD),
+            ),
         ]),
         Line::from(format!(
             "Repository: {}  |  Last Scan: {}",
@@ -54,8 +57,8 @@ fn render_repository_info(frame: &mut Frame, app: &App, area: Rect) {
         )),
     ];
 
-    let paragraph = Paragraph::new(text)
-        .block(Block::default().borders(Borders::ALL).title("Info"));
+    let paragraph =
+        Paragraph::new(text).block(Block::default().borders(Borders::ALL).title("Info"));
 
     frame.render_widget(paragraph, area);
 }
@@ -64,31 +67,16 @@ fn render_severity_counts(frame: &mut Frame, app: &App, area: Rect) {
     let counts = app.severity_counts();
 
     let rows = vec![
-        Row::new(vec![
-            "Critical".to_string(),
-            counts.critical.to_string(),
-        ])
-        .style(Style::default().fg(Color::Red)),
-        Row::new(vec![
-            "High".to_string(),
-            counts.high.to_string(),
-        ])
-        .style(Style::default().fg(Color::Yellow)),
-        Row::new(vec![
-            "Medium".to_string(),
-            counts.medium.to_string(),
-        ])
-        .style(Style::default().fg(Color::Cyan)),
-        Row::new(vec![
-            "Low".to_string(),
-            counts.low.to_string(),
-        ])
-        .style(Style::default().fg(Color::Green)),
-        Row::new(vec![
-            "Info".to_string(),
-            counts.info.to_string(),
-        ])
-        .style(Style::default().fg(Color::White)),
+        Row::new(vec!["Critical".to_string(), counts.critical.to_string()])
+            .style(Style::default().fg(Color::Red)),
+        Row::new(vec!["High".to_string(), counts.high.to_string()])
+            .style(Style::default().fg(Color::Yellow)),
+        Row::new(vec!["Medium".to_string(), counts.medium.to_string()])
+            .style(Style::default().fg(Color::Cyan)),
+        Row::new(vec!["Low".to_string(), counts.low.to_string()])
+            .style(Style::default().fg(Color::Green)),
+        Row::new(vec!["Info".to_string(), counts.info.to_string()])
+            .style(Style::default().fg(Color::White)),
     ];
 
     let table = Table::new(
@@ -130,20 +118,19 @@ fn render_recent_findings(frame: &mut Frame, app: &App, area: Rect) {
 
             let content = format!(
                 "{} {}  {}:{}  [Enter to view]",
-                icon,
-                f.pattern,
-                f.file,
-                f.line
+                icon, f.pattern, f.file, f.line
             );
 
-            ListItem::new(Line::from(vec![
-                Span::raw(content),
-            ])).style(Style::default().fg(severity_color))
+            ListItem::new(Line::from(vec![Span::raw(content)]))
+                .style(Style::default().fg(severity_color))
         })
         .collect();
 
-    let list = List::new(findings)
-        .block(Block::default().borders(Borders::ALL).title("Recent Findings"));
+    let list = List::new(findings).block(
+        Block::default()
+            .borders(Borders::ALL)
+            .title("Recent Findings"),
+    );
 
     frame.render_widget(list, area);
 }
@@ -180,7 +167,11 @@ fn render_quick_actions(frame: &mut Frame, app: &App, area: Rect) {
     };
 
     let paragraph = Paragraph::new(Line::from(actions))
-        .block(Block::default().borders(Borders::ALL).title("Quick Actions"))
+        .block(
+            Block::default()
+                .borders(Borders::ALL)
+                .title("Quick Actions"),
+        )
         .wrap(Wrap { trim: false });
 
     frame.render_widget(paragraph, area);

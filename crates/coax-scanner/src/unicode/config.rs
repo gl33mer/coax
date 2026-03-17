@@ -10,22 +10,22 @@ use std::collections::HashSet;
 pub struct UnicodeConfig {
     /// Enable Unicode scanning
     pub enabled: bool,
-    
+
     /// Sensitivity level: low, medium, high, critical
     pub sensitivity: SensitivityLevel,
-    
+
     /// Enable/disable individual detectors
     pub detectors: DetectorConfig,
-    
+
     /// File patterns to include
     pub include_patterns: Vec<String>,
-    
+
     /// File patterns to exclude
     pub exclude_patterns: Vec<String>,
-    
+
     /// Allowlist configuration
     pub allowlist: AllowlistConfig,
-    
+
     /// Performance tuning
     pub performance: PerformanceConfig,
 }
@@ -71,22 +71,22 @@ impl Default for SensitivityLevel {
 pub struct DetectorConfig {
     /// Detect invisible characters (zero-width, variation selectors)
     pub invisible_chars: bool,
-    
+
     /// Detect homoglyph/confusable characters
     pub homoglyphs: bool,
-    
+
     /// Detect bidirectional overrides
     pub bidirectional: bool,
-    
+
     /// Detect Unicode tags
     pub unicode_tags: bool,
-    
+
     /// Detect Glassworm-specific patterns
     pub glassworm: bool,
-    
+
     /// Detect normalization attacks
     pub normalization: bool,
-    
+
     /// Detect emoji obfuscation
     pub emoji_obfuscation: bool,
 }
@@ -110,13 +110,13 @@ impl Default for DetectorConfig {
 pub struct AllowlistConfig {
     /// Files to always skip (glob patterns)
     pub files: Vec<String>,
-    
+
     /// Directories to always skip (glob patterns)
     pub directories: Vec<String>,
-    
+
     /// Character ranges to allow (for i18n projects)
     pub character_ranges: Vec<(u32, u32)>,
-    
+
     /// Scripts to allow (e.g., "Han", "Hangul" for Asian language projects)
     pub allowed_scripts: Vec<String>,
 }
@@ -126,13 +126,13 @@ pub struct AllowlistConfig {
 pub struct PerformanceConfig {
     /// Maximum file size to scan (bytes)
     pub max_file_size: u64,
-    
+
     /// Skip binary files
     pub skip_binary: bool,
-    
+
     /// Early exit on critical findings
     pub exit_on_critical: bool,
-    
+
     /// Parallel scanning enabled
     pub parallel: bool,
 }
@@ -243,14 +243,14 @@ impl UnicodeConfig {
                 return true;
             }
         }
-        
+
         // Check allowlist files
         for pattern in &self.allowlist.files {
             if self.matches_glob(pattern, file_path) {
                 return false; // Explicitly allowed
             }
         }
-        
+
         false
     }
 
@@ -259,11 +259,11 @@ impl UnicodeConfig {
         // Convert glob to regex-like matching
         let pattern = pattern.replace("**", ".*").replace("*", "[^/]*");
         let regex_pattern = format!("^{}$", pattern);
-        
+
         if let Ok(re) = regex::Regex::new(&regex_pattern) {
             return re.is_match(text);
         }
-        
+
         false
     }
 
@@ -290,7 +290,10 @@ mod tests {
     fn test_i18n_config() {
         let config = UnicodeConfig::for_i18n_project();
         assert_eq!(config.sensitivity, SensitivityLevel::Medium);
-        assert!(config.allowlist.allowed_scripts.contains(&"Han".to_string()));
+        assert!(config
+            .allowlist
+            .allowed_scripts
+            .contains(&"Han".to_string()));
     }
 
     #[test]
@@ -306,7 +309,7 @@ mod tests {
             sensitivity: SensitivityLevel::High,
             ..Default::default()
         };
-        
+
         assert!(config.sensitivity_allows(SensitivityLevel::Low));
         assert!(config.sensitivity_allows(SensitivityLevel::Medium));
         assert!(config.sensitivity_allows(SensitivityLevel::High));

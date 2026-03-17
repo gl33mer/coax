@@ -26,7 +26,10 @@ pub fn handle_key_event(app: &mut App, key: KeyEvent) -> EventResult {
 
     // Handle help view
     if app.show_help {
-        if matches!(key.code, KeyCode::Char('q') | KeyCode::Esc | KeyCode::Char('?')) {
+        if matches!(
+            key.code,
+            KeyCode::Char('q') | KeyCode::Esc | KeyCode::Char('?')
+        ) {
             app.show_help = false;
         }
         return EventResult::Handled;
@@ -99,7 +102,7 @@ fn handle_dashboard_keys(app: &mut App, key: KeyEvent) -> EventResult {
             }
             EventResult::Handled
         }
-        
+
         // View switching
         KeyCode::Char('l') | KeyCode::Char('L') => {
             app.switch_view(View::FindingList);
@@ -109,7 +112,7 @@ fn handle_dashboard_keys(app: &mut App, key: KeyEvent) -> EventResult {
             app.switch_view(View::Settings);
             EventResult::Handled
         }
-        
+
         // Actions
         KeyCode::Char('r') | KeyCode::Char('R') => {
             app.scan();
@@ -120,7 +123,7 @@ fn handle_dashboard_keys(app: &mut App, key: KeyEvent) -> EventResult {
             app.search_query.clear();
             EventResult::Handled
         }
-        
+
         _ => EventResult::NotHandled,
     }
 }
@@ -147,7 +150,7 @@ fn handle_list_keys(app: &mut App, key: KeyEvent) -> EventResult {
             app.go_back();
             EventResult::Handled
         }
-        
+
         // Filtering (number keys)
         KeyCode::Char('1') => {
             app.toggle_severity_filter(None);
@@ -173,7 +176,7 @@ fn handle_list_keys(app: &mut App, key: KeyEvent) -> EventResult {
             app.toggle_severity_filter(Some(Severity::Low));
             EventResult::Handled
         }
-        
+
         // Sorting
         KeyCode::Char('s') | KeyCode::Char('S') => {
             app.set_sort_field(SortField::Severity);
@@ -191,26 +194,26 @@ fn handle_list_keys(app: &mut App, key: KeyEvent) -> EventResult {
             app.set_sort_field(SortField::Pattern);
             EventResult::Handled
         }
-        
+
         // View switching
         KeyCode::Char('d') | KeyCode::Char('D') => {
             app.switch_view(View::Dashboard);
             EventResult::Handled
         }
-        
+
         // Search
         KeyCode::Char('/') => {
             app.search_mode = true;
             app.search_query.clear();
             EventResult::Handled
         }
-        
+
         // Actions
         KeyCode::Char('r') | KeyCode::Char('R') => {
             app.scan();
             EventResult::Handled
         }
-        
+
         _ => EventResult::NotHandled,
     }
 }
@@ -223,7 +226,7 @@ fn handle_detail_keys(app: &mut App, key: KeyEvent) -> EventResult {
             app.go_back();
             EventResult::Handled
         }
-        
+
         // Actions
         KeyCode::Char('i') | KeyCode::Char('I') => {
             app.ignore_selected();
@@ -235,7 +238,8 @@ fn handle_detail_keys(app: &mut App, key: KeyEvent) -> EventResult {
         }
         KeyCode::Char('r') | KeyCode::Char('R') => {
             // Rotate action - just show message for now
-            app.status_message = Some("Rotate the credential in the respective service".to_string());
+            app.status_message =
+                Some("Rotate the credential in the respective service".to_string());
             EventResult::Handled
         }
         KeyCode::Char('c') | KeyCode::Char('C') => {
@@ -247,7 +251,7 @@ fn handle_detail_keys(app: &mut App, key: KeyEvent) -> EventResult {
             app.status_message = Some("Status cleared".to_string());
             EventResult::Handled
         }
-        
+
         _ => EventResult::NotHandled,
     }
 }
@@ -264,7 +268,10 @@ fn handle_settings_keys(app: &mut App, key: KeyEvent) -> EventResult {
 }
 
 /// Poll for and handle the next event
-pub fn poll_and_handle_event(app: &mut App, timeout: Duration) -> Result<EventResult, std::io::Error> {
+pub fn poll_and_handle_event(
+    app: &mut App,
+    timeout: Duration,
+) -> Result<EventResult, std::io::Error> {
     if event::poll(timeout)? {
         if let event::Event::Key(key) = event::read()? {
             if key.kind == event::KeyEventKind::Press {
@@ -283,22 +290,20 @@ mod tests {
 
     fn create_test_app() -> App {
         let mut app = App::new(PathBuf::from("."));
-        app.scan_results = vec![
-            Finding {
-                file: "test1.rs".to_string(),
-                line: 1,
-                column: None,
-                pattern: "TEST".to_string(),
-                severity: Severity::High,
-                recommendation: "Test".to_string(),
-                line_content: None,
-                code_context: None,
-                confidence: 100,
-                ignored: false,
-                false_positive: false,
-                notes: None,
-            },
-        ];
+        app.scan_results = vec![Finding {
+            file: "test1.rs".to_string(),
+            line: 1,
+            column: None,
+            pattern: "TEST".to_string(),
+            severity: Severity::High,
+            recommendation: "Test".to_string(),
+            line_content: None,
+            code_context: None,
+            confidence: 100,
+            ignored: false,
+            false_positive: false,
+            notes: None,
+        }];
         app.apply_filters();
         app
     }
@@ -314,12 +319,12 @@ mod tests {
     #[test]
     fn test_navigation() {
         let mut app = create_test_app();
-        
+
         // Navigate down
         let key = KeyEvent::new(KeyCode::Down, KeyModifiers::empty());
         let result = handle_key_event(&mut app, key);
         assert_eq!(result, EventResult::Handled);
-        
+
         // Navigate up
         let key = KeyEvent::new(KeyCode::Up, KeyModifiers::empty());
         let result = handle_key_event(&mut app, key);
@@ -329,12 +334,12 @@ mod tests {
     #[test]
     fn test_view_switching() {
         let mut app = create_test_app();
-        
+
         // Switch to list view
         let key = KeyEvent::new(KeyCode::Char('l'), KeyModifiers::empty());
         handle_key_event(&mut app, key);
         assert_eq!(app.view, View::FindingList);
-        
+
         // Go back
         let key = KeyEvent::new(KeyCode::Left, KeyModifiers::empty());
         handle_key_event(&mut app, key);
@@ -345,12 +350,12 @@ mod tests {
     fn test_severity_filter() {
         let mut app = create_test_app();
         app.switch_view(View::FindingList);
-        
+
         // Filter by critical
         let key = KeyEvent::new(KeyCode::Char('2'), KeyModifiers::empty());
         handle_key_event(&mut app, key);
         assert!(app.filter_severity.is_some());
-        
+
         // Clear filter
         let key = KeyEvent::new(KeyCode::Char('1'), KeyModifiers::empty());
         handle_key_event(&mut app, key);
@@ -360,17 +365,17 @@ mod tests {
     #[test]
     fn test_search_mode() {
         let mut app = create_test_app();
-        
+
         // Enter search mode
         let key = KeyEvent::new(KeyCode::Char('/'), KeyModifiers::empty());
         handle_key_event(&mut app, key);
         assert!(app.search_mode);
-        
+
         // Type search query
         let key = KeyEvent::new(KeyCode::Char('t'), KeyModifiers::empty());
         handle_key_event(&mut app, key);
         assert_eq!(app.search_query, "t");
-        
+
         // Exit search mode
         let key = KeyEvent::new(KeyCode::Esc, KeyModifiers::empty());
         handle_key_event(&mut app, key);

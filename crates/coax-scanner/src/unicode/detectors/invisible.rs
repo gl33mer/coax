@@ -1,7 +1,7 @@
 //! Invisible Character Detector
 //!
 //! Detects invisible Unicode characters used in Glassworm-style attacks.
-//! 
+//!
 //! Unicode Ranges Monitored:
 //! - U+FE00-U+FE0F: Variation Selectors (Glassworm primary)
 //! - U+E0100-U+E01EF: Variation Selectors Supplement
@@ -9,11 +9,11 @@
 //! - U+2060-U+206F: Word joiner, invisible operators
 //! - U+E0000-U+E007F: Tags
 
-use crate::unicode::config::{UnicodeConfig, SensitivityLevel};
-use crate::unicode::findings::{UnicodeFinding, UnicodeCategory, Severity};
+use crate::unicode::config::{SensitivityLevel, UnicodeConfig};
+use crate::unicode::findings::{Severity, UnicodeCategory, UnicodeFinding};
 use crate::unicode::ranges::{
-    is_in_invisible_range, is_in_critical_range, is_variation_selector,
-    get_bidi_name, get_zero_width_name,
+    get_bidi_name, get_zero_width_name, is_in_critical_range, is_in_invisible_range,
+    is_variation_selector,
 };
 use lazy_static::lazy_static;
 use regex::Regex;
@@ -50,7 +50,7 @@ impl InvisibleCharDetector {
         for (line_num, line) in content.lines().enumerate() {
             for (col_num, ch) in line.chars().enumerate() {
                 let code_point = ch as u32;
-                
+
                 if is_in_invisible_range(code_point) {
                     // Check if this is in a legitimate context
                     if self.is_legitimate_context(line, col_num) {
@@ -129,18 +129,30 @@ impl InvisibleCharDetector {
     /// Get human-readable description
     fn get_description(&self, code_point: u32) -> String {
         if let Some(name) = get_bidi_name(code_point) {
-            return format!("Bidirectional control character detected: {} (U+{:04X})", name, code_point);
+            return format!(
+                "Bidirectional control character detected: {} (U+{:04X})",
+                name, code_point
+            );
         }
 
         if let Some(name) = get_zero_width_name(code_point) {
-            return format!("Zero-width character detected: {} (U+{:04X})", name, code_point);
+            return format!(
+                "Zero-width character detected: {} (U+{:04X})",
+                name, code_point
+            );
         }
 
         if is_variation_selector(code_point) {
-            return format!("Variation selector detected (U+{:04X}) - commonly used in Glassworm attacks", code_point);
+            return format!(
+                "Variation selector detected (U+{:04X}) - commonly used in Glassworm attacks",
+                code_point
+            );
         }
 
-        format!("Invisible Unicode character detected (U+{:04X})", code_point)
+        format!(
+            "Invisible Unicode character detected (U+{:04X})",
+            code_point
+        )
     }
 
     /// Get remediation guidance
@@ -156,13 +168,13 @@ impl InvisibleCharDetector {
             return "Remove the bidirectional control character. These are commonly used to \
                     reverse text display and hide malicious content. Review the actual byte \
                     sequence of the file to understand the true content."
-            .to_string();
+                .to_string();
         }
 
         if get_zero_width_name(code_point).is_some() {
             return "Remove the zero-width character. These characters are invisible but can \
                     be used to inject hidden content or bypass security checks."
-            .to_string();
+                .to_string();
         }
 
         "Remove the invisible character. Verify if this is intentional (e.g., for i18n) \
@@ -184,7 +196,6 @@ impl InvisibleCharDetector {
         let context: String = chars[start..end].iter().collect();
         format!("{}{}{}", prefix, context, suffix)
     }
-
 
     /// Check if a code point is suspicious in the given context
     pub fn is_suspicious(&self, code_point: u32, context: &str) -> bool {
@@ -224,11 +235,11 @@ mod tests {
     #[test]
     fn test_variation_selector_detection() {
         let detector = InvisibleCharDetector::with_default_config();
-        
+
         // Variation selector in code
         let content = "const secret\u{FE00}Key = 'value';";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].category, UnicodeCategory::InvisibleCharacter);
         assert_eq!(findings[0].severity, Severity::Critical);
@@ -238,10 +249,10 @@ mod tests {
     #[test]
     fn test_zero_width_space_detection() {
         let detector = InvisibleCharDetector::with_default_config();
-        
+
         let content = "const pass\u{200B}word = 'secret';";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0x200B);
     }
@@ -249,11 +260,11 @@ mod tests {
     #[test]
     fn test_rlo_detection() {
         let detector = InvisibleCharDetector::with_default_config();
-        
+
         // RLO character (most dangerous bidi char)
         let content = "const file = \"test\u{202E}txt\";";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0x202E);
         assert_eq!(findings[0].severity, Severity::Critical);
@@ -262,11 +273,11 @@ mod tests {
     #[test]
     fn test_emoji_variation_allowed() {
         let detector = InvisibleCharDetector::with_default_config();
-        
+
         // Emoji with variation selector (legitimate)
         let content = "const emoji = '❤️';"; // Heart with variation selector
         let findings = detector.detect(content, "test.js");
-        
+
         // Should be empty or have fewer findings due to emoji context
         // Note: This test may need adjustment based on exact detection logic
     }
@@ -274,20 +285,20 @@ mod tests {
     #[test]
     fn test_clean_content() {
         let detector = InvisibleCharDetector::with_default_config();
-        
+
         let content = "const normal = 'hello world';";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(findings.is_empty());
     }
 
     #[test]
     fn test_multiple_invisible_chars() {
         let detector = InvisibleCharDetector::with_default_config();
-        
+
         let content = "const\u{200B}secret\u{FE00} = 'value';";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(findings.len() >= 2);
     }
 }

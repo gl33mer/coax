@@ -26,11 +26,11 @@
 //! println!("Found {} entry points", model.entry_points.len());
 //! ```
 
-pub mod model;
-pub mod stride;
-pub mod generator;
 pub mod correlation;
 pub mod dfd;
+pub mod generator;
+pub mod model;
+pub mod stride;
 
 // Re-export main types for convenience
 pub use model::{
@@ -78,10 +78,17 @@ impl std::fmt::Display for OutputFormat {
 }
 
 /// Format a threat model for output
-pub fn format_threat_model(model: &ThreatModel, format: OutputFormat) -> Result<String, FormatError> {
+pub fn format_threat_model(
+    model: &ThreatModel,
+    format: OutputFormat,
+) -> Result<String, FormatError> {
     match format {
-        OutputFormat::Yaml => Ok(serde_yaml::to_string(model).map_err(|e| FormatError::Yaml(e.to_string()))?),
-        OutputFormat::Json => Ok(serde_json::to_string_pretty(model).map_err(|e| FormatError::Json(e.to_string()))?),
+        OutputFormat::Yaml => {
+            Ok(serde_yaml::to_string(model).map_err(|e| FormatError::Yaml(e.to_string()))?)
+        }
+        OutputFormat::Json => Ok(
+            serde_json::to_string_pretty(model).map_err(|e| FormatError::Json(e.to_string()))?
+        ),
         OutputFormat::Text => Ok(generate_dfd(model)),
         OutputFormat::SimpleText => Ok(generate_simple_dfd(model)),
         OutputFormat::Component => Ok(generate_component_diagram(model)),

@@ -12,7 +12,7 @@
 //! - U+2066-U+2069: Isolation characters
 
 use crate::unicode::config::UnicodeConfig;
-use crate::unicode::findings::{UnicodeFinding, UnicodeCategory, Severity};
+use crate::unicode::findings::{Severity, UnicodeCategory, UnicodeFinding};
 use crate::unicode::ranges::get_bidi_name;
 
 /// Detector for bidirectional override attacks
@@ -38,7 +38,7 @@ impl BidiDetector {
         for (line_num, line) in content.lines().enumerate() {
             for (col_num, ch) in line.chars().enumerate() {
                 let code_point = ch as u32;
-                
+
                 // Check if this is a bidi character
                 if let Some(bidi_name) = get_bidi_name(code_point) {
                     let severity = self.determine_severity(code_point, bidi_name);
@@ -130,7 +130,6 @@ impl BidiDetector {
         let context: String = chars[start..end].iter().collect();
         format!("{}{}{}", prefix, context, suffix)
     }
-
 }
 
 /// Trait implementation for UnicodeDetector
@@ -161,11 +160,11 @@ mod tests {
     #[test]
     fn test_rlo_detection() {
         let detector = BidiDetector::with_default_config();
-        
+
         // RLO - most dangerous
         let content = "const file = \"test\u{202E}exe\";";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0x202E);
         assert_eq!(findings[0].severity, Severity::Critical);
@@ -174,11 +173,11 @@ mod tests {
     #[test]
     fn test_rle_detection() {
         let detector = BidiDetector::with_default_config();
-        
+
         // RLE
         let content = "const text = \"hello\u{202B}world\";";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0x202B);
         assert_eq!(findings[0].severity, Severity::High);
@@ -187,11 +186,11 @@ mod tests {
     #[test]
     fn test_lro_detection() {
         let detector = BidiDetector::with_default_config();
-        
+
         // LRO
         let content = "const text = \"hello\u{202D}world\";";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0x202D);
         assert_eq!(findings[0].severity, Severity::High);
@@ -200,11 +199,11 @@ mod tests {
     #[test]
     fn test_pdf_detection() {
         let detector = BidiDetector::with_default_config();
-        
+
         // PDF (Pop Directional Formatting)
         let content = "const text = \"hello\u{202C}world\";";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0x202C);
     }
@@ -212,11 +211,11 @@ mod tests {
     #[test]
     fn test_isolation_characters() {
         let detector = BidiDetector::with_default_config();
-        
+
         // RLI (Right-to-Left Isolate)
         let content = "const text = \"hello\u{2067}world\";";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0x2067);
     }
@@ -224,20 +223,20 @@ mod tests {
     #[test]
     fn test_clean_content() {
         let detector = BidiDetector::with_default_config();
-        
+
         let content = "const normal = 'hello world';";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(findings.is_empty());
     }
 
     #[test]
     fn test_multiple_bidi_chars() {
         let detector = BidiDetector::with_default_config();
-        
+
         let content = "const x = \"\u{202E}exe\u{202C}\";"; // RLO + PDF
         let findings = detector.detect(content, "test.js");
-        
+
         assert_eq!(findings.len(), 2);
     }
 }

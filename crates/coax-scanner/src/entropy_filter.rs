@@ -51,11 +51,11 @@
 //! assert!(!result.is_likely_secret);
 //! ```
 
+use crate::token_efficiency::calculate_token_efficiency;
+use crate::word_filter::WordFilter;
+use regex::Regex;
 use std::collections::HashMap;
 use std::sync::OnceLock;
-use regex::Regex;
-use crate::word_filter::WordFilter;
-use crate::token_efficiency::calculate_token_efficiency;
 
 /// Minimum entropy threshold for hex-encoded strings
 const DEFAULT_HEX_THRESHOLD: f64 = 4.5;
@@ -73,38 +73,200 @@ const TOKEN_EFFICIENCY_THRESHOLD: f64 = 2.5;
 /// Common programming keywords that indicate code, not secrets
 const PROGRAMMING_KEYWORDS: &[&str] = &[
     // Python keywords
-    "def", "class", "import", "from", "return", "yield", "raise", "assert",
-    "lambda", "with", "as", "elif", "else", "if", "for", "while", "try",
-    "except", "finally", "pass", "break", "continue", "in", "is", "not",
-    "and", "or", "True", "False", "None",
+    "def",
+    "class",
+    "import",
+    "from",
+    "return",
+    "yield",
+    "raise",
+    "assert",
+    "lambda",
+    "with",
+    "as",
+    "elif",
+    "else",
+    "if",
+    "for",
+    "while",
+    "try",
+    "except",
+    "finally",
+    "pass",
+    "break",
+    "continue",
+    "in",
+    "is",
+    "not",
+    "and",
+    "or",
+    "True",
+    "False",
+    "None",
     // JavaScript keywords
-    "function", "const", "let", "var", "async", "await", "promise", "then",
-    "catch", "finally", "try", "throw", "new", "this", "class", "extends",
-    "export", "import", "default", "from", "return", "yield", "await",
+    "function",
+    "const",
+    "let",
+    "var",
+    "async",
+    "await",
+    "promise",
+    "then",
+    "catch",
+    "finally",
+    "try",
+    "throw",
+    "new",
+    "this",
+    "class",
+    "extends",
+    "export",
+    "import",
+    "default",
+    "from",
+    "return",
+    "yield",
+    "await",
     // Common variable names
-    "data", "info", "config", "settings", "options", "params", "args",
-    "kwargs", "result", "response", "request", "error", "exception",
-    "value", "key", "item", "element", "node", "child", "parent",
-    "source", "target", "input", "output", "stream", "buffer",
+    "data",
+    "info",
+    "config",
+    "settings",
+    "options",
+    "params",
+    "args",
+    "kwargs",
+    "result",
+    "response",
+    "request",
+    "error",
+    "exception",
+    "value",
+    "key",
+    "item",
+    "element",
+    "node",
+    "child",
+    "parent",
+    "source",
+    "target",
+    "input",
+    "output",
+    "stream",
+    "buffer",
     // Function-like patterns
-    "get", "set", "put", "post", "delete", "update", "create", "read",
-    "write", "append", "remove", "add", "insert", "find", "search",
-    "filter", "map", "reduce", "sort", "reverse", "join", "split",
-    "parse", "format", "convert", "transform", "process", "handle",
-    "build", "make", "init", "setup", "cleanup", "start", "stop",
-    "open", "close", "read", "write", "load", "save", "fetch", "send",
+    "get",
+    "set",
+    "put",
+    "post",
+    "delete",
+    "update",
+    "create",
+    "read",
+    "write",
+    "append",
+    "remove",
+    "add",
+    "insert",
+    "find",
+    "search",
+    "filter",
+    "map",
+    "reduce",
+    "sort",
+    "reverse",
+    "join",
+    "split",
+    "parse",
+    "format",
+    "convert",
+    "transform",
+    "process",
+    "handle",
+    "build",
+    "make",
+    "init",
+    "setup",
+    "cleanup",
+    "start",
+    "stop",
+    "open",
+    "close",
+    "read",
+    "write",
+    "load",
+    "save",
+    "fetch",
+    "send",
     // Type names
-    "string", "int", "float", "bool", "list", "dict", "array", "object",
-    "map", "set", "tuple", "optional", "result", "error", "null", "undefined",
+    "string",
+    "int",
+    "float",
+    "bool",
+    "list",
+    "dict",
+    "array",
+    "object",
+    "map",
+    "set",
+    "tuple",
+    "optional",
+    "result",
+    "error",
+    "null",
+    "undefined",
     // Common suffixes
-    "handler", "manager", "controller", "service", "provider", "factory",
-    "builder", "wrapper", "adapter", "decorator", "observer", "strategy",
-    "command", "iterator", "generator", "processor", "analyzer", "checker",
-    "validator", "parser", "lexer", "tokenizer", "compiler", "interpreter",
+    "handler",
+    "manager",
+    "controller",
+    "service",
+    "provider",
+    "factory",
+    "builder",
+    "wrapper",
+    "adapter",
+    "decorator",
+    "observer",
+    "strategy",
+    "command",
+    "iterator",
+    "generator",
+    "processor",
+    "analyzer",
+    "checker",
+    "validator",
+    "parser",
+    "lexer",
+    "tokenizer",
+    "compiler",
+    "interpreter",
     // Common prefixes
-    "is", "has", "can", "should", "will", "would", "could", "may", "might",
-    "must", "need", "want", "get", "set", "new", "old", "current", "previous",
-    "next", "last", "first", "final", "initial", "default", "custom", "auto",
+    "is",
+    "has",
+    "can",
+    "should",
+    "will",
+    "would",
+    "could",
+    "may",
+    "might",
+    "must",
+    "need",
+    "want",
+    "get",
+    "set",
+    "new",
+    "old",
+    "current",
+    "previous",
+    "next",
+    "last",
+    "first",
+    "final",
+    "initial",
+    "default",
+    "custom",
+    "auto",
 ];
 
 /// Lock file patterns to exclude from entropy scanning
@@ -122,12 +284,7 @@ const LOCK_FILE_PATTERNS: &[&str] = &[
 ];
 
 /// Minified file extensions to exclude
-const MINIFIED_EXTENSIONS: &[&str] = &[
-    ".min.js",
-    ".min.css",
-    ".bundle.js",
-    ".bundle.css",
-];
+const MINIFIED_EXTENSIONS: &[&str] = &[".min.js", ".min.css", ".bundle.js", ".bundle.css"];
 
 /// Result of entropy filter analysis
 #[derive(Debug, Clone)]
@@ -307,7 +464,10 @@ impl EntropyFilter {
         Self {
             config,
             word_filter: WordFilter::new(),
-            uuid_pattern: Regex::new(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$").ok(),
+            uuid_pattern: Regex::new(
+                r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            )
+            .ok(),
             css_color_pattern: Regex::new(r"^#[0-9a-fA-F]{3,8}$").ok(),
             sri_hash_pattern: Regex::new(r"sha(256|384|512)-[A-Za-z0-9+/=]+").ok(),
             git_sha_pattern: Regex::new(r"^[0-9a-fA-F]{40}$").ok(),
@@ -372,7 +532,12 @@ impl EntropyFilter {
     /// # Returns
     ///
     /// * `EntropyFilterResult` - Detailed analysis results
-    pub fn analyze_with_path(&self, value: &str, context: &str, file_path: &str) -> EntropyFilterResult {
+    pub fn analyze_with_path(
+        &self,
+        value: &str,
+        context: &str,
+        file_path: &str,
+    ) -> EntropyFilterResult {
         let mut result = EntropyFilterResult {
             is_likely_secret: false,
             entropy: 0.0,
@@ -392,7 +557,11 @@ impl EntropyFilter {
 
         // Check minimum length
         if value.len() < self.config.min_length {
-            result.reason = format!("Too short ({} < {} chars)", value.len(), self.config.min_length);
+            result.reason = format!(
+                "Too short ({} < {} chars)",
+                value.len(),
+                self.config.min_length
+            );
             return result;
         }
 
@@ -473,7 +642,8 @@ impl EntropyFilter {
         // Stage 7: Check for dictionary words
         if self.config.enable_dictionary_check {
             let word_result = self.word_filter.contains_common_words(value);
-            result.has_dictionary_words = word_result.has_common_words && !word_result.is_allowlisted;
+            result.has_dictionary_words =
+                word_result.has_common_words && !word_result.is_allowlisted;
 
             // If it has multiple dictionary words and no allowlisted words, likely not a secret
             if result.has_dictionary_words && word_result.word_count >= 2 {
@@ -493,7 +663,8 @@ impl EntropyFilter {
 
         // Stage 9: Detect format and calculate entropy
         result.entropy = Self::calculate_shannon_entropy(value);
-        result.detected_format = Self::detect_format(value, &self.hex_pattern, &self.base64_pattern);
+        result.detected_format =
+            Self::detect_format(value, &self.hex_pattern, &self.base64_pattern);
 
         // Use adaptive threshold based on detected format and character composition
         let threshold = if result.detected_format == "hex" {
@@ -505,7 +676,7 @@ impl EntropyFilter {
             let has_lowercase = value.chars().any(|c| c.is_ascii_lowercase());
             let has_uppercase = value.chars().any(|c| c.is_ascii_uppercase());
             let has_digits = value.chars().any(|c| c.is_ascii_digit());
-            
+
             // Uppercase + digits only (like AWS keys) - use lower threshold
             // These have inherently lower entropy due to limited character set
             if has_uppercase && has_digits && !has_lowercase {
@@ -565,7 +736,11 @@ impl EntropyFilter {
     }
 
     /// Detect the format of a string (hex, base64, or unknown)
-    fn detect_format(value: &str, hex_pattern: &Option<Regex>, base64_pattern: &Option<Regex>) -> String {
+    fn detect_format(
+        value: &str,
+        hex_pattern: &Option<Regex>,
+        base64_pattern: &Option<Regex>,
+    ) -> String {
         // Check if it's pure hex (only 0-9, a-f, A-F)
         if let Some(ref pattern) = hex_pattern {
             if pattern.is_match(value) {
@@ -593,12 +768,16 @@ impl EntropyFilter {
     /// Check if a file is a lock file
     fn is_lock_file(file_path: &str) -> bool {
         let file_name = file_path.split('/').last().unwrap_or(file_path);
-        LOCK_FILE_PATTERNS.iter().any(|pattern| file_name == *pattern)
+        LOCK_FILE_PATTERNS
+            .iter()
+            .any(|pattern| file_name == *pattern)
     }
 
     /// Check if a file is minified
     fn is_minified_file(file_path: &str) -> bool {
-        MINIFIED_EXTENSIONS.iter().any(|ext| file_path.ends_with(ext))
+        MINIFIED_EXTENSIONS
+            .iter()
+            .any(|ext| file_path.ends_with(ext))
     }
 
     /// Check if a string looks like a code identifier
@@ -626,7 +805,10 @@ impl EntropyFilter {
         if snake_case_parts.len() >= 2 {
             // Check if all parts are lowercase letters (possibly with numbers)
             let all_lowercase = snake_case_parts.iter().all(|part| {
-                !part.is_empty() && part.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit())
+                !part.is_empty()
+                    && part
+                        .chars()
+                        .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit())
             });
             if all_lowercase {
                 // Additional check: real snake_case identifiers have meaningful segments
@@ -648,7 +830,10 @@ impl EntropyFilter {
         let constant_case_parts: Vec<&str> = value.split('_').collect();
         if constant_case_parts.len() >= 2 {
             let all_uppercase = constant_case_parts.iter().all(|part| {
-                !part.is_empty() && part.chars().all(|c| c.is_ascii_uppercase() || c.is_ascii_digit())
+                !part.is_empty()
+                    && part
+                        .chars()
+                        .all(|c| c.is_ascii_uppercase() || c.is_ascii_digit())
             });
             if all_uppercase {
                 return true;
@@ -680,14 +865,14 @@ impl EntropyFilter {
             // Additional check: look for word boundaries (consecutive lowercase followed by uppercase)
             // Real camelCase has syllable-like patterns, base64 has random transitions
             let lower = value.to_lowercase();
-            let has_recognizable_word = PROGRAMMING_KEYWORDS.iter().any(|kw| {
-                kw.len() >= 3 && lower.contains(*kw)
-            });
-            
+            let has_recognizable_word = PROGRAMMING_KEYWORDS
+                .iter()
+                .any(|kw| kw.len() >= 3 && lower.contains(*kw));
+
             if has_recognizable_word {
                 return true;
             }
-            
+
             // Also check for typical code identifier length patterns
             // Real identifiers often have segments of 3+ chars
             if camel_case_transitions >= 3 && value.len() > 25 {
@@ -737,17 +922,32 @@ impl EntropyFilter {
 
         // Check for secret-like variable names
         let secret_indicators = [
-            "api_key", "apikey", "api-key",
-            "secret", "secret_key", "secretkey",
-            "token", "access_token", "auth_token",
-            "password", "passwd", "pwd",
-            "credential", "cred",
-            "private_key", "privatekey",
-            "aws_access", "aws_secret",
-            "github_token", "gitlab_token",
-            "stripe_key", "stripe_secret",
-            "bearer", "authorization",
-            "encryption_key", "decrypt",
+            "api_key",
+            "apikey",
+            "api-key",
+            "secret",
+            "secret_key",
+            "secretkey",
+            "token",
+            "access_token",
+            "auth_token",
+            "password",
+            "passwd",
+            "pwd",
+            "credential",
+            "cred",
+            "private_key",
+            "privatekey",
+            "aws_access",
+            "aws_secret",
+            "github_token",
+            "gitlab_token",
+            "stripe_key",
+            "stripe_secret",
+            "bearer",
+            "authorization",
+            "encryption_key",
+            "decrypt",
         ];
 
         // Check if line contains secret-like variable assignment
@@ -823,7 +1023,10 @@ impl EntropyFilter {
         }
 
         let len = value.len() as f64;
-        freq_map.into_iter().map(|(c, count)| (c, count as f64 / len)).collect()
+        freq_map
+            .into_iter()
+            .map(|(c, count)| (c, count as f64 / len))
+            .collect()
     }
 
     /// Check if a potential secret passes the filter
@@ -851,7 +1054,8 @@ fn static_assignment_pattern() -> &'static Regex {
 /// Static regex pattern for environment variable detection (lazy initialization)
 fn static_env_pattern() -> &'static Regex {
     static PATTERN: OnceLock<Regex> = OnceLock::new();
-    PATTERN.get_or_init(|| Regex::new(r#"(?:getenv|os\.environ|process\.env)\s*\[\s*["']"#).unwrap())
+    PATTERN
+        .get_or_init(|| Regex::new(r#"(?:getenv|os\.environ|process\.env)\s*\[\s*["']"#).unwrap())
 }
 
 /// Legacy config structure for backward compatibility
@@ -895,9 +1099,18 @@ mod tests {
         let filter = EntropyFilter::new();
 
         // UUIDs should NOT be flagged
-        assert!(!filter.is_likely_secret("550e8400-e29b-41d4-a716-446655440000", "id = \"550e8400-e29b-41d4-a716-446655440000\""));
-        assert!(!filter.is_likely_secret("123e4567-e89b-12d3-a456-426614174000", "uuid = \"123e4567-e89b-12d3-a456-426614174000\""));
-        assert!(!filter.is_likely_secret("A1B2C3D4-E5F6-7890-ABCD-EF1234567890", "id: A1B2C3D4-E5F6-7890-ABCD-EF1234567890"));
+        assert!(!filter.is_likely_secret(
+            "550e8400-e29b-41d4-a716-446655440000",
+            "id = \"550e8400-e29b-41d4-a716-446655440000\""
+        ));
+        assert!(!filter.is_likely_secret(
+            "123e4567-e89b-12d3-a456-426614174000",
+            "uuid = \"123e4567-e89b-12d3-a456-426614174000\""
+        ));
+        assert!(!filter.is_likely_secret(
+            "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
+            "id: A1B2C3D4-E5F6-7890-ABCD-EF1234567890"
+        ));
     }
 
     #[test]
@@ -931,8 +1144,14 @@ mod tests {
         let filter = EntropyFilter::new();
 
         // Git SHAs should NOT be flagged
-        assert!(!filter.is_likely_secret("a1b2c3d4e5f6789012345678901234567890abcd", "commit: a1b2c3d4e5f6789012345678901234567890abcd"));
-        assert!(!filter.is_likely_secret("0000000000000000000000000000000000000000", "SHA: 0000000000000000000000000000000000000000"));
+        assert!(!filter.is_likely_secret(
+            "a1b2c3d4e5f6789012345678901234567890abcd",
+            "commit: a1b2c3d4e5f6789012345678901234567890abcd"
+        ));
+        assert!(!filter.is_likely_secret(
+            "0000000000000000000000000000000000000000",
+            "SHA: 0000000000000000000000000000000000000000"
+        ));
     }
 
     #[test]
@@ -941,8 +1160,16 @@ mod tests {
 
         // High-entropy strings in lock files should NOT be flagged
         let high_entropy = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6";
-        assert!(!filter.is_likely_secret_with_path(high_entropy, "version: \"1.0.0\"", "package-lock.json"));
-        assert!(!filter.is_likely_secret_with_path(high_entropy, "resolved: \"https://...\"", "yarn.lock"));
+        assert!(!filter.is_likely_secret_with_path(
+            high_entropy,
+            "version: \"1.0.0\"",
+            "package-lock.json"
+        ));
+        assert!(!filter.is_likely_secret_with_path(
+            high_entropy,
+            "resolved: \"https://...\"",
+            "yarn.lock"
+        ));
         assert!(!filter.is_likely_secret_with_path(high_entropy, "checksum: abc123", "Cargo.lock"));
         assert!(!filter.is_likely_secret_with_path(high_entropy, "revision: def456", "go.sum"));
     }
@@ -953,8 +1180,16 @@ mod tests {
 
         // High-entropy strings in minified files should NOT be flagged
         let high_entropy = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6";
-        assert!(!filter.is_likely_secret_with_path(high_entropy, "var x=\"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6\"", "app.min.js"));
-        assert!(!filter.is_likely_secret_with_path(high_entropy, ".class{content:\"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6\"}", "styles.min.css"));
+        assert!(!filter.is_likely_secret_with_path(
+            high_entropy,
+            "var x=\"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6\"",
+            "app.min.js"
+        ));
+        assert!(!filter.is_likely_secret_with_path(
+            high_entropy,
+            ".class{content:\"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6\"}",
+            "styles.min.css"
+        ));
     }
 
     #[test]
@@ -963,19 +1198,28 @@ mod tests {
 
         // AWS keys MUST be flagged (20 chars, high entropy)
         let result = filter.analyze("AKIAIOSFODNN7EXAMPLE", "aws_key = \"AKIAIOSFODNN7EXAMPLE\"");
-        println!("AWS Key 1 result: is_likely_secret={}, reason={}, entropy={}, token_eff={}", 
-                 result.is_likely_secret, result.reason, result.entropy, result.token_efficiency);
+        println!(
+            "AWS Key 1 result: is_likely_secret={}, reason={}, entropy={}, token_eff={}",
+            result.is_likely_secret, result.reason, result.entropy, result.token_efficiency
+        );
         assert!(
             result.is_likely_secret,
-            "AWS Access Key ID should be detected. Reason: {}", result.reason
+            "AWS Access Key ID should be detected. Reason: {}",
+            result.reason
         );
-        
-        let result2 = filter.analyze("AKIAI44QH8DHBEXAMPLE", "aws_access_key_id = AKIAI44QH8DHBEXAMPLE");
-        println!("AWS Key 2 result: is_likely_secret={}, reason={}, entropy={}, token_eff={}", 
-                 result2.is_likely_secret, result2.reason, result2.entropy, result2.token_efficiency);
+
+        let result2 = filter.analyze(
+            "AKIAI44QH8DHBEXAMPLE",
+            "aws_access_key_id = AKIAI44QH8DHBEXAMPLE",
+        );
+        println!(
+            "AWS Key 2 result: is_likely_secret={}, reason={}, entropy={}, token_eff={}",
+            result2.is_likely_secret, result2.reason, result2.entropy, result2.token_efficiency
+        );
         assert!(
             result2.is_likely_secret,
-            "AWS Access Key ID should be detected. Reason: {}", result2.reason
+            "AWS Access Key ID should be detected. Reason: {}",
+            result2.reason
         );
     }
 
@@ -985,11 +1229,17 @@ mod tests {
 
         // API tokens with high entropy (no underscores in random part to avoid snake_case detection)
         assert!(
-            filter.is_likely_secret("sk_xK9mN2pL5qR8tU3wY6zA", "api_key = \"sk_xK9mN2pL5qR8tU3wY6zA\""),
+            filter.is_likely_secret(
+                "sk_xK9mN2pL5qR8tU3wY6zA",
+                "api_key = \"sk_xK9mN2pL5qR8tU3wY6zA\""
+            ),
             "API token should be detected"
         );
         assert!(
-            filter.is_likely_secret("token_xY7zA1bC4dE9fH2jK5mN", "github_token = token_xY7zA1bC4dE9fH2jK5mN"),
+            filter.is_likely_secret(
+                "token_xY7zA1bC4dE9fH2jK5mN",
+                "github_token = token_xY7zA1bC4dE9fH2jK5mN"
+            ),
             "API token should be detected"
         );
     }
@@ -1000,7 +1250,10 @@ mod tests {
 
         // Base64-encoded passwords (shorter base64 to avoid camelCase detection)
         assert!(
-            filter.is_likely_secret("cGFzc3dvcmQxMjM0NTY3ODkw", "password = \"cGFzc3dvcmQxMjM0NTY3ODkw\""),
+            filter.is_likely_secret(
+                "cGFzc3dvcmQxMjM0NTY3ODkw",
+                "password = \"cGFzc3dvcmQxMjM0NTY3ODkw\""
+            ),
             "Base64-encoded password should be detected"
         );
     }
@@ -1011,7 +1264,10 @@ mod tests {
 
         // High-entropy strings with special chars
         assert!(
-            filter.is_likely_secret("xK9$mN2@pL5#qR8!tU3wY6zA", "api_key: xK9$mN2@pL5#qR8!tU3wY6zA"),
+            filter.is_likely_secret(
+                "xK9$mN2@pL5#qR8!tU3wY6zA",
+                "api_key: xK9$mN2@pL5#qR8!tU3wY6zA"
+            ),
             "High-entropy config value should be detected"
         );
     }
@@ -1078,7 +1334,10 @@ mod tests {
         let filter = EntropyFilter::new();
 
         // Hex string (pure hex characters - lowercase a-f)
-        let result = filter.analyze("abcdef1234567890abcdef1234567890", "key = \"abcdef1234567890abcdef1234567890\"");
+        let result = filter.analyze(
+            "abcdef1234567890abcdef1234567890",
+            "key = \"abcdef1234567890abcdef1234567890\"",
+        );
         assert_eq!(result.detected_format, "hex", "Should detect hex format");
     }
 
@@ -1098,7 +1357,10 @@ mod tests {
         let filter = EntropyFilter::new_with_config(config);
 
         // UUID should now be flagged (exclusion disabled)
-        let result = filter.analyze("550e8400-e29b-41d4-a716-446655440000", "id = \"550e8400-e29b-41d4-a716-446655440000\"");
+        let result = filter.analyze(
+            "550e8400-e29b-41d4-a716-446655440000",
+            "id = \"550e8400-e29b-41d4-a716-446655440000\"",
+        );
         assert!(!result.is_uuid); // Pattern still detected, but exclusion is off
     }
 
@@ -1116,7 +1378,10 @@ mod tests {
         let filter = EntropyFilter::new();
 
         // These were actual false positives from pydantic scan
-        assert!(!filter.is_likely_secret("field_title_generator", "field_title_generator=field_title_generator"));
+        assert!(!filter.is_likely_secret(
+            "field_title_generator",
+            "field_title_generator=field_title_generator"
+        ));
         assert!(!filter.is_likely_secret("minItems", "js_constraint_key = 'minItems'"));
         assert!(!filter.is_likely_secret("maxLength", "js_constraint_key = 'maxLength'"));
     }

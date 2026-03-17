@@ -16,24 +16,46 @@ pub fn generate_dfd(model: &ThreatModel) -> String {
         "╔══════════════════════════════════════════════════════════════════════╗"
     )
     .unwrap();
-    writeln!(output, "║  Data Flow Diagram - {:<54} ║", truncate(&model.repository, 54)).unwrap();
+    writeln!(
+        output,
+        "║  Data Flow Diagram - {:<54} ║",
+        truncate(&model.repository, 54)
+    )
+    .unwrap();
     writeln!(
         output,
         "╠══════════════════════════════════════════════════════════════════════╣"
     )
     .unwrap();
-    writeln!(output, "║  Generated: {:<59} ║", model.generated_at.format("%Y-%m-%d %H:%M:%S UTC")).unwrap();
+    writeln!(
+        output,
+        "║  Generated: {:<59} ║",
+        model.generated_at.format("%Y-%m-%d %H:%M:%S UTC")
+    )
+    .unwrap();
     writeln!(
         output,
         "╠══════════════════════════════════════════════════════════════════════╣"
     )
     .unwrap();
-    writeln!(output, "║                                                          ║").unwrap();
+    writeln!(
+        output,
+        "║                                                          ║"
+    )
+    .unwrap();
 
     // Entry Points Section
     if !model.entry_points.is_empty() {
-        writeln!(output, "║  Entry Points:                                             ║").unwrap();
-        writeln!(output, "║  ┌────────────────────────────────────────────────────┐    ║").unwrap();
+        writeln!(
+            output,
+            "║  Entry Points:                                             ║"
+        )
+        .unwrap();
+        writeln!(
+            output,
+            "║  ┌────────────────────────────────────────────────────┐    ║"
+        )
+        .unwrap();
 
         for (i, ep) in model.entry_points.iter().take(5).enumerate() {
             let auth_indicator = if ep.authentication { "🔐" } else { "🔓" };
@@ -49,7 +71,10 @@ pub fn generate_dfd(model: &ThreatModel) -> String {
             let method = ep.method.as_deref().unwrap_or("EP");
             let line = format!(
                 "║  │  {} {} {} {:<35} │    ║",
-                kind_indicator, auth_indicator, method, truncate(&ep.name, 35)
+                kind_indicator,
+                auth_indicator,
+                method,
+                truncate(&ep.name, 35)
             );
             writeln!(output, "{}", line).unwrap();
 
@@ -64,13 +89,25 @@ pub fn generate_dfd(model: &ThreatModel) -> String {
             }
         }
 
-        writeln!(output, "║  └────────────────────────────────────────────────────┘    ║").unwrap();
-        writeln!(output, "║                                                          ║").unwrap();
+        writeln!(
+            output,
+            "║  └────────────────────────────────────────────────────┘    ║"
+        )
+        .unwrap();
+        writeln!(
+            output,
+            "║                                                          ║"
+        )
+        .unwrap();
     }
 
     // Data Flows Section
     if !model.data_flows.is_empty() {
-        writeln!(output, "║  Data Flows:                                               ║").unwrap();
+        writeln!(
+            output,
+            "║  Data Flows:                                               ║"
+        )
+        .unwrap();
 
         for flow in model.data_flows.iter().take(5) {
             let encryption_indicator = if flow.encrypted { "🔒" } else { "🔓" };
@@ -79,7 +116,10 @@ pub fn generate_dfd(model: &ThreatModel) -> String {
             writeln!(
                 output,
                 "║    [App] {}──{}──{}> [{}]                            ║",
-                encryption_indicator, protocol, flow.data_type, truncate(&flow.to, 20)
+                encryption_indicator,
+                protocol,
+                flow.data_type,
+                truncate(&flow.to, 20)
             )
             .unwrap();
         }
@@ -93,13 +133,25 @@ pub fn generate_dfd(model: &ThreatModel) -> String {
             .unwrap();
         }
 
-        writeln!(output, "║                                                          ║").unwrap();
+        writeln!(
+            output,
+            "║                                                          ║"
+        )
+        .unwrap();
     }
 
     // Trust Boundaries Section
     if !model.trust_boundaries.is_empty() {
-        writeln!(output, "║  Trust Boundaries:                                         ║").unwrap();
-        writeln!(output, "║  ┌─────────────────────────────────────────────────┐       ║").unwrap();
+        writeln!(
+            output,
+            "║  Trust Boundaries:                                         ║"
+        )
+        .unwrap();
+        writeln!(
+            output,
+            "║  ┌─────────────────────────────────────────────────┐       ║"
+        )
+        .unwrap();
 
         for boundary in model.trust_boundaries.iter().take(3) {
             let icon = match boundary.kind {
@@ -127,13 +179,25 @@ pub fn generate_dfd(model: &ThreatModel) -> String {
             .unwrap();
         }
 
-        writeln!(output, "║  └─────────────────────────────────────────────────┘       ║").unwrap();
-        writeln!(output, "║                                                          ║").unwrap();
+        writeln!(
+            output,
+            "║  └─────────────────────────────────────────────────┘       ║"
+        )
+        .unwrap();
+        writeln!(
+            output,
+            "║                                                          ║"
+        )
+        .unwrap();
     }
 
     // Threats Summary Section
     let counts = model.threats_by_severity();
-    writeln!(output, "║  Threats Summary:                                          ║").unwrap();
+    writeln!(
+        output,
+        "║  Threats Summary:                                          ║"
+    )
+    .unwrap();
     writeln!(
         output,
         "║    🚨 Critical: {:<3}  ⚠️  High: {:<3}  ⚡ Medium: {:<3}  ℹ️  Low: {:<3}    ║",
@@ -146,11 +210,19 @@ pub fn generate_dfd(model: &ThreatModel) -> String {
         model.total_risk_score()
     )
     .unwrap();
-    writeln!(output, "║                                                          ║").unwrap();
+    writeln!(
+        output,
+        "║                                                          ║"
+    )
+    .unwrap();
 
     // Top Threats
     if !model.threats.is_empty() {
-        writeln!(output, "║  Top Threats:                                              ║").unwrap();
+        writeln!(
+            output,
+            "║  Top Threats:                                              ║"
+        )
+        .unwrap();
 
         let mut sorted_threats: Vec<&Threat> = model.threats.iter().collect();
         sorted_threats.sort_by(|a, b| b.risk_score.cmp(&a.risk_score));
@@ -165,7 +237,11 @@ pub fn generate_dfd(model: &ThreatModel) -> String {
             .unwrap();
         }
 
-        writeln!(output, "║                                                          ║").unwrap();
+        writeln!(
+            output,
+            "║                                                          ║"
+        )
+        .unwrap();
     }
 
     // Footer
@@ -248,13 +324,21 @@ pub fn generate_component_diagram(model: &ThreatModel) -> String {
         "╔══════════════════════════════════════════════════════════╗"
     )
     .unwrap();
-    writeln!(output, "║  Component Diagram                                    ║").unwrap();
+    writeln!(
+        output,
+        "║  Component Diagram                                    ║"
+    )
+    .unwrap();
     writeln!(
         output,
         "╠══════════════════════════════════════════════════════════╣"
     )
     .unwrap();
-    writeln!(output, "║                                                      ║").unwrap();
+    writeln!(
+        output,
+        "║                                                      ║"
+    )
+    .unwrap();
 
     // Group components by type
     let mut components: std::collections::HashMap<String, Vec<String>> =
@@ -290,7 +374,11 @@ pub fn generate_component_diagram(model: &ThreatModel) -> String {
         if items.len() > 5 {
             writeln!(output, "║    ... and {} more", items.len() - 5).unwrap();
         }
-        writeln!(output, "║                                                      ║").unwrap();
+        writeln!(
+            output,
+            "║                                                      ║"
+        )
+        .unwrap();
     }
 
     writeln!(

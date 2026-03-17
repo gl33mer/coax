@@ -29,19 +29,19 @@
 //! let paths = SliceIntersection::find_vulnerability_paths(&cfg, &entries, &sinks);
 //! ```
 
-pub mod types;
+pub mod backward;
 pub mod builder;
 pub mod entry_points;
-pub mod sinks;
-pub mod backward;
 pub mod forward;
 pub mod intersection;
+pub mod sinks;
+pub mod types;
 
-pub use types::*;
-pub use builder::CFGBuilder;
 pub use backward::BackwardSlicer;
+pub use builder::CFGBuilder;
 pub use forward::ForwardSlicer;
 pub use intersection::SliceIntersection;
+pub use types::*;
 
 /// Supported languages for CFG construction
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

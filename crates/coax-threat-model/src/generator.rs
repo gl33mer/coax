@@ -13,13 +13,13 @@ use tracing::{debug, info};
 use walkdir::WalkDir;
 
 use crate::model::{
-    Asset, AssetKind, DataFlow, EntryPoint, EntryPointKind, Sensitivity,
-    Severity, Threat, ThreatModel, TrustBoundary, TrustBoundaryKind,
+    Asset, AssetKind, DataFlow, EntryPoint, EntryPointKind, Sensitivity, Severity, Threat,
+    ThreatModel, TrustBoundary, TrustBoundaryKind,
 };
 use crate::stride::{
     calculate_risk_score, categorize_finding_stride, determine_impact, determine_likelihood,
 };
-use coax_scanner::{Scanner, ScanResult};
+use coax_scanner::{ScanResult, Scanner};
 
 /// Configuration for the threat model generator
 #[derive(Debug, Clone)]
@@ -141,7 +141,8 @@ impl ThreatModelGenerator {
             },
             EntryPointPattern {
                 name: "router_get",
-                regex: Regex::new(r#"router\.(get|post|put|delete|patch)\s*\(\s*["']([^"']+)["']"#).unwrap(),
+                regex: Regex::new(r#"router\.(get|post|put|delete|patch)\s*\(\s*["']([^"']+)["']"#)
+                    .unwrap(),
                 kind: EntryPointKind::Http,
                 method_capture: Some(1),
                 path_capture: 2,
@@ -156,7 +157,10 @@ impl ThreatModelGenerator {
             },
             EntryPointPattern {
                 name: "flask_method",
-                regex: Regex::new(r#"@(?:app|blueprint)\.(get|post|put|delete|patch)\s*\(\s*["']([^"']+)["']"#).unwrap(),
+                regex: Regex::new(
+                    r#"@(?:app|blueprint)\.(get|post|put|delete|patch)\s*\(\s*["']([^"']+)["']"#,
+                )
+                .unwrap(),
                 kind: EntryPointKind::Http,
                 method_capture: Some(1),
                 path_capture: 2,
@@ -164,7 +168,10 @@ impl ThreatModelGenerator {
             // FastAPI routes
             EntryPointPattern {
                 name: "fastapi_route",
-                regex: Regex::new(r#"@(?:app|router)\.(get|post|put|delete|patch)\s*\(\s*["']([^"']+)["']"#).unwrap(),
+                regex: Regex::new(
+                    r#"@(?:app|router)\.(get|post|put|delete|patch)\s*\(\s*["']([^"']+)["']"#,
+                )
+                .unwrap(),
                 kind: EntryPointKind::Http,
                 method_capture: Some(1),
                 path_capture: 2,
@@ -224,7 +231,8 @@ impl ThreatModelGenerator {
             // Authentication middleware
             TrustBoundaryPattern {
                 name: "auth_middleware",
-                regex: Regex::new(r"(?i)(auth|authentication|authorize|permission|middleware)").unwrap(),
+                regex: Regex::new(r"(?i)(auth|authentication|authorize|permission|middleware)")
+                    .unwrap(),
                 kind: TrustBoundaryKind::Auth,
             },
             // Network boundaries
@@ -260,7 +268,8 @@ impl ThreatModelGenerator {
             // Database connections
             DataFlowPattern {
                 name: "postgres_connect",
-                regex: Regex::new(r"(?i)(postgres|pg|postgresql)\.?(connect|query|execute|new)").unwrap(),
+                regex: Regex::new(r"(?i)(postgres|pg|postgresql)\.?(connect|query|execute|new)")
+                    .unwrap(),
                 data_type: "Database Query",
                 protocol: Some("TCP"),
             },
@@ -279,7 +288,10 @@ impl ThreatModelGenerator {
             // API calls
             DataFlowPattern {
                 name: "http_fetch",
-                regex: Regex::new(r"(?i)(fetch|axios|http|requests)\.?(get|post|put|delete|request)").unwrap(),
+                regex: Regex::new(
+                    r"(?i)(fetch|axios|http|requests)\.?(get|post|put|delete|request)",
+                )
+                .unwrap(),
                 data_type: "HTTP Request",
                 protocol: Some("HTTP"),
             },
@@ -368,7 +380,8 @@ impl ThreatModelGenerator {
 
         if path.is_file() {
             if let Ok(content) = std::fs::read_to_string(path) {
-                let eps = self.detect_entry_points_in_content(&content, path.to_str().unwrap_or(""));
+                let eps =
+                    self.detect_entry_points_in_content(&content, path.to_str().unwrap_or(""));
                 entry_points.extend(eps);
             }
         } else if path.is_dir() {
@@ -399,7 +412,9 @@ impl ThreatModelGenerator {
         for (line_num, line) in content.lines().enumerate() {
             for pattern in &self.entry_point_patterns {
                 if let Some(captures) = pattern.regex.captures(line) {
-                    let path = captures.get(pattern.path_capture).map_or("", |m| m.as_str());
+                    let path = captures
+                        .get(pattern.path_capture)
+                        .map_or("", |m| m.as_str());
                     let method = pattern
                         .method_capture
                         .and_then(|i| captures.get(i))
@@ -468,10 +483,8 @@ impl ThreatModelGenerator {
 
         if path.is_file() {
             if let Ok(content) = std::fs::read_to_string(path) {
-                let boundaries = self.detect_trust_boundaries_in_content(
-                    &content,
-                    path.to_str().unwrap_or(""),
-                );
+                let boundaries =
+                    self.detect_trust_boundaries_in_content(&content, path.to_str().unwrap_or(""));
                 for b in boundaries {
                     boundaries_map.entry(b.name.clone()).or_insert(b);
                 }
@@ -651,11 +664,7 @@ impl ThreatModelGenerator {
                     likelihood,
                     impact,
                     risk_score,
-                    affected_component: format!(
-                        "{}:{}",
-                        finding.file.display(),
-                        finding.line
-                    ),
+                    affected_component: format!("{}:{}", finding.file.display(), finding.line),
                     mitigation: finding.recommendation.clone(),
                     cwe_id: None,
                     related_finding: Some(finding.pattern.clone()),
@@ -671,7 +680,8 @@ impl ThreatModelGenerator {
     fn is_entry_point_related(&self, finding: &ScanResult, entry_point: &EntryPoint) -> bool {
         // Check if file paths are related
         let finding_path = finding.file.to_string_lossy();
-        entry_point.path.contains(finding_path.as_ref()) || finding_path.as_ref().contains(&entry_point.path)
+        entry_point.path.contains(finding_path.as_ref())
+            || finding_path.as_ref().contains(&entry_point.path)
     }
 
     /// Identify assets from findings
@@ -686,11 +696,7 @@ impl ThreatModelGenerator {
                 kind,
                 description: format!("Detected at {}:{}", finding.file.display(), finding.line),
                 sensitivity,
-                location: Some(format!(
-                    "{}:{}",
-                    finding.file.display(),
-                    finding.line
-                )),
+                location: Some(format!("{}:{}", finding.file.display(), finding.line)),
             });
         }
 
@@ -744,11 +750,7 @@ impl ThreatModelGenerator {
         // Check file size
         if let Ok(metadata) = entry.metadata() {
             if metadata.len() > self.config.max_file_size {
-                debug!(
-                    "Skipping large file: {:?} ({} bytes)",
-                    path,
-                    metadata.len()
-                );
+                debug!("Skipping large file: {:?} ({} bytes)", path, metadata.len());
                 return false;
             }
         }
@@ -766,11 +768,11 @@ impl Default for ThreatModelGenerator {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::model::StrideCategory;
+    use coax_scanner::FindingContext;
     use std::fs;
     use std::path::PathBuf;
     use tempfile::TempDir;
-    use crate::model::StrideCategory;
-    use coax_scanner::FindingContext;
 
     #[test]
     fn test_generator_creation() {
@@ -856,11 +858,15 @@ mod tests {
         }];
 
         let entry_points = vec![];
-        let threats = generator.generate_threats(&findings, &entry_points).unwrap();
+        let threats = generator
+            .generate_threats(&findings, &entry_points)
+            .unwrap();
 
         assert!(!threats.is_empty());
-        assert!(threats[0].stride == StrideCategory::Spoofing
-            || threats[0].stride == StrideCategory::InformationDisclosure);
+        assert!(
+            threats[0].stride == StrideCategory::Spoofing
+                || threats[0].stride == StrideCategory::InformationDisclosure
+        );
     }
 
     #[test]

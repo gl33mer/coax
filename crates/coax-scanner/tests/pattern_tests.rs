@@ -8,7 +8,7 @@
 //! 4. Pattern keyword present but no secret → NOT detected
 //! 5. Secret embedded in realistic code context → DETECTED
 
-use coax_scanner::{Scanner, ScannerConfig, PatternCache};
+use coax_scanner::{PatternCache, Scanner, ScannerConfig};
 
 /// Helper to create a scanner with default patterns
 fn create_scanner() -> Scanner {
@@ -57,12 +57,12 @@ mod aws_tests {
     fn test_aws_invalid_format() {
         // Case 3: Invalid strings that look similar
         let scanner = create_scanner();
-        
+
         // Too short
         let content1 = r#"AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAM"#;
         // Known gap - SendGrid pattern may match similar formats
         let _ = scan_content(&scanner, content1, "test.env");
-        
+
         // Wrong prefix
         let content2 = r#"AWS_ACCESS_KEY_ID=XXXXIOSFODNN7EXAMPLE1"#;
         assert_eq!(scan_content(&scanner, content2, "test.env"), 0);
@@ -80,7 +80,7 @@ mod aws_tests {
     fn test_aws_in_context() {
         // Case 5: Realistic code context
         let scanner = create_scanner();
-        
+
         // Python context
         let content1 = r#"
 import boto3
@@ -91,7 +91,7 @@ client = boto3.client(
 )
 "#;
         assert!(scan_content(&scanner, content1, "config.py") >= 1);
-        
+
         // JavaScript context
         let content2 = r#"
 const AWS = require('aws-sdk');
@@ -124,15 +124,15 @@ mod github_tests {
     fn test_github_token_variations() {
         // Case 2: Different GitHub token types
         let scanner = create_scanner();
-        
+
         // OAuth token (gho_)
         let content1 = r#"oauth_token=gho_1234567890abcdefghij1234567890ABCDEF"#;
         assert!(scan_content(&scanner, content1, "test.env") >= 1);
-        
+
         // App token (ghu_)
         let content2 = r#"ghu_1234567890abcdefghij1234567890ABCDEF"#;
         assert!(scan_content(&scanner, content2, "test.env") >= 1);
-        
+
         // SSH key (ghs_)
         let content3 = r#"ghs_1234567890abcdefghij1234567890ABCDEF"#;
         assert!(scan_content(&scanner, content3, "test.env") >= 1);
@@ -142,12 +142,12 @@ mod github_tests {
     fn test_github_invalid_format() {
         // Case 3: Invalid strings
         let scanner = create_scanner();
-        
+
         // Too short
         let content1 = r#"ghp_1234567890abcdef"#;
         // Known gap - SendGrid pattern may match similar formats
         let _ = scan_content(&scanner, content1, "test.env");
-        
+
         // Wrong prefix
         let content2 = r#"xxx_1234567890abcdefghij1234567890ABCDEF"#;
         assert_eq!(scan_content(&scanner, content2, "test.env"), 0);
@@ -165,7 +165,7 @@ mod github_tests {
     fn test_github_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // GitHub Actions workflow
         let content1 = r#"
 name: CI
@@ -201,11 +201,11 @@ mod stripe_tests {
     fn test_stripe_key_variations() {
         // Case 2: Different Stripe key types
         let scanner = create_scanner();
-        
+
         // Test key
         let content1 = r#"sk_test_1234567890abcdefghijklmnopqrstuv"#;
         assert!(scan_content(&scanner, content1, "test.env") >= 1);
-        
+
         // Note: rk_live (restricted keys) may not be detected by current patterns
         // This is a known gap - would need pattern addition
     }
@@ -214,12 +214,12 @@ mod stripe_tests {
     fn test_stripe_invalid_format() {
         // Case 3: Invalid strings
         let scanner = create_scanner();
-        
+
         // Too short
         let content1 = r#"sk_live_1234567890"#;
         // Known gap - SendGrid pattern may match similar formats
         let _ = scan_content(&scanner, content1, "test.env");
-        
+
         // Wrong prefix
         let content2 = r#"xx_live_1234567890abcdefghijklmnopqrstuv"#;
         assert_eq!(scan_content(&scanner, content2, "test.env"), 0);
@@ -237,13 +237,13 @@ mod stripe_tests {
     fn test_stripe_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // Node.js context
         let content1 = r#"
 const stripe = require('stripe')('sk_live_1234567890abcdefghijklmnopqrstuv');
 "#;
         assert!(scan_content(&scanner, content1, "server.js") >= 1);
-        
+
         // Python context
         let content2 = r#"
 import stripe
@@ -289,12 +289,12 @@ mod google_cloud_tests {
     fn test_google_invalid_format() {
         // Case 3: Invalid strings
         let scanner = create_scanner();
-        
+
         // Wrong prefix
         let content1 = r#"AIzbSyDaGmWKa4JsXZ-HjGw7ISLn_3namBGewQe"#;
         // Known gap - SendGrid pattern may match similar formats
         let _ = scan_content(&scanner, content1, "test.env");
-        
+
         // Too short
         let content2 = r#"AIzaSyDaGmWKa4JsXZ"#;
         assert_eq!(scan_content(&scanner, content2, "test.env"), 0);
@@ -312,7 +312,7 @@ mod google_cloud_tests {
     fn test_google_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // Maps API usage
         let content1 = r#"
 const API_KEY = 'AIzaSyDaGmWKa4JsXZ-HjGw7ISLn_3namBGewQe';
@@ -358,7 +358,7 @@ mod azure_tests {
     fn test_azure_invalid_format() {
         // Case 4: Invalid strings
         let scanner = create_scanner();
-        
+
         // Too short
         let content1 = r#"AZURE_CLIENT_SECRET=short"#;
         // Known gap - SendGrid pattern may match similar formats
@@ -369,7 +369,7 @@ mod azure_tests {
     fn test_azure_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // Terraform context
         let content1 = r#"
 resource "azurerm_client_config" "current" {
@@ -408,7 +408,7 @@ mod datadog_tests {
     fn test_datadog_invalid_format() {
         // Case 3: Invalid strings
         let scanner = create_scanner();
-        
+
         // Too short
         let content1 = r#"DD_API_KEY=1234567890abcdef"#;
         // Known gap - SendGrid pattern may match similar formats
@@ -427,7 +427,7 @@ mod datadog_tests {
     fn test_datadog_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // Datadog config
         let content1 = r#"
 datadog:
@@ -466,7 +466,7 @@ mod twilio_tests {
     fn test_twilio_invalid_format() {
         // Case 3: Invalid strings
         let scanner = create_scanner();
-        
+
         // Wrong prefix
         let content1 = r#"XX1234567890abcdef1234567890abcdef"#;
         // Known gap - SendGrid pattern may match similar formats
@@ -485,7 +485,7 @@ mod twilio_tests {
     fn test_twilio_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // Twilio client initialization
         let content1 = r#"
 const twilio = require('twilio');
@@ -518,13 +518,14 @@ mod slack_tests {
     fn test_slack_token_variations() {
         // Case 2: Different Slack token types
         let scanner = create_scanner();
-        
+
         // User token (xoxp-)
         let content1 = r#"xoxp-123456789012-1234567890123-1234567890124-AbCdEfGhIjKlMnOpQrStUvWx"#;
         assert!(scan_content(&scanner, content1, "test.env") >= 1);
-        
+
         // App token (xapp-)
-        let content2 = r#"xapp-1-ABCDEFGHIJ-1234567890123-AbCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOp"#;
+        let content2 =
+            r#"xapp-1-ABCDEFGHIJ-1234567890123-AbCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOp"#;
         assert!(scan_content(&scanner, content2, "test.env") >= 1);
     }
 
@@ -532,7 +533,7 @@ mod slack_tests {
     fn test_slack_invalid_format() {
         // Case 3: Invalid strings
         let scanner = create_scanner();
-        
+
         // Wrong prefix
         let content1 = r#"xxxb-123456789012-1234567890123-AbCdEfGhIjKlMnOpQrStUvWx"#;
         // Known gap - SendGrid pattern may match similar formats
@@ -551,7 +552,7 @@ mod slack_tests {
     fn test_slack_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // Slack bot initialization
         let content1 = r#"
 const { App } = require('@slack/bolt');
@@ -584,7 +585,7 @@ mod sendgrid_tests {
     fn test_sendgrid_invalid_format() {
         // Case 3: Invalid strings
         let scanner = create_scanner();
-        
+
         // Wrong prefix
         let content1 = r#"XX.abcdefghijklmnopqrstuvwx.1234567890abcdefghijklmnopqrstuvwxyz12345"#;
         // Known gap - SendGrid pattern may match similar formats
@@ -595,7 +596,7 @@ mod sendgrid_tests {
     fn test_sendgrid_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // SendGrid client initialization
         let content1 = r#"
 const sgMail = require('@sendgrid/mail');
@@ -625,7 +626,7 @@ mod mailgun_tests {
     fn test_mailgun_invalid_format() {
         // Case 3: Invalid strings
         let scanner = create_scanner();
-        
+
         // Wrong prefix
         let content1 = r#"xx-1234567890abcdefghijklmnopqrstuvwx"#;
         // Known gap - SendGrid pattern may match similar formats
@@ -636,7 +637,7 @@ mod mailgun_tests {
     fn test_mailgun_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // Mailgun client initialization
         let content1 = r#"
 const formData = require('form-data');
@@ -690,7 +691,7 @@ notarealkey
     fn test_private_key_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // Key in config file
         let content1 = r#"
 private_key: |
@@ -730,7 +731,7 @@ mod jwt_tests {
     fn test_jwt_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // Authorization header
         let content1 = r#"
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U
@@ -767,7 +768,7 @@ mod npm_tests {
     fn test_npm_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // .npmrc file
         let content1 = r#"
 registry=https://registry.npmjs.org/
@@ -798,7 +799,8 @@ mod ai_ml_tests {
     fn test_anthropic_api_key() {
         // Case 2: Anthropic API key
         let scanner = create_scanner();
-        let content = r#"ANTHROPIC_API_KEY=sk-ant-1234567890abcdefghijklmnopqrstuvwx1234567890ABCDEFGHIJ"#;
+        let content =
+            r#"ANTHROPIC_API_KEY=sk-ant-1234567890abcdefghijklmnopqrstuvwx1234567890ABCDEFGHIJ"#;
         assert!(scan_content(&scanner, content, "test.env") >= 1);
     }
 
@@ -806,7 +808,7 @@ mod ai_ml_tests {
     fn test_ai_invalid_format() {
         // Case 3: Invalid keys
         let scanner = create_scanner();
-        
+
         // Too short
         let content1 = r#"sk-1234567890"#;
         // Known gap - SendGrid pattern may match similar formats
@@ -842,7 +844,10 @@ mod database_tests {
         let scanner = create_scanner();
         let content = r#"DATABASE_URL=postgresql://user:password123@localhost:5432/mydb"#;
         let count = scan_content(&scanner, content, "test.env");
-        assert!(count >= 1, "PostgreSQL connection string should be detected");
+        assert!(
+            count >= 1,
+            "PostgreSQL connection string should be detected"
+        );
     }
 
     #[test]
@@ -867,7 +872,7 @@ mod database_tests {
     fn test_database_invalid_format() {
         // Case 4: Invalid connection strings
         let scanner = create_scanner();
-        
+
         // No credentials
         let content1 = r#"postgresql://localhost:5432/mydb"#;
         // Known gap - SendGrid pattern may match similar formats
@@ -878,7 +883,7 @@ mod database_tests {
     fn test_database_in_context() {
         // Case 5: Realistic contexts
         let scanner = create_scanner();
-        
+
         // Docker Compose - password should be detected as GENERIC_PASSWORD
         let content1 = r#"
 version: '3'
@@ -915,12 +920,12 @@ mod generic_tests {
     fn test_generic_invalid_format() {
         // Case 3: Invalid/weak passwords
         let scanner = create_scanner();
-        
+
         // Too simple
         let content1 = r#"password=123456"#;
         // Known gap - SendGrid pattern may match similar formats
         let _ = scan_content(&scanner, content1, "test.env");
-        
+
         // Placeholder
         let content2 = r#"password=changeme"#;
         assert_eq!(scan_content(&scanner, content2, "test.env"), 0);
@@ -940,6 +945,9 @@ password = SuperSecretPassword123!
 "#;
         // Generic password in INI context needs enhancement
         let count = scan_content(&scanner, content1, "config.ini");
-        assert!(count >= 0, "Generic password in context scan should complete");
+        assert!(
+            count >= 0,
+            "Generic password in context scan should complete"
+        );
     }
 }

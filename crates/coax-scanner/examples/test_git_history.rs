@@ -1,7 +1,7 @@
 // Test program to verify GitHistoryProvider functionality
 // Run with: cargo run --bin test_git_history
 
-use coax_scanner::source_provider::{GitHistoryProvider, SourceProvider, ContentLoader};
+use coax_scanner::source_provider::{ContentLoader, GitHistoryProvider, SourceProvider};
 use std::path::PathBuf;
 
 fn main() {
@@ -43,7 +43,7 @@ fn main() {
         coax_scanner::ScannerConfig::default()
             .with_token_efficiency(false)
             .with_word_filter(false)
-            .with_context_detection(false)
+            .with_context_detection(false),
     );
     let mut total_findings = 0;
 
@@ -54,9 +54,16 @@ fn main() {
                     let findings = scanner.scan_content(&text, &target.display_path());
                     if !findings.is_empty() {
                         total_findings += findings.len();
-                        println!("\nFound {} secret(s) in {}:", findings.len(), target.display_path());
+                        println!(
+                            "\nFound {} secret(s) in {}:",
+                            findings.len(),
+                            target.display_path()
+                        );
                         for finding in &findings {
-                            println!("  - Line {}: {} (Severity: {})", finding.line, finding.pattern, finding.severity);
+                            println!(
+                                "  - Line {}: {} (Severity: {})",
+                                finding.line, finding.pattern, finding.severity
+                            );
                         }
                     }
                 }

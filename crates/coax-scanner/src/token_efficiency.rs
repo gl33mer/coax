@@ -92,15 +92,14 @@ pub fn contains_common_word_patterns(value: &str) -> bool {
 
     // Common English words that indicate false positives
     let common_words = [
-        "the", "and", "that", "have", "for", "not", "with", "you", "this",
-        "from", "they", "say", "her", "she", "will", "one", "all", "would",
-        "what", "out", "about", "who", "get", "which", "when", "make", "can",
-        "like", "time", "just", "him", "know", "take", "people", "into",
-        "year", "your", "good", "some", "could", "them", "see", "other",
-        "then", "now", "look", "only", "come", "its", "over", "think",
-        "also", "back", "after", "use", "two", "how", "our", "work",
-        "first", "well", "way", "even", "new", "want", "because", "any",
-        "these", "give", "day", "most", "only",
+        "the", "and", "that", "have", "for", "not", "with", "you", "this", "from", "they", "say",
+        "her", "she", "will", "one", "all", "would", "what", "out", "about", "who", "get", "which",
+        "when", "make", "can", "like", "time", "just", "him", "know", "take", "people", "into",
+        "year", "your", "good", "some", "could", "them", "see", "other", "then", "now", "look",
+        "only", "come", "its", "over", "think", "also", "back", "after", "use", "two", "how",
+        "our", "work", "first", "well", "way", "even", "new", "want", "because", "any", "these",
+        "give", "day", "most",
+        "only",
         // NOTE: Removed "example", "test", "sample" - they appear in legitimate credentials
     ];
 
@@ -113,16 +112,24 @@ pub fn contains_common_word_patterns(value: &str) -> bool {
     }
 
     // Check for common programming patterns
-    if lower.contains("function") || lower.contains("method") ||
-       lower.contains("class") || lower.contains("interface") ||
-       lower.contains("module") || lower.contains("package") {
+    if lower.contains("function")
+        || lower.contains("method")
+        || lower.contains("class")
+        || lower.contains("interface")
+        || lower.contains("module")
+        || lower.contains("package")
+    {
         return true;
     }
 
     // Check for variable naming patterns
-    if lower.contains("var_") || lower.contains("temp_") ||
-       lower.contains("_value") || lower.contains("_data") ||
-       lower.contains("_string") || lower.contains("_text") {
+    if lower.contains("var_")
+        || lower.contains("temp_")
+        || lower.contains("_value")
+        || lower.contains("_data")
+        || lower.contains("_string")
+        || lower.contains("_text")
+    {
         return true;
     }
 
@@ -161,7 +168,7 @@ pub fn is_likely_false_positive(value: &str) -> bool {
 /// Initialize the tokenizer (lazy, thread-safe)
 fn get_tokenizer() -> Option<CoreBPE> {
     let mut tokenizer = TOKENIZER.lock().ok()?;
-    
+
     if tokenizer.is_none() {
         match cl100k_base() {
             Ok(bpe) => *tokenizer = Some(bpe),
@@ -171,7 +178,7 @@ fn get_tokenizer() -> Option<CoreBPE> {
             }
         }
     }
-    
+
     tokenizer.clone()
 }
 
@@ -207,7 +214,7 @@ pub fn calculate_token_efficiency(secret: &str) -> f64 {
     if secret.is_empty() {
         return 0.0;
     }
-    
+
     // For short secrets (< 20 chars) that contain newlines, strip the newlines
     // before analysis so that strings like "123\n\nTest" are evaluated as "123Test"
     let analyzed = if secret.len() < 20 && secret.contains(|c| c == '\n' || c == '\r') {
@@ -215,11 +222,11 @@ pub fn calculate_token_efficiency(secret: &str) -> f64 {
     } else {
         secret.to_string()
     };
-    
+
     if analyzed.is_empty() {
         return 0.0;
     }
-    
+
     // Get tokenizer
     let tokenizer = match get_tokenizer() {
         Some(t) => t,
@@ -229,16 +236,16 @@ pub fn calculate_token_efficiency(secret: &str) -> f64 {
             return 3.0;
         }
     };
-    
+
     // Encode the secret and count tokens
     let tokens = tokenizer.encode_ordinary(&analyzed);
     let token_count = tokens.len();
-    
+
     // Avoid division by zero
     if token_count == 0 {
         return 0.0;
     }
-    
+
     // Calculate efficiency: characters per token
     analyzed.len() as f64 / token_count as f64
 }
@@ -272,20 +279,20 @@ pub fn is_likely_secret(secret: &str, threshold: Option<f64>) -> bool {
     } else {
         secret.to_string()
     };
-    
+
     if analyzed.is_empty() {
         return false;
     }
-    
+
     // Use adaptive threshold based on length (matching Betterleaks)
     let effective_threshold = threshold.unwrap_or_else(|| {
         if analyzed.len() < 12 {
-            2.1  // More lenient for short secrets
+            2.1 // More lenient for short secrets
         } else {
-            2.5  // Standard threshold
+            2.5 // Standard threshold
         }
     });
-    
+
     calculate_token_efficiency(&analyzed) >= effective_threshold
 }
 
@@ -332,41 +339,41 @@ impl TokenEfficiencyConfig {
     pub fn new() -> Self {
         Self::default()
     }
-    
+
     /// Create a new config with custom threshold
     pub fn with_threshold(mut self, threshold: f64) -> Self {
         self.threshold = threshold;
         self
     }
-    
+
     /// Enable or disable the filter
     pub fn with_enabled(mut self, enabled: bool) -> Self {
         self.enabled = enabled;
         self
     }
-    
+
     /// Set minimum secret length
     pub fn with_min_length(mut self, min_length: usize) -> Self {
         self.min_length = min_length;
         self
     }
-    
+
     /// Check if a secret passes the filter based on this config
     pub fn passes_filter(&self, secret: &str) -> bool {
         if !self.enabled {
             return true;
         }
-        
+
         if secret.len() < self.min_length {
             return true; // Too short to analyze
         }
-        
+
         let threshold = if self.adaptive_threshold && secret.len() < 12 {
             2.1
         } else {
             self.threshold
         };
-        
+
         is_likely_secret(secret, Some(threshold))
     }
 }
@@ -382,15 +389,27 @@ mod tests {
         let aws_key = "AKIAIOSFODNN7EXAMPLE1";
         let efficiency = calculate_token_efficiency(aws_key);
         // AWS keys typically have efficiency > 1.5
-        assert!(efficiency > 1.0, "AWS key efficiency {} should be > 1.0", efficiency);
-        
+        assert!(
+            efficiency > 1.0,
+            "AWS key efficiency {} should be > 1.0",
+            efficiency
+        );
+
         let github_token = "ghp_1234567890abcdefghij1234567890abcdefghij";
         let efficiency = calculate_token_efficiency(github_token);
-        assert!(efficiency > 1.0, "GitHub token efficiency {} should be > 1.0", efficiency);
-        
+        assert!(
+            efficiency > 1.0,
+            "GitHub token efficiency {} should be > 1.0",
+            efficiency
+        );
+
         let stripe_key = "sk_live_1234567890abcdefghij1234567890abcdefghij";
         let efficiency = calculate_token_efficiency(stripe_key);
-        assert!(efficiency > 1.0, "Stripe key efficiency {} should be > 1.0", efficiency);
+        assert!(
+            efficiency > 1.0,
+            "Stripe key efficiency {} should be > 1.0",
+            efficiency
+        );
     }
 
     #[test]
@@ -399,11 +418,17 @@ mod tests {
         // This test verifies the calculation works, not specific thresholds
         let common = "password123";
         let efficiency = calculate_token_efficiency(common);
-        assert!(efficiency > 0.0, "Common word should have positive efficiency");
-        
+        assert!(
+            efficiency > 0.0,
+            "Common word should have positive efficiency"
+        );
+
         let common = "my_secret_key";
         let efficiency = calculate_token_efficiency(common);
-        assert!(efficiency > 0.0, "Common phrase should have positive efficiency");
+        assert!(
+            efficiency > 0.0,
+            "Common phrase should have positive efficiency"
+        );
     }
 
     #[test]
@@ -412,10 +437,10 @@ mod tests {
         // Real-world behavior depends on BPE tokenization
         let result1 = is_likely_secret("AKIAIOSFODNN7EXAMPLE1", None);
         assert!(result1 == result1); // Just verify no panic
-        
+
         let result2 = is_likely_secret("ghp_1234567890abcdefghij1234567890abcdefghij", None);
         assert!(result2 == result2);
-        
+
         let result3 = is_likely_secret("sk_live_1234567890abcdefghij1234567890abcdefghij", None);
         assert!(result3 == result3);
     }
@@ -425,10 +450,10 @@ mod tests {
         // Test that the function works without panicking
         let result1 = fails_token_efficiency_filter("AKIAIOSFODNN7EXAMPLE1");
         assert!(result1 == result1);
-        
+
         let result2 = fails_token_efficiency_filter("ghp_1234567890abcdefghij1234567890abcdefghij");
         assert!(result2 == result2);
-        
+
         // Common words should typically fail
         let result3 = fails_token_efficiency_filter("password");
         assert!(result3 == result3);
@@ -453,7 +478,7 @@ mod tests {
     fn test_adaptive_threshold() {
         // Short secrets should use lower threshold
         let config = TokenEfficiencyConfig::default();
-        
+
         // Short but valid-looking secret
         let short_secret = "AKIA1234567890";
         // Should pass with adaptive threshold (2.1 for < 12 chars)
@@ -468,11 +493,11 @@ mod tests {
             .with_threshold(3.0)
             .with_enabled(false)
             .with_min_length(10);
-        
+
         assert!(!config.enabled);
         assert_eq!(config.threshold, 3.0);
         assert_eq!(config.min_length, 10);
-        
+
         // Disabled filter should always pass
         assert!(config.passes_filter("anything"));
     }
@@ -489,22 +514,31 @@ mod tests {
     fn test_betterleaks_comparison() {
         // Test cases based on Betterleaks expected behavior
         // Real secrets should have reasonable efficiency
-        
+
         // AWS Access Key ID (20 chars)
         let aws_key = "AKIAIOSFODNN7EXAMPLE1";
         let efficiency = calculate_token_efficiency(aws_key);
         // Should have reasonable efficiency
-        assert!(efficiency > 1.0, "AWS key should have reasonable efficiency");
+        assert!(
+            efficiency > 1.0,
+            "AWS key should have reasonable efficiency"
+        );
 
         // GitHub PAT (40 chars)
         let gh_token = "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
         let efficiency = calculate_token_efficiency(gh_token);
-        assert!(efficiency > 1.0, "GitHub token should have reasonable efficiency");
+        assert!(
+            efficiency > 1.0,
+            "GitHub token should have reasonable efficiency"
+        );
 
         // Natural language may have varying efficiency depending on BPE
         // This test just verifies the calculation works
         let natural = "this_is_my_password";
         let efficiency = calculate_token_efficiency(natural);
-        assert!(efficiency > 0.0, "Natural language should have positive efficiency");
+        assert!(
+            efficiency > 0.0,
+            "Natural language should have positive efficiency"
+        );
     }
 }

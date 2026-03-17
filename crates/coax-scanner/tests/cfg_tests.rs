@@ -1,8 +1,7 @@
 //! CFG-Based Vulnerability Slicing Tests
 
 use coax_scanner::cfg::{
-    CFGBuilder, BackwardSlicer, ForwardSlicer, SliceIntersection,
-    entry_points, sinks, Language,
+    entry_points, sinks, BackwardSlicer, CFGBuilder, ForwardSlicer, Language, SliceIntersection,
 };
 
 #[test]
@@ -37,7 +36,8 @@ fn get_user(conn: &Connection, id: u32) {
     let builder = CFGBuilder::new(Language::Rust);
     let cfg = builder.build(code).unwrap();
     let sinks = sinks::detect_all(&cfg);
-    let sql_sinks: Vec<_> = sinks.iter()
+    let sql_sinks: Vec<_> = sinks
+        .iter()
         .filter(|s| matches!(s, coax_scanner::cfg::SinkPoint::SqlExecution { .. }))
         .collect();
     assert!(!sql_sinks.is_empty());
@@ -53,7 +53,8 @@ fn run_command(cmd: &str) {
     let builder = CFGBuilder::new(Language::Rust);
     let cfg = builder.build(code).unwrap();
     let sinks = sinks::detect_all(&cfg);
-    let cmd_sinks: Vec<_> = sinks.iter()
+    let cmd_sinks: Vec<_> = sinks
+        .iter()
         .filter(|s| matches!(s, coax_scanner::cfg::SinkPoint::CommandExecution { .. }))
         .collect();
     assert!(!cmd_sinks.is_empty());
@@ -93,7 +94,7 @@ fn handle(input: &str) -> String {
 fn test_confidence_calculation() {
     use coax_scanner::cfg::{EntryPoint, SinkPoint, VulnerabilitySlice};
     use petgraph::graph::NodeIndex;
-    
+
     let entry = EntryPoint::PublicFunction {
         name: "test".to_string(),
         file: "test.rs".to_string(),

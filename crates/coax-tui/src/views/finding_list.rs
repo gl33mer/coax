@@ -16,11 +16,11 @@ pub fn render_finding_list(frame: &mut Frame, app: &mut App, area: Rect) {
         .direction(Direction::Vertical)
         .margin(1)
         .constraints([
-            Constraint::Length(3),  // Title and filter info
-            Constraint::Length(3),  // Filter tabs
-            Constraint::Length(3),  // Sort info
-            Constraint::Min(10),    // Finding list
-            Constraint::Length(3),  // Status bar
+            Constraint::Length(3), // Title and filter info
+            Constraint::Length(3), // Filter tabs
+            Constraint::Length(3), // Sort info
+            Constraint::Min(10),   // Finding list
+            Constraint::Length(3), // Status bar
         ])
         .split(area);
 
@@ -43,7 +43,7 @@ pub fn render_finding_list(frame: &mut Frame, app: &mut App, area: Rect) {
 fn render_list_title(frame: &mut Frame, app: &App, area: Rect) {
     let total = app.scan_results.len();
     let filtered = app.filtered_results.len();
-    
+
     let search_info = if !app.search_query.is_empty() {
         format!(" (searching: \"{}\")", app.search_query)
     } else {
@@ -52,15 +52,18 @@ fn render_list_title(frame: &mut Frame, app: &App, area: Rect) {
 
     let text = Line::from(vec![
         Span::styled("📋 ", Style::default().fg(Color::Blue)),
-        Span::styled(" Finding List", Style::default().add_modifier(Modifier::BOLD)),
+        Span::styled(
+            " Finding List",
+            Style::default().add_modifier(Modifier::BOLD),
+        ),
         Span::raw(format!(
             " - {} findings{} (showing {})",
             total, search_info, filtered
         )),
     ]);
 
-    let paragraph = Paragraph::new(text)
-        .block(Block::default().borders(Borders::ALL).title("Findings"));
+    let paragraph =
+        Paragraph::new(text).block(Block::default().borders(Borders::ALL).title("Findings"));
 
     frame.render_widget(paragraph, area);
 }
@@ -69,7 +72,7 @@ fn render_filter_tabs(frame: &mut Frame, app: &App, area: Rect) {
     use crate::app::Severity;
 
     let current_filter = app.filter_severity.as_ref();
-    
+
     let tabs = vec![
         ("All", None),
         ("Critical", Some(Severity::Critical)),
@@ -81,7 +84,7 @@ fn render_filter_tabs(frame: &mut Frame, app: &App, area: Rect) {
     let mut spans = Vec::new();
     for (i, (label, severity)) in tabs.iter().enumerate() {
         let is_selected = current_filter == severity.as_ref();
-        
+
         if is_selected {
             spans.push(Span::styled(
                 format!(" [{}] ", label),
@@ -101,7 +104,7 @@ fn render_filter_tabs(frame: &mut Frame, app: &App, area: Rect) {
             };
             spans.push(Span::raw(format!(" [{}]{} ", key, label)));
         }
-        
+
         if i < tabs.len() - 1 {
             spans.push(Span::raw("|"));
         }
@@ -145,8 +148,8 @@ fn render_sort_info(frame: &mut Frame, app: &App, area: Rect) {
         Span::raw("=Pattern"),
     ]);
 
-    let paragraph = Paragraph::new(text)
-        .block(Block::default().borders(Borders::ALL).title("Sorting"));
+    let paragraph =
+        Paragraph::new(text).block(Block::default().borders(Borders::ALL).title("Sorting"));
 
     frame.render_widget(paragraph, area);
 }
@@ -201,7 +204,11 @@ fn render_finding_table(frame: &mut Frame, app: &App, area: Rect) {
             };
 
             Row::new(vec![
-                if i == app.selected_index { "▶".to_string() } else { " ".to_string() },
+                if i == app.selected_index {
+                    "▶".to_string()
+                } else {
+                    " ".to_string()
+                },
                 format!("{} {}", icon, f.pattern),
                 f.file.clone(),
                 f.line.to_string(),

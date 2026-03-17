@@ -282,10 +282,8 @@ impl PatternCache {
     ///
     /// Panics if any pattern has an invalid regex.
     pub fn new(patterns: &[PatternConfig]) -> Self {
-        let compiled: Vec<CompiledPattern> = patterns
-            .iter()
-            .map(CompiledPattern::from_config)
-            .collect();
+        let compiled: Vec<CompiledPattern> =
+            patterns.iter().map(CompiledPattern::from_config).collect();
 
         Self { patterns: compiled }
     }
@@ -299,7 +297,9 @@ impl PatternCache {
             .map(CompiledPattern::try_from_config)
             .collect();
 
-        Ok(Self { patterns: compiled? })
+        Ok(Self {
+            patterns: compiled?,
+        })
     }
 
     /// Get all compiled patterns
@@ -342,10 +342,7 @@ impl PatternCache {
     ///
     /// Returns a vector of pattern names that match.
     pub fn find_matches<'a>(&'a self, text: &'a str) -> Vec<&'a CompiledPattern> {
-        self.patterns
-            .iter()
-            .filter(|p| p.is_match(text))
-            .collect()
+        self.patterns.iter().filter(|p| p.is_match(text)).collect()
     }
 }
 
@@ -572,7 +569,10 @@ pub fn default_patterns() -> Vec<PatternConfig> {
             r"[a-zA-Z0-9+/=_-]{40,}",
             "low",
             "Review - may be false positive (entropy-based detection)",
-        ).with_enabled(false).with_min_entropy(4.5).with_extract_secret(false),
+        )
+        .with_enabled(false)
+        .with_min_entropy(4.5)
+        .with_extract_secret(false),
     ]
 }
 
@@ -627,12 +627,7 @@ mod tests {
 
     #[test]
     fn test_try_from_config_invalid() {
-        let pattern = PatternConfig::new(
-            "INVALID",
-            r"[invalid(regex",
-            "high",
-            "Test",
-        );
+        let pattern = PatternConfig::new("INVALID", r"[invalid(regex", "high", "Test");
 
         let result = CompiledPattern::try_from_config(&pattern);
         assert!(result.is_err());

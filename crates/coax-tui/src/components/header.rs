@@ -21,16 +21,15 @@ pub fn render_header(frame: &mut Frame, area: Rect, title: &str, version: &str) 
         Span::raw(format!(" v{}", version)),
     ]);
 
-    let paragraph = Paragraph::new(text)
-        .block(
-            Block::default()
-                .borders(Borders::ALL)
-                .border_style(Style::default().fg(Color::Blue))
-                .title(Span::styled(
-                    title,
-                    Style::default().add_modifier(Modifier::BOLD),
-                )),
-        );
+    let paragraph = Paragraph::new(text).block(
+        Block::default()
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(Color::Blue))
+            .title(Span::styled(
+                title,
+                Style::default().add_modifier(Modifier::BOLD),
+            )),
+    );
 
     frame.render_widget(paragraph, area);
 }

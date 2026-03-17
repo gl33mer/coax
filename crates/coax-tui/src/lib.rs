@@ -51,12 +51,12 @@
 //! ```
 
 pub mod app;
-pub mod ui;
-pub mod views;
 pub mod components;
 pub mod events;
+pub mod ui;
+pub mod views;
 
-pub use app::{App, View, SortField, SortOrder};
+pub use app::{App, SortField, SortOrder, View};
 pub use events::handler::handle_key_event;
 
 /// Crate version

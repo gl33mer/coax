@@ -40,37 +40,50 @@
 //! }
 //! ```
 
+pub mod baseline;
+pub mod cfg;
+mod context;
+pub mod encoded_detection;
+pub mod entropy_filter;
 mod pattern_cache;
+pub mod pattern_loader;
+mod result;
+pub mod sarif_output;
 mod scanner;
 mod secrets;
-mod result;
-mod context;
-pub mod pattern_loader;
-pub mod token_efficiency;
-pub mod word_filter;
-pub mod entropy_filter;
-pub mod sarif_output;
-pub mod baseline;
-pub mod encoded_detection;
-pub mod cfg;
-pub mod unicode;
 pub mod source_provider;
+pub mod token_efficiency;
+pub mod unicode;
+pub mod word_filter;
 
-pub use pattern_cache::{PatternCache, CompiledPattern, PatternConfig};
-pub use scanner::{Scanner, ScannerConfig};
-pub use result::{ScanResult, ScanSummary, SeverityCounts, PatternCount, OutputFormat, FindingContext};
-pub use secrets::SecretPattern;
-pub use context::{ContextAnalyzer, ExclusionPatterns};
-pub use pattern_loader::{PatternLoader, PatternLoaderError, PatternValidationResult, ValidationResult, PatternsFile, PatternEntry};
-pub use token_efficiency::{TokenEfficiencyConfig, calculate_token_efficiency, is_likely_secret, fails_token_efficiency_filter};
-pub use word_filter::{WordFilter, WordFilterConfig, WordFilterResult};
-pub use entropy_filter::{EntropyFilter, EntropyFilterConfig, EntropyFilterResult};
-pub use cfg::{CFGBuilder, BackwardSlicer, ForwardSlicer, SliceIntersection, CFG, VulnerabilitySlice, CfgFinding, EntryPoint, SinkPoint};
-pub use unicode::{UnicodeScanner, UnicodeConfig, UnicodeFinding, UnicodeCategory, Severity as UnicodeSeverity};
-pub use source_provider::{
-    SourceProvider, ContentLoader, ScanTarget, ScanOrigin, ScanContent, ContentType,
-    FileSystemProvider, GitHistoryProvider, SourceProviderError, SourceProviderResult,
+pub use cfg::{
+    BackwardSlicer, CFGBuilder, CfgFinding, EntryPoint, ForwardSlicer, SinkPoint,
+    SliceIntersection, VulnerabilitySlice, CFG,
 };
+pub use context::{ContextAnalyzer, ExclusionPatterns};
+pub use entropy_filter::{EntropyFilter, EntropyFilterConfig, EntropyFilterResult};
+pub use pattern_cache::{CompiledPattern, PatternCache, PatternConfig};
+pub use pattern_loader::{
+    PatternEntry, PatternLoader, PatternLoaderError, PatternValidationResult, PatternsFile,
+    ValidationResult,
+};
+pub use result::{
+    FindingContext, OutputFormat, PatternCount, ScanResult, ScanSummary, SeverityCounts,
+};
+pub use scanner::{Scanner, ScannerConfig};
+pub use secrets::SecretPattern;
+pub use source_provider::{
+    ContentLoader, ContentType, FileSystemProvider, GitHistoryProvider, ScanContent, ScanOrigin,
+    ScanTarget, SourceProvider, SourceProviderError, SourceProviderResult,
+};
+pub use token_efficiency::{
+    calculate_token_efficiency, fails_token_efficiency_filter, is_likely_secret,
+    TokenEfficiencyConfig,
+};
+pub use unicode::{
+    Severity as UnicodeSeverity, UnicodeCategory, UnicodeConfig, UnicodeFinding, UnicodeScanner,
+};
+pub use word_filter::{WordFilter, WordFilterConfig, WordFilterResult};
 
 /// Crate version
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -121,7 +134,7 @@ mod tests {
             ScannerConfig::default()
                 .with_token_efficiency(false)
                 .with_word_filter(false)
-                .with_context_detection(false)
+                .with_context_detection(false),
         );
         let content = r#"
             AWS_KEY=AKIAIOSFODNN7EXAMPLE
@@ -155,7 +168,7 @@ mod tests {
             ScannerConfig::default()
                 .with_token_efficiency(false)
                 .with_word_filter(false)
-                .with_context_detection(false)
+                .with_context_detection(false),
         );
 
         // Create test files
@@ -176,14 +189,12 @@ mod tests {
 
     #[test]
     fn test_pattern_cache_caching() {
-        let patterns = vec![
-            PatternConfig::new(
-                "TEST_PATTERN",
-                r"test\d+",
-                "high",
-                "Test recommendation",
-            ),
-        ];
+        let patterns = vec![PatternConfig::new(
+            "TEST_PATTERN",
+            r"test\d+",
+            "high",
+            "Test recommendation",
+        )];
 
         let cache = PatternCache::new(&patterns);
         // Second access should use cached pattern

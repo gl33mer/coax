@@ -14,7 +14,7 @@
 //! - Precision: >95%
 //! - F1 Score: >92%
 
-use coax_scanner::entropy_filter::{EntropyFilter, EntropyConfig, EntropyFilterResult};
+use coax_scanner::entropy_filter::{EntropyConfig, EntropyFilter, EntropyFilterResult};
 
 // ============================================================================
 // TRUE POSITIVE TESTS - These MUST be detected as secrets
@@ -37,15 +37,24 @@ mod true_positives {
 
         // AWS Access Key IDs (start with AKIA)
         assert!(
-            filter.is_likely_secret("AKIAFakeAWSKeyID1234", "aws_access_key_id = AKIAFakeAWSKeyID1234"),
+            filter.is_likely_secret(
+                "AKIAFakeAWSKeyID1234",
+                "aws_access_key_id = AKIAFakeAWSKeyID1234"
+            ),
             "AWS Access Key ID should be detected"
         );
         assert!(
-            filter.is_likely_secret("AKIAFakeAWSKeyID5678", "aws_access_key_id: AKIAFakeAWSKeyID5678"),
+            filter.is_likely_secret(
+                "AKIAFakeAWSKeyID5678",
+                "aws_access_key_id: AKIAFakeAWSKeyID5678"
+            ),
             "AWS Access Key ID should be detected"
         );
         assert!(
-            filter.is_likely_secret("AKIA1234567890ABCDEF", "aws_access_key_id=AKIA1234567890ABCDEF"),
+            filter.is_likely_secret(
+                "AKIA1234567890ABCDEF",
+                "aws_access_key_id=AKIA1234567890ABCDEF"
+            ),
             "AWS Access Key ID should be detected"
         );
     }
@@ -56,11 +65,17 @@ mod true_positives {
 
         // AWS Secret Access Keys (40 character base64-like strings)
         assert!(
-            filter.is_likely_secret("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY", "aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"),
+            filter.is_likely_secret(
+                "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+                "aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+            ),
             "AWS Secret Access Key should be detected"
         );
         assert!(
-            filter.is_likely_secret("abcdefghijklmnopqrstuvwxyz1234567890ABCDEF", "aws_secret_access_key: abcdefghijklmnopqrstuvwxyz1234567890ABCDEF"),
+            filter.is_likely_secret(
+                "abcdefghijklmnopqrstuvwxyz1234567890ABCDEF",
+                "aws_secret_access_key: abcdefghijklmnopqrstuvwxyz1234567890ABCDEF"
+            ),
             "AWS Secret Access Key should be detected"
         );
     }
@@ -75,11 +90,17 @@ mod true_positives {
 
         // GitHub Personal Access Tokens (classic)
         assert!(
-            filter.is_likely_secret("ghp_1234567890abcdefghij1234567890abcdef", "github_token = ghp_1234567890abcdefghij1234567890abcdef"),
+            filter.is_likely_secret(
+                "ghp_1234567890abcdefghij1234567890abcdef",
+                "github_token = ghp_1234567890abcdefghij1234567890abcdef"
+            ),
             "GitHub PAT (classic) should be detected"
         );
         assert!(
-            filter.is_likely_secret("ghp_ABCDEFghijklmnop1234567890ABCDEFGH", "GITHUB_TOKEN: ghp_ABCDEFghijklmnop1234567890ABCDEFGH"),
+            filter.is_likely_secret(
+                "ghp_ABCDEFghijklmnop1234567890ABCDEFGH",
+                "GITHUB_TOKEN: ghp_ABCDEFghijklmnop1234567890ABCDEFGH"
+            ),
             "GitHub PAT (classic) should be detected"
         );
     }
@@ -90,7 +111,10 @@ mod true_positives {
 
         // GitHub OAuth Access Tokens
         assert!(
-            filter.is_likely_secret("gho_1234567890abcdefghij1234567890abcdef", "oauth_token = gho_1234567890abcdefghij1234567890abcdef"),
+            filter.is_likely_secret(
+                "gho_1234567890abcdefghij1234567890abcdef",
+                "oauth_token = gho_1234567890abcdefghij1234567890abcdef"
+            ),
             "GitHub OAuth token should be detected"
         );
     }
@@ -101,7 +125,10 @@ mod true_positives {
 
         // GitHub App Installation Access Tokens
         assert!(
-            filter.is_likely_secret("ghs_1234567890abcdefghij1234567890abcdef", "token: ghs_1234567890abcdefghij1234567890abcdef"),
+            filter.is_likely_secret(
+                "ghs_1234567890abcdefghij1234567890abcdef",
+                "token: ghs_1234567890abcdefghij1234567890abcdef"
+            ),
             "GitHub App token should be detected"
         );
     }
@@ -116,15 +143,24 @@ mod true_positives {
 
         // Stripe API Keys
         assert!(
-            filter.is_likely_secret("sk_live_1234567890abcdefghijklmnop", "stripe_key = sk_live_1234567890abcdefghijklmnop"),
+            filter.is_likely_secret(
+                "sk_live_1234567890abcdefghijklmnop",
+                "stripe_key = sk_live_1234567890abcdefghijklmnop"
+            ),
             "Stripe live key should be detected"
         );
         assert!(
-            filter.is_likely_secret("sk_test_1234567890abcdefghijklmnop", "stripe_key: sk_test_1234567890abcdefghijklmnop"),
+            filter.is_likely_secret(
+                "sk_test_1234567890abcdefghijklmnop",
+                "stripe_key: sk_test_1234567890abcdefghijklmnop"
+            ),
             "Stripe test key should be detected"
         );
         assert!(
-            filter.is_likely_secret("pk_live_1234567890abcdefghijklmnop", "stripe_publishable_key = pk_live_1234567890abcdefghijklmnop"),
+            filter.is_likely_secret(
+                "pk_live_1234567890abcdefghijklmnop",
+                "stripe_publishable_key = pk_live_1234567890abcdefghijklmnop"
+            ),
             "Stripe publishable key should be detected"
         );
     }
@@ -139,7 +175,10 @@ mod true_positives {
 
         // Slack Bot Tokens
         assert!(
-            filter.is_likely_secret("xoxb-FakeSlackToken-ForTestingOnly", "SLACK_BOT_TOKEN=xoxb-FakeSlackToken-ForTestingOnly"),
+            filter.is_likely_secret(
+                "xoxb-FakeSlackToken-ForTestingOnly",
+                "SLACK_BOT_TOKEN=xoxb-FakeSlackToken-ForTestingOnly"
+            ),
             "Slack bot token should be detected"
         );
 
@@ -166,15 +205,24 @@ mod true_positives {
 
         // Base64-encoded passwords
         assert!(
-            filter.is_likely_secret("cGFzc3dvcmQxMjM0NTY=", "password = \"cGFzc3dvcmQxMjM0NTY=\""),
+            filter.is_likely_secret(
+                "cGFzc3dvcmQxMjM0NTY=",
+                "password = \"cGFzc3dvcmQxMjM0NTY=\""
+            ),
             "Base64-encoded password should be detected"
         );
         assert!(
-            filter.is_likely_secret("c2VjcmV0cGFzc3dvcmQxMjM=", "secret: c2VjcmV0cGFzc3dvcmQxMjM="),
+            filter.is_likely_secret(
+                "c2VjcmV0cGFzc3dvcmQxMjM=",
+                "secret: c2VjcmV0cGFzc3dvcmQxMjM="
+            ),
             "Base64-encoded secret should be detected"
         );
         assert!(
-            filter.is_likely_secret("YWRtaW5pc3RyYXRvcnBhc3N3b3Jk", "admin_password = YWRtaW5pc3RyYXRvcnBhc3N3b3Jk"),
+            filter.is_likely_secret(
+                "YWRtaW5pc3RyYXRvcnBhc3N3b3Jk",
+                "admin_password = YWRtaW5pc3RyYXRvcnBhc3N3b3Jk"
+            ),
             "Base64-encoded admin password should be detected"
         );
     }
@@ -185,7 +233,10 @@ mod true_positives {
 
         // Base64-encoded API keys
         assert!(
-            filter.is_likely_secret("YXBpX2tleV9zZWNyZXRfdmFsdWU=", "api_key: YXBpX2tleV9zZWNyZXRfdmFsdWU="),
+            filter.is_likely_secret(
+                "YXBpX2tleV9zZWNyZXRfdmFsdWU=",
+                "api_key: YXBpX2tleV9zZWNyZXRfdmFsdWU="
+            ),
             "Base64-encoded API key should be detected"
         );
     }
@@ -197,7 +248,7 @@ mod true_positives {
     // Note: High-entropy detection depends on multiple factors including entropy threshold,
     // token efficiency, and context. The library tests (entropy_filter::tests) provide
     // comprehensive testing of the core functionality.
-    
+
     // #[test]  // Commented out - see library tests for comprehensive coverage
     // fn test_high_entropy_hex_strings() {
     //     let filter = create_filter();
@@ -228,7 +279,10 @@ mod true_positives {
 
         // Secrets in JSON config
         assert!(
-            filter.is_likely_secret("JsonSecretKey123456", "\"api_key\": \"JsonSecretKey123456\""),
+            filter.is_likely_secret(
+                "JsonSecretKey123456",
+                "\"api_key\": \"JsonSecretKey123456\""
+            ),
             "Secret in JSON config should be detected"
         );
 
@@ -249,13 +303,19 @@ mod true_positives {
 
         // PostgreSQL connection strings with passwords
         assert!(
-            filter.is_likely_secret("postgresql://user:SecretPass123@localhost/db", "DATABASE_URL=postgresql://user:SecretPass123@localhost/db"),
+            filter.is_likely_secret(
+                "postgresql://user:SecretPass123@localhost/db",
+                "DATABASE_URL=postgresql://user:SecretPass123@localhost/db"
+            ),
             "PostgreSQL connection string should be detected"
         );
 
         // MongoDB connection strings
         assert!(
-            filter.is_likely_secret("mongodb://user:MongoPass456@localhost:27017/db", "MONGO_URI=mongodb://user:MongoPass456@localhost:27017/db"),
+            filter.is_likely_secret(
+                "mongodb://user:MongoPass456@localhost:27017/db",
+                "MONGO_URI=mongodb://user:MongoPass456@localhost:27017/db"
+            ),
             "MongoDB connection string should be detected"
         );
     }
@@ -297,15 +357,24 @@ mod true_negatives {
 
         // UUID v4 (random)
         assert!(
-            !filter.is_likely_secret("550e8400-e29b-41d4-a716-446655440000", "id = \"550e8400-e29b-41d4-a716-446655440000\""),
+            !filter.is_likely_secret(
+                "550e8400-e29b-41d4-a716-446655440000",
+                "id = \"550e8400-e29b-41d4-a716-446655440000\""
+            ),
             "UUID v4 should NOT be flagged"
         );
         assert!(
-            !filter.is_likely_secret("123e4567-e89b-12d3-a456-426614174000", "uuid: 123e4567-e89b-12d3-a456-426614174000"),
+            !filter.is_likely_secret(
+                "123e4567-e89b-12d3-a456-426614174000",
+                "uuid: 123e4567-e89b-12d3-a456-426614174000"
+            ),
             "UUID v4 should NOT be flagged"
         );
         assert!(
-            !filter.is_likely_secret("A1B2C3D4-E5F6-7890-ABCD-EF1234567890", "request_id: A1B2C3D4-E5F6-7890-ABCD-EF1234567890"),
+            !filter.is_likely_secret(
+                "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
+                "request_id: A1B2C3D4-E5F6-7890-ABCD-EF1234567890"
+            ),
             "UUID v4 should NOT be flagged"
         );
     }
@@ -316,7 +385,10 @@ mod true_negatives {
 
         // UUID v1 (time-based)
         assert!(
-            !filter.is_likely_secret("7d4f4e0a-1234-11ec-82a8-0242ac130003", "id = \"7d4f4e0a-1234-11ec-82a8-0242ac130003\""),
+            !filter.is_likely_secret(
+                "7d4f4e0a-1234-11ec-82a8-0242ac130003",
+                "id = \"7d4f4e0a-1234-11ec-82a8-0242ac130003\""
+            ),
             "UUID v1 should NOT be flagged"
         );
     }
@@ -428,15 +500,24 @@ mod true_negatives {
 
         // Git commit SHAs (40 hex chars)
         assert!(
-            !filter.is_likely_secret("a1b2c3d4e5f6789012345678901234567890abcd", "commit: a1b2c3d4e5f6789012345678901234567890abcd"),
+            !filter.is_likely_secret(
+                "a1b2c3d4e5f6789012345678901234567890abcd",
+                "commit: a1b2c3d4e5f6789012345678901234567890abcd"
+            ),
             "Git commit SHA should NOT be flagged"
         );
         assert!(
-            !filter.is_likely_secret("0000000000000000000000000000000000000000", "SHA: 0000000000000000000000000000000000000000"),
+            !filter.is_likely_secret(
+                "0000000000000000000000000000000000000000",
+                "SHA: 0000000000000000000000000000000000000000"
+            ),
             "Git commit SHA should NOT be flagged"
         );
         assert!(
-            !filter.is_likely_secret("ffffffffffffffffffffffffffffffffffffffff", "commit: ffffffffffffffffffffffffffffffffffffffff"),
+            !filter.is_likely_secret(
+                "ffffffffffffffffffffffffffffffffffffffff",
+                "commit: ffffffffffffffffffffffffffffffffffffffff"
+            ),
             "Git commit SHA should NOT be flagged"
         );
     }
@@ -452,11 +533,19 @@ mod true_negatives {
         // High-entropy strings in package-lock.json should NOT be flagged
         let high_entropy = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6";
         assert!(
-            !filter.is_likely_secret_with_path(high_entropy, "\"version\": \"1.0.0\"", "package-lock.json"),
+            !filter.is_likely_secret_with_path(
+                high_entropy,
+                "\"version\": \"1.0.0\"",
+                "package-lock.json"
+            ),
             "High-entropy in package-lock.json should NOT be flagged"
         );
         assert!(
-            !filter.is_likely_secret_with_path(high_entropy, "\"resolved\": \"https://registry.npmjs.org/...\"", "package-lock.json"),
+            !filter.is_likely_secret_with_path(
+                high_entropy,
+                "\"resolved\": \"https://registry.npmjs.org/...\"",
+                "package-lock.json"
+            ),
             "High-entropy in package-lock.json should NOT be flagged"
         );
     }
@@ -472,7 +561,11 @@ mod true_negatives {
             "High-entropy in yarn.lock should NOT be flagged"
         );
         assert!(
-            !filter.is_likely_secret_with_path(high_entropy, "resolved \"https://...\"", "yarn.lock"),
+            !filter.is_likely_secret_with_path(
+                high_entropy,
+                "resolved \"https://...\"",
+                "yarn.lock"
+            ),
             "High-entropy in yarn.lock should NOT be flagged"
         );
     }
@@ -496,7 +589,11 @@ mod true_negatives {
         // High-entropy strings in go.sum should NOT be flagged
         let high_entropy = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6";
         assert!(
-            !filter.is_likely_secret_with_path(high_entropy, "github.com/example/pkg v1.0.0 h1:abc123", "go.sum"),
+            !filter.is_likely_secret_with_path(
+                high_entropy,
+                "github.com/example/pkg v1.0.0 h1:abc123",
+                "go.sum"
+            ),
             "High-entropy in go.sum should NOT be flagged"
         );
     }
@@ -508,7 +605,11 @@ mod true_negatives {
         // High-entropy strings in Gemfile.lock should NOT be flagged
         let high_entropy = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6";
         assert!(
-            !filter.is_likely_secret_with_path(high_entropy, "remote: https://rubygems.org/", "Gemfile.lock"),
+            !filter.is_likely_secret_with_path(
+                high_entropy,
+                "remote: https://rubygems.org/",
+                "Gemfile.lock"
+            ),
             "High-entropy in Gemfile.lock should NOT be flagged"
         );
     }
@@ -520,7 +621,11 @@ mod true_negatives {
         // High-entropy strings in composer.lock should NOT be flagged
         let high_entropy = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6";
         assert!(
-            !filter.is_likely_secret_with_path(high_entropy, "\"dist\": {\"url\": \"...\"}", "composer.lock"),
+            !filter.is_likely_secret_with_path(
+                high_entropy,
+                "\"dist\": {\"url\": \"...\"}",
+                "composer.lock"
+            ),
             "High-entropy in composer.lock should NOT be flagged"
         );
     }
@@ -536,11 +641,19 @@ mod true_negatives {
         // High-entropy strings in minified JS should NOT be flagged
         let high_entropy = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6";
         assert!(
-            !filter.is_likely_secret_with_path(high_entropy, "var x=\"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6\"", "app.min.js"),
+            !filter.is_likely_secret_with_path(
+                high_entropy,
+                "var x=\"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6\"",
+                "app.min.js"
+            ),
             "High-entropy in minified JS should NOT be flagged"
         );
         assert!(
-            !filter.is_likely_secret_with_path(high_entropy, "!function(){var x=\"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6\"}", "bundle.min.js"),
+            !filter.is_likely_secret_with_path(
+                high_entropy,
+                "!function(){var x=\"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6\"}",
+                "bundle.min.js"
+            ),
             "High-entropy in minified JS should NOT be flagged"
         );
     }
@@ -552,11 +665,19 @@ mod true_negatives {
         // High-entropy strings in minified CSS should NOT be flagged
         let high_entropy = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6";
         assert!(
-            !filter.is_likely_secret_with_path(high_entropy, ".class{content:\"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6\"}", "styles.min.css"),
+            !filter.is_likely_secret_with_path(
+                high_entropy,
+                ".class{content:\"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6\"}",
+                "styles.min.css"
+            ),
             "High-entropy in minified CSS should NOT be flagged"
         );
         assert!(
-            !filter.is_likely_secret_with_path(high_entropy, ".a{background:url(data:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6)}", "bundle.min.css"),
+            !filter.is_likely_secret_with_path(
+                high_entropy,
+                ".a{background:url(data:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6)}",
+                "bundle.min.css"
+            ),
             "High-entropy in minified CSS should NOT be flagged"
         );
     }
@@ -671,7 +792,10 @@ mod true_negatives {
 
         // These were actual false positives from pydantic scan
         assert!(
-            !filter.is_likely_secret("field_title_generator", "field_title_generator=field_title_generator"),
+            !filter.is_likely_secret(
+                "field_title_generator",
+                "field_title_generator=field_title_generator"
+            ),
             "Pydantic field_title_generator should NOT be flagged"
         );
         assert!(
@@ -733,7 +857,10 @@ mod edge_cases {
         let filter = EntropyFilter::new();
 
         // String just below min_length (20) should NOT be flagged
-        assert!(!filter.is_likely_secret("abcdefghijklmnopqrst", "x = abcdefghijklmnopqrst"), "19 chars should NOT be flagged");
+        assert!(
+            !filter.is_likely_secret("abcdefghijklmnopqrst", "x = abcdefghijklmnopqrst"),
+            "19 chars should NOT be flagged"
+        );
 
         // String at min_length should be evaluated
         let result = filter.analyze("abcdefghijklmnopqrstu", "x = abcdefghijklmnopqrstu");
@@ -750,7 +877,10 @@ mod edge_cases {
         let filter = EntropyFilter::new_with_config(config);
 
         // Higher threshold should be more strict
-        let result = filter.analyze("a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4", "key = a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4");
+        let result = filter.analyze(
+            "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4",
+            "key = a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4",
+        );
         // Result depends on entropy vs threshold
     }
 
@@ -772,8 +902,14 @@ mod edge_cases {
         let filter = EntropyFilter::new_with_config(config);
 
         // UUID should be evaluated (not automatically excluded)
-        let result = filter.analyze("550e8400-e29b-41d4-a716-446655440000", "id = \"550e8400-e29b-41d4-a716-446655440000\"");
-        assert!(!result.is_uuid, "UUID pattern should still be detected but not excluded");
+        let result = filter.analyze(
+            "550e8400-e29b-41d4-a716-446655440000",
+            "id = \"550e8400-e29b-41d4-a716-446655440000\"",
+        );
+        assert!(
+            !result.is_uuid,
+            "UUID pattern should still be detected but not excluded"
+        );
     }
 
     // ------------------------------------------------------------------------
@@ -784,7 +920,10 @@ mod edge_cases {
     fn test_hex_format_detection() {
         let filter = EntropyFilter::new();
 
-        let result = filter.analyze("a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4", "key = a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4");
+        let result = filter.analyze(
+            "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4",
+            "key = a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4",
+        );
         assert_eq!(result.detected_format, "hex", "Should detect hex format");
     }
 
@@ -793,7 +932,10 @@ mod edge_cases {
         let filter = EntropyFilter::new();
 
         let result = filter.analyze("cGFzc3dvcmQxMjM0NTY=", "key = \"cGFzc3dvcmQxMjM0NTY=\"");
-        assert_eq!(result.detected_format, "base64", "Should detect base64 format");
+        assert_eq!(
+            result.detected_format, "base64",
+            "Should detect base64 format"
+        );
     }
 
     #[test]
@@ -801,7 +943,10 @@ mod edge_cases {
         let filter = EntropyFilter::new();
 
         let result = filter.analyze("xK9$mN2@pL5#qR8!", "key = \"xK9$mN2@pL5#qR8!\"");
-        assert_eq!(result.detected_format, "unknown", "Should detect unknown format");
+        assert_eq!(
+            result.detected_format, "unknown",
+            "Should detect unknown format"
+        );
     }
 
     // ------------------------------------------------------------------------
@@ -817,13 +962,19 @@ mod edge_cases {
     #[test]
     fn test_medium_entropy_pattern() {
         let entropy = EntropyFilter::calculate_shannon_entropy("abcabcabcabc");
-        assert!(entropy > 1.0 && entropy < 3.0, "Patterned string should have medium entropy");
+        assert!(
+            entropy > 1.0 && entropy < 3.0,
+            "Patterned string should have medium entropy"
+        );
     }
 
     #[test]
     fn test_high_entropy_random() {
         let entropy = EntropyFilter::calculate_shannon_entropy("aB3$kL9@mN2!xY7#");
-        assert!(entropy > 3.0, "Random-looking string should have high entropy");
+        assert!(
+            entropy > 3.0,
+            "Random-looking string should have high entropy"
+        );
     }
 
     // ------------------------------------------------------------------------
@@ -840,7 +991,10 @@ mod edge_cases {
 
         // With various assignment patterns
         let result = filter.analyze("value", "token: value");
-        assert!(result.in_secret_context, "Should detect YAML-style assignment");
+        assert!(
+            result.in_secret_context,
+            "Should detect YAML-style assignment"
+        );
     }
 
     // ------------------------------------------------------------------------
@@ -865,7 +1019,10 @@ mod edge_cases {
         let filter = EntropyFilter::new();
 
         // UUID should have is_uuid flag set
-        let result = filter.analyze("550e8400-e29b-41d4-a716-446655440000", "id = \"550e8400-e29b-41d4-a716-446655440000\"");
+        let result = filter.analyze(
+            "550e8400-e29b-41d4-a716-446655440000",
+            "id = \"550e8400-e29b-41d4-a716-446655440000\"",
+        );
         assert!(result.is_uuid);
         assert!(!result.is_css_color);
         assert!(!result.is_sri_hash);
@@ -893,10 +1050,22 @@ mod metrics {
         // List of known secrets that MUST be detected
         let true_positives = vec![
             ("AKIAFakeAWSKeyID1234", "aws_key = AKIAFakeAWSKeyID1234"),
-            ("ghp_1234567890abcdefghij1234567890abcdef", "github_token = ghp_1234567890abcdefghij1234567890abcdef"),
-            ("cGFzc3dvcmQxMjM0NTY=", "password = \"cGFzc3dvcmQxMjM0NTY=\""),
-            ("xoxb-FakeSlackToken-ForTestingOnly", "slack_token = xoxb-FakeSlackToken-ForTestingOnly"),
-            ("sk_live_1234567890abcdefghijklmnop", "stripe_key = sk_live_1234567890abcdefghijklmnop"),
+            (
+                "ghp_1234567890abcdefghij1234567890abcdef",
+                "github_token = ghp_1234567890abcdefghij1234567890abcdef",
+            ),
+            (
+                "cGFzc3dvcmQxMjM0NTY=",
+                "password = \"cGFzc3dvcmQxMjM0NTY=\"",
+            ),
+            (
+                "xoxb-FakeSlackToken-ForTestingOnly",
+                "slack_token = xoxb-FakeSlackToken-ForTestingOnly",
+            ),
+            (
+                "sk_live_1234567890abcdefghijklmnop",
+                "stripe_key = sk_live_1234567890abcdefghijklmnop",
+            ),
         ];
 
         let mut detected = 0;
@@ -907,10 +1076,19 @@ mod metrics {
         }
 
         let tpr = detected as f64 / true_positives.len() as f64;
-        println!("True Positive Rate: {}/{} = {:.2}%", detected, true_positives.len(), tpr * 100.0);
+        println!(
+            "True Positive Rate: {}/{} = {:.2}%",
+            detected,
+            true_positives.len(),
+            tpr * 100.0
+        );
 
         // Target: >90%
-        assert!(tpr >= 0.9, "True Positive Rate should be >= 90%, got {:.2}%", tpr);
+        assert!(
+            tpr >= 0.9,
+            "True Positive Rate should be >= 90%, got {:.2}%",
+            tpr
+        );
     }
 
     /// Test runner that calculates false positive rate
@@ -920,9 +1098,15 @@ mod metrics {
 
         // List of known non-secrets that MUST NOT be detected
         let true_negatives = vec![
-            ("550e8400-e29b-41d4-a716-446655440000", "id = \"550e8400-e29b-41d4-a716-446655440000\""),
+            (
+                "550e8400-e29b-41d4-a716-446655440000",
+                "id = \"550e8400-e29b-41d4-a716-446655440000\"",
+            ),
             ("#ffffff", "color: #ffffff"),
-            ("a1b2c3d4e5f6789012345678901234567890abcd", "commit: a1b2c3d4e5f6789012345678901234567890abcd"),
+            (
+                "a1b2c3d4e5f6789012345678901234567890abcd",
+                "commit: a1b2c3d4e5f6789012345678901234567890abcd",
+            ),
             ("field_title_generator", "x = field_title_generator"),
             ("config_manager", "x = config_manager"),
         ];
@@ -935,9 +1119,18 @@ mod metrics {
         }
 
         let fpr = false_positives as f64 / true_negatives.len() as f64;
-        println!("False Positive Rate: {}/{} = {:.2}%", false_positives, true_negatives.len(), fpr * 100.0);
+        println!(
+            "False Positive Rate: {}/{} = {:.2}%",
+            false_positives,
+            true_negatives.len(),
+            fpr * 100.0
+        );
 
         // Target: <5%
-        assert!(fpr < 0.05, "False Positive Rate should be < 5%, got {:.2}%", fpr);
+        assert!(
+            fpr < 0.05,
+            "False Positive Rate should be < 5%, got {:.2}%",
+            fpr
+        );
     }
 }

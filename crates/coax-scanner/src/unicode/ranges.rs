@@ -15,7 +15,12 @@ pub struct UnicodeRange {
 
 impl UnicodeRange {
     pub const fn new(start: u32, end: u32, name: &'static str, description: &'static str) -> Self {
-        Self { start, end, name, description }
+        Self {
+            start,
+            end,
+            name,
+            description,
+        }
     }
 
     pub fn contains(&self, code_point: u32) -> bool {
@@ -25,66 +30,71 @@ impl UnicodeRange {
 
 // Variation Selectors (Glassworm primary range)
 pub const VARIATION_SELECTORS: UnicodeRange = UnicodeRange::new(
-    0xFE00, 0xFE0F,
+    0xFE00,
+    0xFE0F,
     "Variation Selectors",
-    "Used by Glassworm to hide payloads"
+    "Used by Glassworm to hide payloads",
 );
 
 // Variation Selectors Supplement
 pub const VARIATION_SELECTORS_SUPPLEMENT: UnicodeRange = UnicodeRange::new(
-    0xE0100, 0xE01EF,
+    0xE0100,
+    0xE01EF,
     "Variation Selectors Supplement",
-    "Extended variation selectors"
+    "Extended variation selectors",
 );
 
 // Zero-width characters
 pub const ZERO_WIDTH_SPACE: UnicodeRange = UnicodeRange::new(
-    0x200B, 0x200F,
+    0x200B,
+    0x200F,
     "Zero-Width Characters",
-    "Invisible characters used for injection attacks"
+    "Invisible characters used for injection attacks",
 );
 
 // Word joiner and invisible operators
 pub const INVISIBLE_OPERATORS: UnicodeRange = UnicodeRange::new(
-    0x2060, 0x206F,
+    0x2060,
+    0x206F,
     "Invisible Operators",
-    "Hidden formatting characters"
+    "Hidden formatting characters",
 );
 
 // Bidirectional overrides
 pub const BIDIRECTIONAL_FORMATTING: UnicodeRange = UnicodeRange::new(
-    0x202A, 0x202E,
+    0x202A,
+    0x202E,
     "Bidirectional Formatting",
-    "Text direction override characters"
+    "Text direction override characters",
 );
 
 // Isolation characters
 pub const ISOLATION_CHARACTERS: UnicodeRange = UnicodeRange::new(
-    0x2066, 0x2069,
+    0x2066,
+    0x2069,
     "Isolation Characters",
-    "Unicode isolation formatting"
+    "Unicode isolation formatting",
 );
 
 // Unicode tags
 pub const UNICODE_TAGS: UnicodeRange = UnicodeRange::new(
-    0xE0000, 0xE007F,
+    0xE0000,
+    0xE007F,
     "Unicode Tags",
-    "Tag characters for metadata injection"
+    "Tag characters for metadata injection",
 );
 
 // Private Use Area (can be used for custom attacks)
 pub const PRIVATE_USE_AREA_A: UnicodeRange = UnicodeRange::new(
-    0xE000, 0xF8FF,
+    0xE000,
+    0xF8FF,
     "Private Use Area A",
-    "Custom/private characters"
+    "Custom/private characters",
 );
 
 // Specials
-pub const SPECIALS: UnicodeRange = UnicodeRange::new(
-    0xFFF0, 0xFFFF,
-    "Specials",
-    "Special purpose characters"
-);
+pub const SPECIALS: UnicodeRange =
+    UnicodeRange::new(0xFFF0, 0xFFFF, "Specials", "Special purpose characters");
 
 lazy_static! {
     /// All invisible character ranges
@@ -159,21 +169,25 @@ pub fn is_in_critical_range(code_point: u32) -> bool {
 
 /// Get the name of a bidirectional character
 pub fn get_bidi_name(code_point: u32) -> Option<&'static str> {
-    BIDI_CHARS.iter()
+    BIDI_CHARS
+        .iter()
         .find(|(cp, _)| *cp == code_point)
         .map(|(_, name)| *name)
 }
 
 /// Get the name of a zero-width character
 pub fn get_zero_width_name(code_point: u32) -> Option<&'static str> {
-    ZERO_WIDTH_CHARS.iter()
+    ZERO_WIDTH_CHARS
+        .iter()
         .find(|(cp, _)| *cp == code_point)
         .map(|(_, name)| *name)
 }
 
 /// Check if a code point is a variation selector
 pub fn is_variation_selector(code_point: u32) -> bool {
-    VARIATION_SELECTOR_CHARS.iter().any(|(cp, _)| *cp == code_point)
+    VARIATION_SELECTOR_CHARS
+        .iter()
+        .any(|(cp, _)| *cp == code_point)
 }
 
 #[cfg(test)]

@@ -64,10 +64,9 @@ pub fn categorize_finding_stride(pattern: &str) -> Vec<StrideCategory> {
         ],
 
         // Slack/Discord webhooks - impersonation
-        "SLACK_WEBHOOK" | "DISCORD_WEBHOOK" => vec![
-            StrideCategory::Spoofing,
-            StrideCategory::Tampering,
-        ],
+        "SLACK_WEBHOOK" | "DISCORD_WEBHOOK" => {
+            vec![StrideCategory::Spoofing, StrideCategory::Tampering]
+        }
 
         // Mailgun/SendGrid - email spoofing
         "MAILGUN_API_KEY" | "SENDGRID_KEY" => vec![
@@ -95,10 +94,9 @@ pub fn categorize_finding_stride(pattern: &str) -> Vec<StrideCategory> {
         ],
 
         // Webhook secrets
-        "WEBHOOK_SECRET" | "HOOK_SECRET" => vec![
-            StrideCategory::Spoofing,
-            StrideCategory::Tampering,
-        ],
+        "WEBHOOK_SECRET" | "HOOK_SECRET" => {
+            vec![StrideCategory::Spoofing, StrideCategory::Tampering]
+        }
 
         // Generic API keys
         "API_KEY" | "API_SECRET" | "SECRET_KEY" => vec![
@@ -149,14 +147,10 @@ pub fn determine_impact(pattern: &str) -> Impact {
         }
 
         // High impact - significant data access
-        "DATABASE_URL" | "DATABASE_PASSWORD" | "JWT_SECRET" | "ENCRYPTION_KEY" => {
-            Impact::Major
-        }
+        "DATABASE_URL" | "DATABASE_PASSWORD" | "JWT_SECRET" | "ENCRYPTION_KEY" => Impact::Major,
 
         // Medium-high impact - service access
-        "GITHUB_PAT" | "GITHUB_TOKEN" | "STRIPE_KEY" | "OAUTH_CLIENT_SECRET" => {
-            Impact::Moderate
-        }
+        "GITHUB_PAT" | "GITHUB_TOKEN" | "STRIPE_KEY" | "OAUTH_CLIENT_SECRET" => Impact::Moderate,
 
         // Medium impact - limited scope
         "API_KEY" | "WEBHOOK_SECRET" | "SLACK_WEBHOOK" => Impact::Minor,
@@ -191,21 +185,13 @@ pub fn severity_to_impact(severity: &str) -> Impact {
 /// Get STRIDE description
 pub fn stride_description(category: StrideCategory) -> &'static str {
     match category {
-        StrideCategory::Spoofing => {
-            "Attacker can impersonate a legitimate entity or user"
-        }
-        StrideCategory::Tampering => {
-            "Attacker can modify data, code, or system configuration"
-        }
-        StrideCategory::Repudiation => {
-            "Attacker can deny performing an action without proof"
-        }
+        StrideCategory::Spoofing => "Attacker can impersonate a legitimate entity or user",
+        StrideCategory::Tampering => "Attacker can modify data, code, or system configuration",
+        StrideCategory::Repudiation => "Attacker can deny performing an action without proof",
         StrideCategory::InformationDisclosure => {
             "Attacker can access sensitive or confidential information"
         }
-        StrideCategory::DenialOfService => {
-            "Attacker can disrupt service availability"
-        }
+        StrideCategory::DenialOfService => "Attacker can disrupt service availability",
         StrideCategory::ElevationOfPrivilege => {
             "Attacker can gain unauthorized access or privileges"
         }

@@ -153,7 +153,9 @@ pub enum ScanContent {
 impl std::fmt::Debug for ScanContent {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            ScanContent::Buffered(bytes) => write!(f, "ScanContent::Buffered({} bytes)", bytes.len()),
+            ScanContent::Buffered(bytes) => {
+                write!(f, "ScanContent::Buffered({} bytes)", bytes.len())
+            }
             ScanContent::Streamed(_) => write!(f, "ScanContent::Streamed(..)"),
         }
     }
@@ -494,18 +496,38 @@ impl FileSystemProvider {
         matches!(
             ext.to_str(),
             Some(
-                "yml" | "yaml" | "json" | "env" | "js" | "py" | "rs" | "toml" | "xml" |
-                "properties" | "conf" | "config" | "ini" | "sh" | "bash" | "zsh" |
-                "tf" | "terraform" | "md" | "txt" | "ts" | "tsx" | "jsx" | "go" |
-                "rb" | "php" | "java" | "cs" | "cpp" | "c" | "h" | "hpp" | "sql" |
-                "graphql" | "proto" | "dockerfile" | "pem" | "key" | "cert" |
-                "html" | "css" | "scss" | "less" | "vue" | "svelte" | "dart" |
-                "kt" | "kts" | "swift" | "m" | "mm" | "r" | "R" | "jl" | "scala" |
-                "sbt" | "ex" | "exs" | "erl" | "hrl" | "clj" | "cljs" | "edn" |
-                "hs" | "lhs" | "fs" | "fsi" | "fsx" | "elm" |
-                "ps1" | "psm1" | "psd1" | "bat" | "cmd" | "vbs" | "vb" | "lua" |
-                "pl" | "pm" | "t" | "raku" | "rakumod" | "rakutest" | "nim" |
-                "nix" | "re" | "rei" | "gql" | "lock" | "sum" | "bin" | "dat"
+                // Core programming languages
+                "js" | "ts" | "tsx" | "jsx" | "py" | "rs" | "go" | "rb" | "php" |
+                "java" | "cs" | "cpp" | "c" | "h" | "hpp" | "kt" | "kts" | "swift" |
+                "scala" | "sbt" | "dart" | "r" | "R" | "jl" | "nim" | "hs" | "lhs" |
+                "fs" | "fsi" | "fsx" | "elm" | "vue" | "svelte" |
+                // Web technologies
+                "html" | "css" | "scss" | "less" | "graphql" | "gql" |
+                // Config files
+                "yml" | "yaml" | "json" | "toml" | "xml" | "ini" | "conf" | "config" |
+                "properties" | "plist" | "cfg" | "hcl" | "tf" | "tfvars" | "terraform" |
+                "env" | "envrc" | "htaccess" | "htpasswd" |
+                // Build/CI files
+                "gradle" | "cmake" | "mk" | "bzl" | "bazel" | "makefile" |
+                // Data files
+                "csv" | "tsv" | "sql" | "sqlite" |
+                // Package manager configs
+                "npmrc" | "pypirc" | "gemrc" | "yarnrc" | "lock" | "sum" |
+                // Notebooks
+                "ipynb" | "rmd" |
+                // IaC / Config management
+                "pp" | "sls" | "erb" |
+                // Shell scripts
+                "sh" | "bash" | "zsh" | "ps1" | "psm1" | "psd1" | "bat" | "cmd" | "vbs" | "vb" | "lua" |
+                // Perl/Raku
+                "pl" | "pm" | "t" | "raku" | "rakumod" | "rakutest" |
+                // Erlang/Elixir
+                "erl" | "hrl" | "ex" | "exs" |
+                // Clojure
+                "clj" | "cljs" | "edn" |
+                // Other
+                "md" | "txt" | "proto" | "dockerfile" | "pem" | "key" | "cert" |
+                "m" | "mm" | "nix" | "re" | "rei" | "bin" | "dat" | "exe" | "dll" | "so"
             )
         )
     }
@@ -549,9 +571,45 @@ impl SourceProvider for FileSystemProvider {
                 } else {
                     // Files without extension - check if it's a known file type
                     if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
-                        // Allow files like "Dockerfile", ".gitignore", etc.
-                        if !matches!(name, "Dockerfile" | ".gitignore" | ".env" | "LICENSE" | "README") {
-                            return None;
+                        // Allow common text-based files without extensions
+                        // This includes build files, config files, and documentation
+                        const KNOWN_TEXT_FILES: &[&str] = &[
+                            "Jenkinsfile",
+                            "Makefile",
+                            "Vagrantfile",
+                            "Dockerfile",
+                            "Gemfile",
+                            "Rakefile",
+                            "Procfile",
+                            "Brewfile",
+                            "Berksfile",
+                            "Podfile",
+                            ".env",
+                            ".envrc",
+                            ".gitignore",
+                            ".dockerignore",
+                            ".npmignore",
+                            ".pypirc",
+                            "README",
+                            "LICENSE",
+                            "CHANGELOG",
+                            "INSTALL",
+                            "TODO",
+                            "NOTICE",
+                            "AUTHORS",
+                            "CONTRIBUTORS",
+                        ];
+                        if !KNOWN_TEXT_FILES.contains(&name) {
+                            // For unknown extensionless files, do a quick binary check
+                            if let Ok(mut file) = std::fs::File::open(&path) {
+                                use std::io::Read;
+                                let mut buffer = [0u8; 512];
+                                if let Ok(bytes_read) = file.read(&mut buffer) {
+                                    if bytes_read > 0 && buffer[..bytes_read].contains(&0u8) {
+                                        return None; // Binary file
+                                    }
+                                }
+                            }
                         }
                     } else {
                         return None;
@@ -560,8 +618,8 @@ impl SourceProvider for FileSystemProvider {
 
                 let content_type = self.detect_content_type(&path).ok();
 
-                let mut target = ScanTarget::new(ScanOrigin::FileSystem { path })
-                    .with_size_hint(size);
+                let mut target =
+                    ScanTarget::new(ScanOrigin::FileSystem { path }).with_size_hint(size);
 
                 if let Some(ct) = content_type {
                     target = target.with_content_type(ct);
@@ -592,7 +650,10 @@ impl SourceProvider for FileSystemProvider {
                 if let Some(ext) = e.path().extension() {
                     self.should_scan_extension(ext)
                 } else if let Some(name) = e.path().file_name().and_then(|n| n.to_str()) {
-                    matches!(name, "Dockerfile" | ".gitignore" | ".env" | "LICENSE" | "README")
+                    matches!(
+                        name,
+                        "Dockerfile" | ".gitignore" | ".env" | "LICENSE" | "README"
+                    )
                 } else {
                     false
                 }
@@ -629,7 +690,9 @@ impl ContentLoader for FileSystemProvider {
         // Check binary
         if self.skip_binary {
             if let Some(ContentType::Binary) = target.content_type {
-                return Err(SourceProviderError::BinaryContent(path.display().to_string()));
+                return Err(SourceProviderError::BinaryContent(
+                    path.display().to_string(),
+                ));
             }
         }
 
@@ -895,7 +958,10 @@ impl GitHistoryProvider {
     }
 
     /// Collect commits from a revwalk with limit and date filtering
-    fn collect_commits_from_revwalk(&self, revwalk: git2::Revwalk<'_>) -> Result<Vec<git2::Commit<'_>>, git2::Error> {
+    fn collect_commits_from_revwalk(
+        &self,
+        revwalk: git2::Revwalk<'_>,
+    ) -> Result<Vec<git2::Commit<'_>>, git2::Error> {
         let mut commits: Vec<git2::Commit> = Vec::new();
         let mut shallow_warning_printed = false;
 
@@ -953,11 +1019,8 @@ impl GitHistoryProvider {
             .include_unreadable(false)
             .recurse_untracked_dirs(true);
 
-        self.repo.diff_tree_to_tree(
-            parent_tree.as_ref(),
-            Some(&tree),
-            Some(&mut diff_opts),
-        )
+        self.repo
+            .diff_tree_to_tree(parent_tree.as_ref(), Some(&tree), Some(&mut diff_opts))
     }
 
     /// Check if a blob is binary (contains null bytes in first 8KB)
@@ -1003,7 +1066,8 @@ impl GitHistoryProvider {
 
                         // Size hint from delta (if available)
                         if let Some(stats) = diff.stats().ok() {
-                            target = target.with_size_hint(stats.insertions() as u64 * 100); // Rough estimate
+                            target = target.with_size_hint(stats.insertions() as u64 * 100);
+                            // Rough estimate
                         }
 
                         target = target.with_content_type(if is_binary {
@@ -1033,7 +1097,14 @@ impl GitHistoryProvider {
         let date = DateTime::<Utc>::from_timestamp(commit.time().seconds(), 0)
             .unwrap_or_else(|| Utc::now());
 
-        self.tree_walk_recursive(tree, PathBuf::from(""), &commit_sha, &author, date, &mut targets);
+        self.tree_walk_recursive(
+            tree,
+            PathBuf::from(""),
+            &commit_sha,
+            &author,
+            date,
+            &mut targets,
+        );
 
         targets
     }
@@ -1054,7 +1125,8 @@ impl GitHistoryProvider {
             match entry.kind() {
                 Some(git2::ObjectType::Blob) => {
                     if let Ok(blob) = entry.to_object(self.repo()).and_then(|obj| {
-                        obj.into_blob().map_err(|_| git2::Error::from_str("Not a blob"))
+                        obj.into_blob()
+                            .map_err(|_| git2::Error::from_str("Not a blob"))
                     }) {
                         // Skip binary blobs
                         if self.skip_binary && self.is_binary_blob(&blob) {
@@ -1074,28 +1146,22 @@ impl GitHistoryProvider {
                         })
                         .with_size_hint(blob.size() as u64);
 
-                        target = target.with_content_type(
-                            if self.is_binary_blob(&blob) {
-                                ContentType::Binary
-                            } else {
-                                ContentType::Text
-                            },
-                        );
+                        target = target.with_content_type(if self.is_binary_blob(&blob) {
+                            ContentType::Binary
+                        } else {
+                            ContentType::Text
+                        });
 
                         targets.push(target);
                     }
                 }
                 Some(git2::ObjectType::Tree) => {
                     if let Ok(subtree) = entry.to_object(self.repo()).and_then(|obj| {
-                        obj.into_tree().map_err(|_| git2::Error::from_str("Not a tree"))
+                        obj.into_tree()
+                            .map_err(|_| git2::Error::from_str("Not a tree"))
                     }) {
                         self.tree_walk_recursive(
-                            &subtree,
-                            entry_path,
-                            commit_sha,
-                            author,
-                            date,
-                            targets,
+                            &subtree, entry_path, commit_sha, author, date, targets,
                         );
                     }
                 }
@@ -1133,11 +1199,7 @@ impl SourceProvider for GitHistoryProvider {
                         all_targets.extend(targets);
                     }
                     Err(e) => {
-                        tracing::debug!(
-                            "Failed to get diff for commit {}: {}",
-                            commit.id(),
-                            e
-                        );
+                        tracing::debug!("Failed to get diff for commit {}: {}", commit.id(), e);
                     }
                 }
             } else {
@@ -1148,11 +1210,7 @@ impl SourceProvider for GitHistoryProvider {
                         all_targets.extend(targets);
                     }
                     Err(e) => {
-                        tracing::debug!(
-                            "Failed to get tree for commit {}: {}",
-                            commit.id(),
-                            e
-                        );
+                        tracing::debug!("Failed to get tree for commit {}: {}", commit.id(), e);
                     }
                 }
             }
@@ -1197,59 +1255,77 @@ impl ContentLoader for GitHistoryProvider {
         match &target.origin {
             ScanOrigin::GitBlob { commit, path, .. } => {
                 // Load blob from specific commit
-                let commit_obj = self.repo.revparse_single(commit)
+                let commit_obj = self
+                    .repo
+                    .revparse_single(commit)
                     .map_err(|e: git2::Error| SourceProviderError::Git(e.to_string()))?
                     .into_commit()
                     .map_err(|_| SourceProviderError::Git("Not a commit".to_string()))?;
 
-                let tree = commit_obj.tree()
+                let tree = commit_obj
+                    .tree()
                     .map_err(|e: git2::Error| SourceProviderError::Git(e.to_string()))?;
 
-                let blob = self.find_blob_in_tree(&tree, path)
-                    .ok_or_else(|| SourceProviderError::NotFound(
-                        format!("Blob not found: {} at {}", path.display(), commit)
-                    ))?;
+                let blob = self.find_blob_in_tree(&tree, path).ok_or_else(|| {
+                    SourceProviderError::NotFound(format!(
+                        "Blob not found: {} at {}",
+                        path.display(),
+                        commit
+                    ))
+                })?;
 
                 // Check binary
                 if self.skip_binary && self.is_binary_blob(&blob) {
-                    return Err(SourceProviderError::BinaryContent(
-                        format!("{} at {}", path.display(), commit)
-                    ));
+                    return Err(SourceProviderError::BinaryContent(format!(
+                        "{} at {}",
+                        path.display(),
+                        commit
+                    )));
                 }
 
                 Ok(ScanContent::Buffered(blob.content().to_vec()))
             }
 
-            ScanOrigin::GitDiff { commit, path, added: _ } => {
+            ScanOrigin::GitDiff {
+                commit,
+                path,
+                added: _,
+            } => {
                 // For diffs, we need to get the content from the commit's tree
-                let commit_obj = self.repo.revparse_single(commit)
+                let commit_obj = self
+                    .repo
+                    .revparse_single(commit)
                     .map_err(|e: git2::Error| SourceProviderError::Git(e.to_string()))?
                     .into_commit()
                     .map_err(|_| SourceProviderError::Git("Not a commit".to_string()))?;
 
-                let tree = commit_obj.tree()
+                let tree = commit_obj
+                    .tree()
                     .map_err(|e: git2::Error| SourceProviderError::Git(e.to_string()))?;
 
-                let blob = self.find_blob_in_tree(&tree, path)
-                    .ok_or_else(|| SourceProviderError::NotFound(
-                        format!("Blob not found: {} at {}", path.display(), commit)
-                    ))?;
+                let blob = self.find_blob_in_tree(&tree, path).ok_or_else(|| {
+                    SourceProviderError::NotFound(format!(
+                        "Blob not found: {} at {}",
+                        path.display(),
+                        commit
+                    ))
+                })?;
 
                 // Check binary
                 if self.skip_binary && self.is_binary_blob(&blob) {
-                    return Err(SourceProviderError::BinaryContent(
-                        format!("{} at {}", path.display(), commit)
-                    ));
+                    return Err(SourceProviderError::BinaryContent(format!(
+                        "{} at {}",
+                        path.display(),
+                        commit
+                    )));
                 }
 
                 Ok(ScanContent::Buffered(blob.content().to_vec()))
             }
 
-            ScanOrigin::FileSystem { .. } => {
-                Err(SourceProviderError::NotFound(
-                    "GitHistoryProvider can only load Git targets".to_string(),
-                ))
-            }
+            ScanOrigin::FileSystem { .. } => Err(SourceProviderError::NotFound(
+                "GitHistoryProvider can only load Git targets".to_string(),
+            )),
         }
     }
 
@@ -1267,7 +1343,7 @@ impl GitHistoryProvider {
     fn find_blob_in_tree(&self, tree: &git2::Tree, path: &Path) -> Option<git2::Blob<'_>> {
         // Use the repo's lookup method which handles the tree traversal internally
         let oid = tree.get_path(path.as_ref()).ok()?.id();
-        
+
         // Find the blob by OID
         self.repo.find_blob(oid).ok()
     }
@@ -1334,8 +1410,8 @@ mod tests {
         fs::write(temp_dir.path().join("visible.txt"), "content").unwrap();
         fs::write(temp_dir.path().join(".hidden.txt"), "hidden").unwrap();
 
-        let provider = FileSystemProvider::new(temp_dir.path().to_path_buf())
-            .with_scan_hidden(false);
+        let provider =
+            FileSystemProvider::new(temp_dir.path().to_path_buf()).with_scan_hidden(false);
 
         let targets: Vec<ScanTarget> = provider.enumerate().collect();
 
@@ -1371,8 +1447,8 @@ mod tests {
         // Write binary content with null bytes
         fs::write(&binary_path, vec![0x00, 0x01, 0x02, 0x03]).unwrap();
 
-        let provider = FileSystemProvider::new(temp_dir.path().to_path_buf())
-            .with_skip_binary(true);
+        let provider =
+            FileSystemProvider::new(temp_dir.path().to_path_buf()).with_skip_binary(true);
 
         let targets: Vec<ScanTarget> = provider.enumerate().collect();
 

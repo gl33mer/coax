@@ -4,12 +4,12 @@
 
 use anyhow::Result;
 use clap::{Parser, Subcommand, ValueEnum};
-use colored::Colorize;
-use coax_scanner::{Scanner, ScannerConfig, ScanResult, OutputFormat};
+use coax_scanner::{OutputFormat, ScanResult, Scanner, ScannerConfig};
 use coax_threat_model::{
-    ThreatModelGenerator, GeneratorConfig, OutputFormat as ThreatOutputFormat,
-    format_threat_model, enhance_threat_model,
+    enhance_threat_model, format_threat_model, GeneratorConfig, OutputFormat as ThreatOutputFormat,
+    ThreatModelGenerator,
 };
+use colored::Colorize;
 use std::path::PathBuf;
 use std::time::Instant;
 
@@ -311,7 +311,15 @@ fn run_scan(
     let start = Instant::now();
     let (results, summary) = if git_history {
         // Git history mode
-        run_git_history_scan(&scanner, &path, commits, since, range, unicode_scan, &unicode_sensitivity)?
+        run_git_history_scan(
+            &scanner,
+            &path,
+            commits,
+            since,
+            range,
+            unicode_scan,
+            &unicode_sensitivity,
+        )?
     } else if unicode_only {
         // Unicode-only mode - skip secret scanning
         scanner.scan_unicode_only(&path)
@@ -393,8 +401,8 @@ fn run_git_history_scan(
     _unicode_scan: bool,
     _unicode_sensitivity: &str,
 ) -> Result<(Vec<ScanResult>, coax_scanner::ScanSummary)> {
-    use coax_scanner::source_provider::{GitHistoryProvider, SourceProvider};
     use chrono::{NaiveDate, TimeZone};
+    use coax_scanner::source_provider::{GitHistoryProvider, SourceProvider};
 
     // Create git history provider
     let mut provider = GitHistoryProvider::new(path)
@@ -525,16 +533,9 @@ fn format_text(
 
         // Show detected secret if available
         if let Some(secret) = &result.detected_secret {
-            output.push_str(&format!(
-                "   {} {}\n",
-                "String:".bold(),
-                secret.red()
-            ));
+            output.push_str(&format!("   {} {}\n", "String:".bold(), secret.red()));
         } else if let Some(content) = &result.line_content {
-            output.push_str(&format!(
-                "   {}\n",
-                content.dimmed()
-            ));
+            output.push_str(&format!("   {}\n", content.dimmed()));
         }
 
         // Show recommendation

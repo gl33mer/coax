@@ -5,13 +5,6 @@
 pub mod data;
 
 pub use data::{
-    ConfusableEntry,
-    CONFUSABLES_DB,
-    REVERSE_CONFUSABLES,
-    ALL_CONFUSABLES,
-    get_confusables,
-    get_base_char,
-    is_confusable,
-    get_confusable_script,
-    get_similarity,
+    get_base_char, get_confusable_script, get_confusables, get_similarity, is_confusable,
+    ConfusableEntry, ALL_CONFUSABLES, CONFUSABLES_DB, REVERSE_CONFUSABLES,
 };

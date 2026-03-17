@@ -1,17 +1,17 @@
 //! Homoglyph Detector
 //!
 //! Detects confusable characters that could be used for spoofing attacks.
-//! 
+//!
 //! Data Source: Embedded confusables database
 //! Performance: O(1) lookup per character using HashMap
 
 use crate::unicode::config::UnicodeConfig;
-use crate::unicode::findings::{UnicodeFinding, UnicodeCategory, Severity};
 use crate::unicode::confusables::data::{
-    get_base_char, is_confusable, get_confusable_script, get_similarity,
+    get_base_char, get_confusable_script, get_similarity, is_confusable,
 };
+use crate::unicode::findings::{Severity, UnicodeCategory, UnicodeFinding};
 use crate::unicode::script_detector::{
-    has_mixed_scripts, is_pure_non_latin, extract_identifiers, find_identifier_at_position,
+    extract_identifiers, find_identifier_at_position, has_mixed_scripts, is_pure_non_latin,
 };
 use std::collections::HashMap;
 
@@ -58,11 +58,12 @@ impl HomoglyphDetector {
         for (line_num, line) in content.lines().enumerate() {
             // Skip comment lines entirely
             let trimmed = line.trim();
-            if trimmed.starts_with("//") ||
-               trimmed.starts_with("#") ||
-               trimmed.starts_with("/*") ||
-               trimmed.starts_with("*") ||
-               trimmed.starts_with("<!--") {
+            if trimmed.starts_with("//")
+                || trimmed.starts_with("#")
+                || trimmed.starts_with("/*")
+                || trimmed.starts_with("*")
+                || trimmed.starts_with("<!--")
+            {
                 continue;
             }
 
@@ -177,7 +178,11 @@ impl HomoglyphDetector {
     }
 
     /// Get description for identifier-based detection
-    fn get_description_for_identifier(&self, match_result: &ConfusableMatch, identifier: &str) -> String {
+    fn get_description_for_identifier(
+        &self,
+        match_result: &ConfusableMatch,
+        identifier: &str,
+    ) -> String {
         format!(
             "Mixed script identifier: '{}' contains '{}' (U+{:04X}) from {} script confusable with '{}'",
             identifier,
@@ -195,14 +200,16 @@ impl HomoglyphDetector {
              This appears to be a homoglyph attack where visually similar characters \
              are used to spoof identifiers. Review the context to determine if this \
              is intentional (e.g., i18n) or malicious.",
-            match_result.script_source,
-            match_result.suspicious_char,
-            match_result.base_char
+            match_result.script_source, match_result.suspicious_char, match_result.base_char
         )
     }
 
     /// Get remediation for identifier-based detection
-    fn get_remediation_for_identifier(&self, match_result: &ConfusableMatch, identifier: &str) -> String {
+    fn get_remediation_for_identifier(
+        &self,
+        match_result: &ConfusableMatch,
+        identifier: &str,
+    ) -> String {
         format!(
             "Use pure Latin or pure non-Latin identifiers, not mixed scripts. \
              Replace '{}' with a consistent script. The character '{}' ({} script) \
@@ -218,10 +225,10 @@ impl HomoglyphDetector {
         let chars: Vec<char> = line.chars().collect();
         let start = char_pos.saturating_sub(20);
         let end = (char_pos + 20).min(chars.len());
-        
+
         let prefix = if start > 0 { "..." } else { "" };
         let suffix = if end < chars.len() { "..." } else { "" };
-        
+
         let context: String = chars[start..end].iter().collect();
         format!("{}{}{}", prefix, context, suffix)
     }
@@ -255,11 +262,11 @@ mod tests {
     #[test]
     fn test_cyrillic_a_detection() {
         let detector = HomoglyphDetector::with_default_config();
-        
+
         // Cyrillic 'а' (U+0430) vs Latin 'a'
         let content = "const pаssword = 'secret';"; // Cyrillic 'а'
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].category, UnicodeCategory::Homoglyph);
         assert_eq!(findings[0].code_point, 0x0430);
@@ -268,11 +275,11 @@ mod tests {
     #[test]
     fn test_greek_o_detection() {
         let detector = HomoglyphDetector::with_default_config();
-        
+
         // Greek 'ο' (U+03BF) vs Latin 'o'
         let content = "const lοgin = 'user';"; // Greek 'ο'
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0x03BF);
     }
@@ -280,11 +287,11 @@ mod tests {
     #[test]
     fn test_cyrillic_e_detection() {
         let detector = HomoglyphDetector::with_default_config();
-        
+
         // Cyrillic 'е' (U+0435) vs Latin 'e'
         let content = "const usеr = 'test';"; // Cyrillic 'е'
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0x0435);
     }
@@ -292,11 +299,11 @@ mod tests {
     #[test]
     fn test_uppercase_cyrillic_detection() {
         let detector = HomoglyphDetector::with_default_config();
-        
+
         // Cyrillic 'А' (U+0410) vs Latin 'A'
         let content = "const АPI_KEY = 'secret';"; // Cyrillic 'А'
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0x0410);
     }
@@ -304,20 +311,20 @@ mod tests {
     #[test]
     fn test_clean_content() {
         let detector = HomoglyphDetector::with_default_config();
-        
+
         let content = "const password = 'secret';"; // All ASCII
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(findings.is_empty());
     }
 
     #[test]
     fn test_scan_identifier() {
         let detector = HomoglyphDetector::with_default_config();
-        
+
         // Identifier with Cyrillic 'а'
         let matches = detector.scan_identifier("pаssword");
-        
+
         assert!(!matches.is_empty());
         assert_eq!(matches[0].base_char, 'a');
         assert_eq!(matches[0].script_source, "Cyrillic");
@@ -325,9 +332,8 @@ mod tests {
 
     #[test]
     fn test_confidence_threshold() {
-        let detector = HomoglyphDetector::with_default_config()
-            .with_min_confidence(0.95);
-        
+        let detector = HomoglyphDetector::with_default_config().with_min_confidence(0.95);
+
         // Cyrillic 'а' has 100% similarity
         let result = detector.is_confusable('а');
         assert!(result.is_some());
@@ -337,11 +343,11 @@ mod tests {
     #[test]
     fn test_multiple_homoglyphs() {
         let detector = HomoglyphDetector::with_default_config();
-        
+
         // Multiple confusables in one line
         let content = "const sесrеt = 'value';"; // Cyrillic 'е' and 'с'
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(findings.len() >= 2);
     }
 }

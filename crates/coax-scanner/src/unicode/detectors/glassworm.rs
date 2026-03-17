@@ -3,7 +3,7 @@
 //! Specialized detector for Glassworm attack patterns.
 
 use crate::unicode::config::UnicodeConfig;
-use crate::unicode::findings::{UnicodeFinding, UnicodeCategory, Severity, SourceLocation};
+use crate::unicode::findings::{Severity, SourceLocation, UnicodeCategory, UnicodeFinding};
 use lazy_static::lazy_static;
 use regex::Regex;
 
@@ -164,9 +164,9 @@ impl GlasswormDetector {
         let sum_confidence: f32 = indicators.iter().map(|i| i.confidence).sum();
         let avg_confidence = sum_confidence / indicators.len() as f32;
 
-        let unique_types: std::collections::HashSet<_> = 
+        let unique_types: std::collections::HashSet<_> =
             indicators.iter().map(|i| &i.indicator_type).collect();
-        
+
         let type_bonus = match unique_types.len() {
             1 => 0.0,
             2 => 0.1,

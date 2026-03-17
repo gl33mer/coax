@@ -36,3 +36,4 @@ Thumbs.db
 
 # Benchmark results
 /benches/results/
+coax-benchmarks/results/

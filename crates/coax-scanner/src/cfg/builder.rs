@@ -1,11 +1,11 @@
 //! CFG Builder - Constructs Control Flow Graph from AST
 
-use tree_sitter::{Parser, Tree, Node};
 use petgraph::graph::{DiGraph, NodeIndex};
 use std::collections::HashMap;
+use tree_sitter::{Node, Parser, Tree};
 
 use super::types::*;
-use super::{CFGError, Result, Language};
+use super::{CFGError, Language, Result};
 
 /// CFG Builder - constructs CFG from source code
 pub struct CFGBuilder {
@@ -41,12 +41,14 @@ impl CFGBuilder {
     /// Build CFG from source code
     pub fn build(&self, source: &str) -> Result<CFG> {
         if self.language == Language::Unknown {
-            return Err(CFGError::LanguageNotSupported("Unknown language".to_string()));
+            return Err(CFGError::LanguageNotSupported(
+                "Unknown language".to_string(),
+            ));
         }
 
         // Parse source
         let mut parser = Parser::new();
-        
+
         // Set language-specific parser
         let tree = match self.language {
             Language::Rust => {
@@ -54,19 +56,26 @@ impl CFGBuilder {
                 parser.parse(source, None)
             }
             Language::Python => {
-                parser.set_language(&tree_sitter_python::LANGUAGE.into()).ok();
+                parser
+                    .set_language(&tree_sitter_python::LANGUAGE.into())
+                    .ok();
                 parser.parse(source, None)
             }
             Language::JavaScript => {
-                parser.set_language(&tree_sitter_javascript::LANGUAGE.into()).ok();
+                parser
+                    .set_language(&tree_sitter_javascript::LANGUAGE.into())
+                    .ok();
                 parser.parse(source, None)
             }
             Language::TypeScript => {
-                parser.set_language(&tree_sitter_typescript::LANGUAGE_TSX.into()).ok();
+                parser
+                    .set_language(&tree_sitter_typescript::LANGUAGE_TSX.into())
+                    .ok();
                 parser.parse(source, None)
             }
             Language::Unknown => None,
-        }.ok_or_else(|| CFGError::Parse("Failed to parse source".to_string()))?;
+        }
+        .ok_or_else(|| CFGError::Parse("Failed to parse source".to_string()))?;
 
         // Extract basic blocks
         let blocks = self.extract_blocks(&tree, source)?;
@@ -82,20 +91,24 @@ impl CFGBuilder {
         }
 
         // Find entry and exit
-        let entry_id = blocks.iter()
+        let entry_id = blocks
+            .iter()
             .find(|b| b.kind == BlockKind::Entry)
             .map(|b| b.id)
             .unwrap_or(0);
-        
-        let exit_id = blocks.iter()
+
+        let exit_id = blocks
+            .iter()
             .find(|b| b.kind == BlockKind::Exit)
             .map(|b| b.id)
             .unwrap_or_else(|| blocks.len().saturating_sub(1));
 
-        let entry_node = *block_to_node.get(&entry_id)
+        let entry_node = *block_to_node
+            .get(&entry_id)
             .ok_or_else(|| CFGError::Construction("Entry block not found".to_string()))?;
-        
-        let exit_node = *block_to_node.get(&exit_id)
+
+        let exit_node = *block_to_node
+            .get(&exit_id)
             .ok_or_else(|| CFGError::Construction("Exit block not found".to_string()))?;
 
         // Build edges
@@ -125,11 +138,8 @@ impl CFGBuilder {
         self.walk_ast(root, &mut blocks, &mut block_id)?;
 
         // Create exit block
-        let max_line = blocks.iter()
-            .map(|b| b.line_end)
-            .max()
-            .unwrap_or(1);
-        
+        let max_line = blocks.iter().map(|b| b.line_end).max().unwrap_or(1);
+
         let mut exit_block = BasicBlock::new(block_id, BlockKind::Exit);
         exit_block.line_start = max_line;
         exit_block.line_end = max_line;
@@ -167,7 +177,10 @@ impl CFGBuilder {
                 "expression_statement" | "statement" => {
                     self.handle_statement(child, blocks)?;
                 }
-                "assignment_expression" | "let_declaration" | "const_declaration" | "variable_declaration" => {
+                "assignment_expression"
+                | "let_declaration"
+                | "const_declaration"
+                | "variable_declaration" => {
                     self.handle_assignment(child, blocks)?;
                 }
                 "call_expression" | "call" => {
@@ -182,7 +195,12 @@ impl CFGBuilder {
         Ok(())
     }
 
-    fn handle_function(&self, node: Node, blocks: &mut Vec<BasicBlock>, block_id: &mut usize) -> Result<()> {
+    fn handle_function(
+        &self,
+        node: Node,
+        blocks: &mut Vec<BasicBlock>,
+        block_id: &mut usize,
+    ) -> Result<()> {
         let mut block = BasicBlock::new(*block_id, BlockKind::Normal);
         *block_id += 1;
         let start = node.start_position().row as u32;
@@ -190,7 +208,7 @@ impl CFGBuilder {
         block.line_start = start + 1;
         block.line_end = end + 1;
         blocks.push(block);
-        
+
         let mut cursor = node.walk();
         for child in node.children(&mut cursor) {
             self.walk_ast(child, blocks, block_id)?;
@@ -198,7 +216,12 @@ impl CFGBuilder {
         Ok(())
     }
 
-    fn handle_if(&self, node: Node, blocks: &mut Vec<BasicBlock>, block_id: &mut usize) -> Result<()> {
+    fn handle_if(
+        &self,
+        node: Node,
+        blocks: &mut Vec<BasicBlock>,
+        block_id: &mut usize,
+    ) -> Result<()> {
         let mut branch_block = BasicBlock::new(*block_id, BlockKind::Branch);
         *block_id += 1;
         let start = node.start_position().row as u32;
@@ -206,7 +229,7 @@ impl CFGBuilder {
         branch_block.line_start = start + 1;
         branch_block.line_end = end + 1;
         blocks.push(branch_block);
-        
+
         let mut cursor = node.walk();
         for child in node.children(&mut cursor) {
             self.walk_ast(child, blocks, block_id)?;
@@ -214,7 +237,12 @@ impl CFGBuilder {
         Ok(())
     }
 
-    fn handle_match(&self, node: Node, blocks: &mut Vec<BasicBlock>, block_id: &mut usize) -> Result<()> {
+    fn handle_match(
+        &self,
+        node: Node,
+        blocks: &mut Vec<BasicBlock>,
+        block_id: &mut usize,
+    ) -> Result<()> {
         let mut match_block = BasicBlock::new(*block_id, BlockKind::Branch);
         *block_id += 1;
         let start = node.start_position().row as u32;
@@ -222,7 +250,7 @@ impl CFGBuilder {
         match_block.line_start = start + 1;
         match_block.line_end = end + 1;
         blocks.push(match_block);
-        
+
         let mut cursor = node.walk();
         for child in node.children(&mut cursor) {
             self.walk_ast(child, blocks, block_id)?;
@@ -230,7 +258,12 @@ impl CFGBuilder {
         Ok(())
     }
 
-    fn handle_loop(&self, node: Node, blocks: &mut Vec<BasicBlock>, block_id: &mut usize) -> Result<()> {
+    fn handle_loop(
+        &self,
+        node: Node,
+        blocks: &mut Vec<BasicBlock>,
+        block_id: &mut usize,
+    ) -> Result<()> {
         let mut loop_block = BasicBlock::new(*block_id, BlockKind::Loop);
         *block_id += 1;
         let start = node.start_position().row as u32;
@@ -238,7 +271,7 @@ impl CFGBuilder {
         loop_block.line_start = start + 1;
         loop_block.line_end = end + 1;
         blocks.push(loop_block);
-        
+
         let mut cursor = node.walk();
         for child in node.children(&mut cursor) {
             self.walk_ast(child, blocks, block_id)?;
@@ -246,7 +279,12 @@ impl CFGBuilder {
         Ok(())
     }
 
-    fn handle_return(&self, node: Node, blocks: &mut Vec<BasicBlock>, block_id: &mut usize) -> Result<()> {
+    fn handle_return(
+        &self,
+        node: Node,
+        blocks: &mut Vec<BasicBlock>,
+        block_id: &mut usize,
+    ) -> Result<()> {
         let mut return_block = BasicBlock::new(*block_id, BlockKind::Return);
         *block_id += 1;
         let start = node.start_position().row as u32;
@@ -326,7 +364,8 @@ impl CFGBuilder {
                     }
                 }
                 BlockKind::Return => {
-                    let exit_node = block_to_node.values()
+                    let exit_node = block_to_node
+                        .values()
                         .find(|&&n| graph[n].kind == BlockKind::Exit)
                         .copied();
                     if let Some(exit) = exit_node {

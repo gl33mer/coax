@@ -40,7 +40,7 @@ pub fn render_footer(frame: &mut Frame, area: Rect, status_message: Option<&str>
 /// Render a simple footer with keybindings for a specific view
 pub fn render_view_footer(frame: &mut Frame, area: Rect, keys: &[(&str, &str)]) {
     let mut spans = Vec::new();
-    
+
     for (i, (key, desc)) in keys.iter().enumerate() {
         if i > 0 {
             spans.push(Span::raw("  |  "));

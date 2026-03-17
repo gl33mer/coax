@@ -8,49 +8,49 @@ use std::path::PathBuf;
 pub struct App {
     /// Whether the application is running
     pub running: bool,
-    
+
     /// Current view
     pub view: View,
-    
+
     /// Path being scanned
     pub scan_path: PathBuf,
-    
+
     /// All scan results
     pub scan_results: Vec<Finding>,
-    
+
     /// Filtered results (after applying filters/search)
     pub filtered_results: Vec<Finding>,
-    
+
     /// Currently selected index in the list
     pub selected_index: usize,
-    
+
     /// Filter by severity (None = all)
     pub filter_severity: Option<Severity>,
-    
+
     /// Search query
     pub search_query: String,
-    
+
     /// Whether search mode is active
     pub search_mode: bool,
-    
+
     /// Sort field
     pub sort_by: SortField,
-    
+
     /// Sort order
     pub sort_order: SortOrder,
-    
+
     /// Last scan time
     pub last_scan_time: Option<DateTime<Local>>,
-    
+
     /// Scroll offset for the list view
     pub scroll_offset: usize,
-    
+
     /// Status message (temporary)
     pub status_message: Option<String>,
-    
+
     /// Help panel visibility
     pub show_help: bool,
-    
+
     /// Previous view (for back navigation)
     pub previous_view: Option<View>,
 }
@@ -60,16 +60,16 @@ pub struct App {
 pub enum View {
     /// Main dashboard with statistics
     Dashboard,
-    
+
     /// List of all findings
     FindingList,
-    
+
     /// Detail view of a single finding
     FindingDetail,
-    
+
     /// Settings panel
     Settings,
-    
+
     /// Help panel
     Help,
 }
@@ -95,7 +95,7 @@ impl Severity {
             _ => Severity::Info,
         }
     }
-    
+
     /// Convert severity to string
     pub fn as_str(&self) -> &'static str {
         match self {
@@ -135,37 +135,37 @@ pub enum SortOrder {
 pub struct Finding {
     /// File path where the finding was found
     pub file: String,
-    
+
     /// Line number (1-indexed)
     pub line: u32,
-    
+
     /// Column number (1-indexed, if available)
     pub column: Option<u32>,
-    
+
     /// Pattern name that matched
     pub pattern: String,
-    
+
     /// Severity level
     pub severity: Severity,
-    
+
     /// Recommendation for remediation
     pub recommendation: String,
-    
+
     /// The actual line content (if available)
     pub line_content: Option<String>,
-    
+
     /// Code context (surrounding lines)
     pub code_context: Option<CodeContext>,
-    
+
     /// Confidence score (0-100)
     pub confidence: u8,
-    
+
     /// Whether this finding has been ignored
     pub ignored: bool,
-    
+
     /// Whether this finding is marked as false positive
     pub false_positive: bool,
-    
+
     /// Additional notes
     pub notes: Option<String>,
 }
@@ -237,43 +237,39 @@ impl App {
             previous_view: None,
         }
     }
-    
+
     /// Run a scan on the configured path
     pub fn scan(&mut self) {
         use coax_scanner::{Scanner, ScannerConfig};
-        
+
         self.status_message = Some("Scanning...".to_string());
-        
-        let config = ScannerConfig::default()
-            .with_line_content();
-        
+
+        let config = ScannerConfig::default().with_line_content();
+
         let scanner = Scanner::with_config(config);
         let results = scanner.scan_directory(&self.scan_path);
-        
-        self.scan_results = results
-            .iter()
-            .map(Finding::from)
-            .collect();
-        
+
+        self.scan_results = results.iter().map(Finding::from).collect();
+
         self.last_scan_time = Some(Local::now());
         self.apply_filters();
-        
+
         self.status_message = Some(format!(
             "Scan complete: {} findings",
             self.scan_results.len()
         ));
     }
-    
+
     /// Apply current filters and sorting to results
     pub fn apply_filters(&mut self) {
         // Start with all results
         let mut filtered: Vec<Finding> = self.scan_results.clone();
-        
+
         // Apply severity filter
         if let Some(severity) = &self.filter_severity {
             filtered.retain(|f| &f.severity == severity);
         }
-        
+
         // Apply search filter
         if !self.search_query.is_empty() {
             let query = self.search_query.to_lowercase();
@@ -287,7 +283,7 @@ impl App {
                         .unwrap_or(false)
             });
         }
-        
+
         // Apply sorting
         filtered.sort_by(|a, b| {
             let cmp = match self.sort_by {
@@ -306,26 +302,26 @@ impl App {
                 }
                 SortField::Pattern => a.pattern.cmp(&b.pattern),
             };
-            
+
             match self.sort_order {
                 SortOrder::Asc => cmp,
                 SortOrder::Desc => cmp.reverse(),
             }
         });
-        
+
         self.filtered_results = filtered;
-        
+
         // Adjust selection if needed
         if self.selected_index >= self.filtered_results.len() {
             self.selected_index = self.filtered_results.len().saturating_sub(1);
         }
     }
-    
+
     /// Get the currently selected finding
     pub fn selected_finding(&self) -> Option<&Finding> {
         self.filtered_results.get(self.selected_index)
     }
-    
+
     /// Navigate up in the list
     pub fn navigate_up(&mut self) {
         if self.selected_index > 0 {
@@ -336,7 +332,7 @@ impl App {
             }
         }
     }
-    
+
     /// Navigate down in the list
     pub fn navigate_down(&mut self) {
         if self.selected_index < self.filtered_results.len().saturating_sub(1) {
@@ -345,7 +341,7 @@ impl App {
             // Will be handled by UI based on viewport
         }
     }
-    
+
     /// Switch to a different view
     pub fn switch_view(&mut self, view: View) {
         if self.view != view {
@@ -353,14 +349,14 @@ impl App {
             self.view = view;
         }
     }
-    
+
     /// Go back to the previous view
     pub fn go_back(&mut self) {
         if let Some(prev) = self.previous_view.take() {
             self.view = prev;
         }
     }
-    
+
     /// Toggle the severity filter
     pub fn toggle_severity_filter(&mut self, severity: Option<Severity>) {
         self.filter_severity = severity;
@@ -368,7 +364,7 @@ impl App {
         self.scroll_offset = 0;
         self.apply_filters();
     }
-    
+
     /// Set the search query
     pub fn set_search_query(&mut self, query: String) {
         self.search_query = query;
@@ -376,14 +372,14 @@ impl App {
         self.scroll_offset = 0;
         self.apply_filters();
     }
-    
+
     /// Clear the search
     pub fn clear_search(&mut self) {
         self.search_query.clear();
         self.search_mode = false;
         self.apply_filters();
     }
-    
+
     /// Set sort field
     pub fn set_sort_field(&mut self, field: SortField) {
         if self.sort_by == field {
@@ -398,7 +394,7 @@ impl App {
         }
         self.apply_filters();
     }
-    
+
     /// Mark the selected finding as ignored
     pub fn ignore_selected(&mut self) {
         if let Some(finding) = self.filtered_results.get(self.selected_index) {
@@ -408,11 +404,11 @@ impl App {
             }) {
                 target.ignored = true;
                 self.status_message = Some("Finding ignored".to_string());
-                self.apply_filters();  // Refresh filtered list
+                self.apply_filters(); // Refresh filtered list
             }
         }
     }
-    
+
     /// Mark the selected finding as false positive
     pub fn mark_false_positive(&mut self) {
         if let Some(finding) = self.filtered_results.get(self.selected_index) {
@@ -422,11 +418,11 @@ impl App {
             }) {
                 target.false_positive = true;
                 self.status_message = Some("Marked as false positive".to_string());
-                self.apply_filters();  // Refresh filtered list
+                self.apply_filters(); // Refresh filtered list
             }
         }
     }
-    
+
     /// Get severity counts for dashboard
     pub fn severity_counts(&self) -> SeverityCounts {
         let mut counts = SeverityCounts::default();
@@ -441,15 +437,12 @@ impl App {
         }
         counts
     }
-    
+
     /// Get recent findings (for dashboard)
     pub fn recent_findings(&self, limit: usize) -> Vec<&Finding> {
-        self.filtered_results
-            .iter()
-            .take(limit)
-            .collect()
+        self.filtered_results.iter().take(limit).collect()
     }
-    
+
     /// Clear status message
     pub fn clear_status(&mut self) {
         self.status_message = None;
@@ -480,7 +473,7 @@ fn severity_order(severity: &Severity) -> u8 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_app_creation() {
         let app = App::new(PathBuf::from("."));
@@ -488,11 +481,11 @@ mod tests {
         assert_eq!(app.view, View::Dashboard);
         assert_eq!(app.scan_results.len(), 0);
     }
-    
+
     #[test]
     fn test_navigation() {
         let mut app = App::new(PathBuf::from("."));
-        
+
         // Add some test findings
         app.scan_results = vec![
             Finding {
@@ -525,18 +518,18 @@ mod tests {
             },
         ];
         app.apply_filters();
-        
+
         assert_eq!(app.selected_index, 0);
         app.navigate_down();
         assert_eq!(app.selected_index, 1);
         app.navigate_up();
         assert_eq!(app.selected_index, 0);
     }
-    
+
     #[test]
     fn test_severity_filter() {
         let mut app = App::new(PathBuf::from("."));
-        
+
         app.scan_results = vec![
             Finding {
                 file: "test1.rs".to_string(),
@@ -567,19 +560,19 @@ mod tests {
                 notes: None,
             },
         ];
-        
+
         app.apply_filters();
         assert_eq!(app.filtered_results.len(), 2);
-        
+
         app.toggle_severity_filter(Some(Severity::High));
         assert_eq!(app.filtered_results.len(), 1);
         assert_eq!(app.filtered_results[0].severity, Severity::High);
     }
-    
+
     #[test]
     fn test_view_switching() {
         let mut app = App::new(PathBuf::from("."));
-        
+
         assert_eq!(app.view, View::Dashboard);
         app.switch_view(View::FindingList);
         assert_eq!(app.view, View::FindingList);

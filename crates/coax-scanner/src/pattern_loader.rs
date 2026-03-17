@@ -169,7 +169,9 @@ impl PatternEntry {
             self.name.clone(),
             self.regex.clone(),
             self.severity.clone(),
-            self.recommendation.clone().unwrap_or_else(|| "Review this finding".to_string()),
+            self.recommendation
+                .clone()
+                .unwrap_or_else(|| "Review this finding".to_string()),
         )
         .with_description_opt(self.description.clone())
         .with_cwe_id_opt(self.cwe_id.clone())
@@ -297,7 +299,10 @@ impl PatternLoader {
         }
 
         // Skip patterns that match generic key=value without specificity
-        if regex.contains(".*") && regex.len() < 15 && (regex.contains("key") || regex.contains("secret") || regex.contains("password")) {
+        if regex.contains(".*")
+            && regex.len() < 15
+            && (regex.contains("key") || regex.contains("secret") || regex.contains("password"))
+        {
             return true;
         }
 
@@ -314,7 +319,9 @@ impl PatternLoader {
     /// FP REDUCTION: Add word boundaries to patterns if needed
     ///
     /// This helps prevent false positives from partial matches.
-    fn add_word_boundaries_if_needed(mut config: crate::pattern_cache::PatternConfig) -> crate::pattern_cache::PatternConfig {
+    fn add_word_boundaries_if_needed(
+        mut config: crate::pattern_cache::PatternConfig,
+    ) -> crate::pattern_cache::PatternConfig {
         // Don't modify already anchored patterns
         if config.pattern.starts_with('^') || config.pattern.starts_with(r"\b") {
             return config;
@@ -330,7 +337,12 @@ impl PatternLoader {
             // Only add if it doesn't already have implicit boundaries
             if !config.pattern.starts_with("(?") && !config.pattern.contains("(?:") {
                 // Add word boundary at start for patterns that look like they need it
-                if config.pattern.chars().next().map_or(false, |c| c.is_ascii_alphanumeric()) {
+                if config
+                    .pattern
+                    .chars()
+                    .next()
+                    .map_or(false, |c| c.is_ascii_alphanumeric())
+                {
                     config.pattern = format!(r"\b{}", config.pattern);
                 }
             }
@@ -518,12 +530,7 @@ impl PatternLoader {
         let patterns = self
             .patterns
             .iter()
-            .filter(|p| {
-                p.category
-                    .as_ref()
-                    .map(|c| c == category)
-                    .unwrap_or(false)
-            })
+            .filter(|p| p.category.as_ref().map(|c| c == category).unwrap_or(false))
             .cloned()
             .collect();
 
@@ -753,7 +760,10 @@ patterns:
         // Filter to high confidence only (includes NO_CONF which has no confidence set)
         let filtered = loader.filter_by_confidence("high");
         assert_eq!(filtered.len(), 2); // HIGH_CONF + NO_CONF
-        assert!(filtered.get_patterns().iter().any(|p| p.name == "HIGH_CONF"));
+        assert!(filtered
+            .get_patterns()
+            .iter()
+            .any(|p| p.name == "HIGH_CONF"));
 
         // Filter to medium and above (includes NO_CONF which defaults to included)
         let filtered = loader.filter_by_confidence("medium");
@@ -838,20 +848,28 @@ patterns:
     #[test]
     fn test_load_secrets_patterns_db_file() {
         // Test loading the actual secrets_patterns_db.yml file if it exists
-        let spdb_file = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../config/patterns/secrets_patterns_db.yml");
-        
+        let spdb_file = Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../config/patterns/secrets_patterns_db.yml");
+
         if spdb_file.exists() {
             let mut loader = PatternLoader::new();
-            let count = loader.load_from_file(&spdb_file).expect("Failed to load secrets_patterns_db.yml");
-            
+            let count = loader
+                .load_from_file(&spdb_file)
+                .expect("Failed to load secrets_patterns_db.yml");
+
             assert!(count > 0, "Should load at least one pattern");
-            
+
             // Validate all patterns
             let validation = loader.validate_patterns();
-            assert!(validation.valid > 0, "Should have at least one valid pattern");
-            
-            println!("Loaded {} patterns, {} valid, {} invalid", 
-                     validation.total, validation.valid, validation.invalid);
+            assert!(
+                validation.valid > 0,
+                "Should have at least one valid pattern"
+            );
+
+            println!(
+                "Loaded {} patterns, {} valid, {} invalid",
+                validation.total, validation.valid, validation.invalid
+            );
         }
     }
 }

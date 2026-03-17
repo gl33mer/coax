@@ -360,7 +360,7 @@ lazy_static! {
         "work", "worker", "working", "works", "workshop", "world", "worried", "worry", "worth", "would",
         "wound", "wrap", "write", "writer", "writing", "wrong", "yard", "yeah", "year", "yell", "yellow",
         "yes", "yesterday", "yet", "yield", "you", "young", "your", "yours", "yourself", "youth", "zone",
-        
+
         // Programming keywords and common variable names
         "function", "method", "class", "interface", "module", "package", "import", "export",
         "public", "private", "protected", "static", "final", "abstract", "override", "virtual",
@@ -414,7 +414,7 @@ lazy_static! {
         "sufficient", "insufficient", "adequate", "inadequate", "complete", "incomplete", "partial",
         "whole", "entire", "total", "absolute", "relative", "approximate", "exact", "precise",
         "accurate", "correct", "true", "false", "positive", "negative", "neutral", "zero",
-        
+
         // Common configuration keys (not secrets)
         "host", "hostname", "ip", "address", "port", "endpoint", "url", "uri", "path", "route",
         "database", "db", "table", "column", "schema", "query", "statement", "transaction",
@@ -564,23 +564,25 @@ impl WordFilter {
 
         for mat in self.automaton.find_iter(&text_lower) {
             let word = &text_lower[mat.start()..mat.end()];
-            
+
             // Skip if too short
             if word.len() < self.min_word_length {
                 continue;
             }
-            
+
             // Skip if already seen
             if seen.contains(word) {
                 continue;
             }
-            
+
             seen.insert(word.to_string());
             matched_words.push(word.to_string());
         }
 
         let has_common_words = !matched_words.is_empty();
-        let is_allowlisted = matched_words.iter().any(|w| ALLOWLIST.contains(&w.as_str()));
+        let is_allowlisted = matched_words
+            .iter()
+            .any(|w| ALLOWLIST.contains(&w.as_str()));
 
         WordFilterResult {
             has_common_words,
@@ -602,7 +604,7 @@ impl WordFilter {
     /// * `bool` - true if the text should be filtered (likely false positive)
     pub fn should_filter(&self, text: &str) -> bool {
         let result = self.contains_common_words(text);
-        
+
         // Filter if it has common words AND is not allowlisted
         result.has_common_words && !result.is_allowlisted
     }
@@ -705,7 +707,10 @@ mod tests {
         // Should detect common words that are in our word list
         let result = filter.contains_common_words("this_is_my_test");
         assert!(result.has_common_words);
-        assert!(result.matched_words.iter().any(|w| w == "this" || w == "test"));
+        assert!(result
+            .matched_words
+            .iter()
+            .any(|w| w == "this" || w == "test"));
 
         // Should detect multiple common words
         let result = filter.contains_common_words("hello_world_example");
@@ -735,16 +740,16 @@ mod tests {
         // Note: The allowlist contains common English words to prevent over-filtering
         // So should_filter() returns false for many common phrases (this is intentional)
         // The filter is designed to catch obvious false positives like programming keywords
-        
+
         // Test that common words ARE detected
         let result = filter.contains_common_words("this_is_a_test");
         assert!(result.has_common_words, "Should detect common words");
-        
+
         // Test detection of programming-related false positives
         // Words like "function", "method", "class" are in COMMON_WORDS but NOT in ALLOWLIST
         let result = filter.contains_common_words("function_callback_handler");
         assert!(result.has_common_words);
-        
+
         // Test that real secrets without common words are NOT filtered
         assert!(!filter.should_filter("AKIA1234567890ABCDEFG"));
         assert!(!filter.should_filter("ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"));
@@ -776,7 +781,7 @@ mod tests {
         let result = filter.contains_common_words("hello_world");
         // "hello" and "world" are 5 chars, so they won't match with min_length=6
         assert!(!result.has_common_words);
-        
+
         // But longer words will match
         let result = filter.contains_common_words("testing_example");
         assert!(result.has_common_words);
@@ -813,14 +818,14 @@ mod tests {
 
         // Betterleaks achieves ~68% FP reduction
         // Test cases that should be detected as having common words
-        
+
         // Common words ARE detected (but may be allowlisted)
         let result = filter.contains_common_words("this_is_a_test");
         assert!(result.has_common_words);
-        
+
         let result = filter.contains_common_words("hello_world_test");
         assert!(result.has_common_words);
-        
+
         let result = filter.contains_common_words("the_quick_brown_fox");
         assert!(result.has_common_words);
 
@@ -837,7 +842,7 @@ mod tests {
         let result1 = filter.contains_common_words("THIS_IS_A_TEST");
         let result2 = filter.contains_common_words("This_Is_A_Test");
         let result3 = filter.contains_common_words("this_is_a_test");
-        
+
         // All should detect common words
         assert!(result1.has_common_words);
         assert!(result2.has_common_words);

@@ -29,8 +29,8 @@
 //! - scan_regex_only: <100ms (baseline: ~270ms)
 //! - Speedup: 3-5x expected from optimizations
 
-use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
 use coax_scanner::{PatternCache, Scanner, ScannerConfig};
+use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
 use std::fs;
 use std::sync::Arc;
 use tempfile::TempDir;
@@ -294,10 +294,14 @@ fn bench_mixed_file_types(c: &mut Criterion) {
     let temp_dir = TempDir::new().unwrap();
 
     // Create various file types
-    let extensions = ["rs", "py", "js", "ts", "json", "yaml", "toml", "md", "txt", "sh"];
+    let extensions = [
+        "rs", "py", "js", "ts", "json", "yaml", "toml", "md", "txt", "sh",
+    ];
     for (i, ext) in extensions.iter().enumerate() {
         for j in 0..10 {
-            let file = temp_dir.path().join(format!("file_{}_{}.{}", i * 10 + j, i, ext));
+            let file = temp_dir
+                .path()
+                .join(format!("file_{}_{}.{}", i * 10 + j, i, ext));
             let content = if j % 5 == 0 {
                 format!("AWS_KEY=AKIAIOSFODNN7EXAMPLE{}\n", j)
             } else {

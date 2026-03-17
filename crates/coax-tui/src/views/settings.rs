@@ -16,9 +16,9 @@ pub fn render_settings(frame: &mut Frame, app: &mut App, area: Rect) {
         .direction(Direction::Vertical)
         .margin(1)
         .constraints([
-            Constraint::Length(3),  // Title
-            Constraint::Min(15),    // Settings list
-            Constraint::Length(3),  // Actions
+            Constraint::Length(3), // Title
+            Constraint::Min(15),   // Settings list
+            Constraint::Length(3), // Actions
         ])
         .split(area);
 
@@ -38,8 +38,11 @@ fn render_settings_title(frame: &mut Frame, area: Rect) {
         Span::styled(" Settings", Style::default().add_modifier(Modifier::BOLD)),
     ]);
 
-    let paragraph = Paragraph::new(text)
-        .block(Block::default().borders(Borders::ALL).title("Configuration"));
+    let paragraph = Paragraph::new(text).block(
+        Block::default()
+            .borders(Borders::ALL)
+            .title("Configuration"),
+    );
 
     frame.render_widget(paragraph, area);
 }
@@ -49,7 +52,12 @@ fn render_settings_list(frame: &mut Frame, app: &App, area: Rect) {
         ("Scan Path", app.scan_path.display().to_string()),
         ("Sort By", format!("{:?}", app.sort_by)),
         ("Sort Order", format!("{:?}", app.sort_order)),
-        ("Filter Severity", app.filter_severity.as_ref().map_or("All".to_string(), |s| format!("{:?}", s))),
+        (
+            "Filter Severity",
+            app.filter_severity
+                .as_ref()
+                .map_or("All".to_string(), |s| format!("{:?}", s)),
+        ),
         ("Total Findings", app.scan_results.len().to_string()),
         ("Filtered Findings", app.filtered_results.len().to_string()),
     ];
@@ -68,7 +76,11 @@ fn render_settings_list(frame: &mut Frame, app: &App, area: Rect) {
     }
 
     let paragraph = Paragraph::new(lines)
-        .block(Block::default().borders(Borders::ALL).title("Current Settings"))
+        .block(
+            Block::default()
+                .borders(Borders::ALL)
+                .title("Current Settings"),
+        )
         .wrap(Wrap { trim: false });
 
     frame.render_widget(paragraph, area);

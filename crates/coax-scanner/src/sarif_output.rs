@@ -4,8 +4,8 @@
 //! SARIF (Static Analysis Results Interchange Format) is compatible with
 //! GitHub Advanced Security and other security tools.
 
-use serde::{Deserialize, Serialize};
 use crate::ScanResult;
+use serde::{Deserialize, Serialize};
 
 /// SARIF 2.1.0 output structure
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -150,13 +150,14 @@ fn severity_to_score(severity: &str) -> &'static str {
 /// Generate SARIF output from scan results
 pub fn generate_sarif(results: &[ScanResult], version: &str) -> SarifOutput {
     // Collect unique rules from results
-    let mut rules_map: std::collections::HashMap<String, SarifRule> = std::collections::HashMap::new();
-    
+    let mut rules_map: std::collections::HashMap<String, SarifRule> =
+        std::collections::HashMap::new();
+
     for result in results {
         if !rules_map.contains_key(&result.pattern) {
             // Determine if this is a Unicode finding
             let is_unicode = result.pattern.starts_with("UNICODE-");
-            
+
             // Create appropriate tags
             let mut tags = vec!["security".to_string()];
             if is_unicode {
@@ -169,14 +170,28 @@ pub fn generate_sarif(results: &[ScanResult], version: &str) -> SarifOutput {
             // Create help URI - use Glassworm reference for Unicode findings
             let help_uri = if is_unicode {
                 match result.pattern.as_str() {
-                    "UNICODE-GLASSWORM_PATTERN" => Some("https://www.aikido.dev/blog/glassworm-returns".to_string()),
-                    "UNICODE-BIDIRECTIONAL_OVERRIDE" => Some("https://www.w3.org/TR/unicode140/".to_string()),
-                    "UNICODE-HOMOGLYPH" => Some("https://www.unicode.org/reports/tr39/".to_string()),
-                    "UNICODE-INVISIBLE_CHARACTER" => Some("https://www.unicode.org/charts/PDF/U2000.pdf".to_string()),
-                    _ => Some("https://github.com/gl33mer/coax/blob/main/docs/unicode-attacks.md".to_string()),
+                    "UNICODE-GLASSWORM_PATTERN" => {
+                        Some("https://www.aikido.dev/blog/glassworm-returns".to_string())
+                    }
+                    "UNICODE-BIDIRECTIONAL_OVERRIDE" => {
+                        Some("https://www.w3.org/TR/unicode140/".to_string())
+                    }
+                    "UNICODE-HOMOGLYPH" => {
+                        Some("https://www.unicode.org/reports/tr39/".to_string())
+                    }
+                    "UNICODE-INVISIBLE_CHARACTER" => {
+                        Some("https://www.unicode.org/charts/PDF/U2000.pdf".to_string())
+                    }
+                    _ => Some(
+                        "https://github.com/gl33mer/coax/blob/main/docs/unicode-attacks.md"
+                            .to_string(),
+                    ),
                 }
             } else {
-                Some(format!("https://github.com/gl33mer/coax/rules/{}", result.pattern.to_lowercase()))
+                Some(format!(
+                    "https://github.com/gl33mer/coax/rules/{}",
+                    result.pattern.to_lowercase()
+                ))
             };
 
             let rule = SarifRule {
@@ -194,12 +209,13 @@ pub fn generate_sarif(results: &[ScanResult], version: &str) -> SarifOutput {
             rules_map.insert(result.pattern.clone(), rule);
         }
     }
-    
+
     let rules: Vec<SarifRule> = rules_map.into_values().collect();
-    
+
     // Convert results to SARIF results
-    let sarif_results: Vec<SarifResult> = results.iter().map(|result| {
-        SarifResult {
+    let sarif_results: Vec<SarifResult> = results
+        .iter()
+        .map(|result| SarifResult {
             rule_id: result.pattern.clone(),
             level: severity_to_level(&result.severity).to_string(),
             message: SarifMessage {
@@ -215,13 +231,16 @@ pub fn generate_sarif(results: &[ScanResult], version: &str) -> SarifOutput {
                         start_column: result.column,
                         end_line: None,
                         end_column: None,
-                        snippet: result.line_content.clone().map(|text| SarifSnippet { text }),
+                        snippet: result
+                            .line_content
+                            .clone()
+                            .map(|text| SarifSnippet { text }),
                     }),
                 },
             }],
-        }
-    }).collect();
-    
+        })
+        .collect();
+
     SarifOutput {
         schema: "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json".to_string(),
         version: "2.1.0".to_string(),
@@ -248,9 +267,9 @@ pub fn generate_sarif_json(results: &[ScanResult], version: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{FindingContext, ScanResult};
     use std::path::PathBuf;
-    use crate::{ScanResult, FindingContext};
-    
+
     fn create_test_result() -> ScanResult {
         ScanResult {
             file: PathBuf::from("config.yml"),
@@ -264,50 +283,50 @@ mod tests {
             context: FindingContext::default(),
         }
     }
-    
+
     #[test]
     fn test_sarif_generation() {
         let results = vec![create_test_result()];
         let sarif = generate_sarif(&results, "0.3.0");
-        
+
         assert_eq!(sarif.version, "2.1.0");
         assert_eq!(sarif.runs.len(), 1);
         assert_eq!(sarif.runs[0].results.len(), 1);
-        
+
         let result = &sarif.runs[0].results[0];
         assert_eq!(result.rule_id, "AWS_ACCESS_KEY");
         assert_eq!(result.level, "error");
     }
-    
+
     #[test]
     fn test_sarif_json_generation() {
         let results = vec![create_test_result()];
         let json = generate_sarif_json(&results, "0.3.0");
-        
+
         // Verify it's valid JSON
         let parsed: serde_json::Value = serde_json::from_str(&json).unwrap();
         assert_eq!(parsed["version"], "2.1.0");
         assert!(parsed["runs"].is_array());
     }
-    
+
     #[test]
     fn test_severity_mapping() {
         assert_eq!(severity_to_level("critical"), "error");
         assert_eq!(severity_to_level("high"), "error");
         assert_eq!(severity_to_level("medium"), "warning");
         assert_eq!(severity_to_level("low"), "note");
-        
+
         assert_eq!(severity_to_score("critical"), "9.0");
         assert_eq!(severity_to_score("high"), "7.0");
         assert_eq!(severity_to_score("medium"), "4.0");
         assert_eq!(severity_to_score("low"), "1.0");
     }
-    
+
     #[test]
     fn test_sarif_schema_url() {
         let results = vec![create_test_result()];
         let sarif = generate_sarif(&results, "0.3.0");
-        
+
         assert_eq!(
             sarif.schema,
             "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"

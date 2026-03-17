@@ -9,8 +9,8 @@
 //! for i18n purposes. However, MIXED scripts within a single identifier (e.g., "variαble"
 //! where α is Greek) indicates a potential homoglyph attack.
 
-use unicode_script::{Script, UnicodeScript};
 use std::collections::HashSet;
+use unicode_script::{Script, UnicodeScript};
 
 /// Detect which Unicode script a character belongs to
 pub fn get_script(ch: char) -> Script {
@@ -25,22 +25,27 @@ pub fn get_script(ch: char) -> Script {
 pub fn has_mixed_scripts(identifier: &str) -> bool {
     let mut non_latin_scripts = HashSet::new();
     let mut has_latin = false;
-    
+
     for ch in identifier.chars() {
-        // Track ASCII Latin characters
-        if ch.is_ascii_alphanumeric() || ch == '_' {
+        // Track ASCII Latin characters (but NOT underscore - it's common across scripts)
+        if ch.is_ascii_alphabetic() {
             has_latin = true;
             continue;
         }
-        
+
+        // Skip common characters (underscore, digits, etc.)
+        if ch == '_' || ch.is_ascii_digit() {
+            continue;
+        }
+
         let script = get_script(ch);
-        
+
         // Only count non-Latin scripts
         if script != Script::Latin && script != Script::Common && script != Script::Inherited {
             non_latin_scripts.insert(script);
         }
     }
-    
+
     // Mixed scripts = has Latin + 1+ non-Latin scripts
     has_latin && !non_latin_scripts.is_empty()
 }
@@ -52,34 +57,35 @@ pub fn has_mixed_scripts(identifier: &str) -> bool {
 /// - The identifier does NOT contain any Latin ASCII characters
 /// - This is legitimate for i18n, math notation, etc.
 pub fn is_pure_non_latin(identifier: &str) -> bool {
-    let has_latin = identifier.chars().any(|c| c.is_ascii_alphanumeric() || c == '_');
+    // Check for actual Latin letters (not underscore or digits)
+    let has_latin = identifier.chars().any(|c| c.is_ascii_alphabetic());
     let has_non_latin = identifier.chars().any(|c| {
         let script = get_script(c);
         script != Script::Latin && script != Script::Common && script != Script::Inherited
     });
-    
-    // Pure non-Latin = has non-Latin but NO Latin
+
+    // Pure non-Latin = has non-Latin but NO Latin letters
     has_non_latin && !has_latin
 }
 
 /// Check if identifier is pure Latin (no flags needed)
 pub fn is_pure_latin(identifier: &str) -> bool {
-    identifier.chars().all(|c| {
-        c.is_ascii_alphanumeric() || c == '_'
-    })
+    identifier
+        .chars()
+        .all(|c| c.is_ascii_alphanumeric() || c == '_')
 }
 
 /// Get all scripts present in an identifier
 pub fn get_scripts_in_identifier(identifier: &str) -> Vec<Script> {
     let mut scripts = HashSet::new();
-    
+
     for ch in identifier.chars() {
         let script = get_script(ch);
         if script != Script::Common && script != Script::Inherited {
             scripts.insert(script);
         }
     }
-    
+
     scripts.into_iter().collect()
 }
 
@@ -135,14 +141,14 @@ mod tests {
     #[test]
     fn test_mixed_script_flagged() {
         // Latin + Greek mixing (deceptive)
-        assert!(has_mixed_scripts("variαble"));  // α is Greek
-        assert!(has_mixed_scripts("pαypal"));    // α is Greek
+        assert!(has_mixed_scripts("variαble")); // α is Greek
+        assert!(has_mixed_scripts("pαypal")); // α is Greek
         assert!(!is_pure_non_latin("variαble"));
-        
+
         // Latin + Cyrillic mixing (more deceptive)
-        assert!(has_mixed_scripts("pаypal"));    // а is Cyrillic
-        assert!(has_mixed_scripts("vаriable"));  // а is Cyrillic
-        assert!(has_mixed_scripts("fаke"));      // а is Cyrillic
+        assert!(has_mixed_scripts("pаypal")); // а is Cyrillic
+        assert!(has_mixed_scripts("vаriable")); // а is Cyrillic
+        assert!(has_mixed_scripts("fаke")); // а is Cyrillic
     }
 
     #[test]
@@ -166,8 +172,8 @@ mod tests {
     #[test]
     fn test_script_detection() {
         assert_eq!(get_script('a'), Script::Latin);
-        assert_eq!(get_script('α'), Script::Greek);  // Greek alpha
-        assert_eq!(get_script('а'), Script::Cyrillic);  // Cyrillic a
+        assert_eq!(get_script('α'), Script::Greek); // Greek alpha
+        assert_eq!(get_script('а'), Script::Cyrillic); // Cyrillic a
         assert_eq!(get_script('5'), Script::Common);
     }
 
@@ -176,7 +182,7 @@ mod tests {
         let scripts = get_scripts_in_identifier("variαble");
         assert!(scripts.contains(&Script::Latin));
         assert!(scripts.contains(&Script::Greek));
-        
+
         let scripts2 = get_scripts_in_identifier("μήνυμα");
         assert!(scripts2.contains(&Script::Greek));
         assert!(!scripts2.contains(&Script::Latin));
@@ -184,10 +190,10 @@ mod tests {
 
     #[test]
     fn test_high_risk_scripts() {
-        assert!(is_high_risk_script('α'));  // Greek
-        assert!(is_high_risk_script('а'));  // Cyrillic
-        assert!(!is_high_risk_script('a'));  // Latin
-        assert!(!is_high_risk_script('中'));  // Han (not high-risk for homoglyphs)
+        assert!(is_high_risk_script('α')); // Greek
+        assert!(is_high_risk_script('а')); // Cyrillic
+        assert!(!is_high_risk_script('a')); // Latin
+        assert!(!is_high_risk_script('中')); // Han (not high-risk for homoglyphs)
     }
 }
 
@@ -205,9 +211,13 @@ pub fn extract_identifiers(line: &str) -> Vec<&str> {
 }
 
 /// Find the identifier containing a specific character position
-pub fn find_identifier_at_position<'a>(line: &'a str, char_pos: usize, identifiers: &[&'a str]) -> Option<&'a str> {
+pub fn find_identifier_at_position<'a>(
+    line: &'a str,
+    char_pos: usize,
+    identifiers: &[&'a str],
+) -> Option<&'a str> {
     let byte_pos = line.char_indices().nth(char_pos)?.0;
-    
+
     for id in identifiers {
         if let Some(start) = line.find(id) {
             let end = start + id.len();
@@ -216,6 +226,6 @@ pub fn find_identifier_at_position<'a>(line: &'a str, char_pos: usize, identifie
             }
         }
     }
-    
+
     None
 }

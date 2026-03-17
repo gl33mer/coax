@@ -272,8 +272,14 @@ mod tests {
         assert!(matches!(OutputFormat::from_str("json"), OutputFormat::Json));
         assert!(matches!(OutputFormat::from_str("yaml"), OutputFormat::Yaml));
         assert!(matches!(OutputFormat::from_str("yml"), OutputFormat::Yaml));
-        assert!(matches!(OutputFormat::from_str("sarif"), OutputFormat::Sarif));
+        assert!(matches!(
+            OutputFormat::from_str("sarif"),
+            OutputFormat::Sarif
+        ));
         assert!(matches!(OutputFormat::from_str("text"), OutputFormat::Text));
-        assert!(matches!(OutputFormat::from_str("unknown"), OutputFormat::Text));
+        assert!(matches!(
+            OutputFormat::from_str("unknown"),
+            OutputFormat::Text
+        ));
     }
 }

@@ -8,10 +8,10 @@
 //!
 //! Based on QA feedback and research from GitGuardian, Aikido Security, and Betterleaks.
 
-use regex::Regex;
-use lazy_static::lazy_static;
-use std::path::Path;
 use crate::result::FindingContext;
+use lazy_static::lazy_static;
+use regex::Regex;
+use std::path::Path;
 
 lazy_static! {
     // Comment detection patterns for various languages
@@ -28,25 +28,28 @@ lazy_static! {
 
     // Placeholder patterns - these should NOT be flagged as real secrets
     // These patterns match the VALUE portion, not variable names
+    // All patterns are case-insensitive (?i flag)
     static ref PLACEHOLDER_PATTERNS: Vec<Regex> = vec![
         // Match placeholder VALUES (quoted strings only)
-        Regex::new(r#"[:=]\s*[\x27\x22]your[-_]?access[-_]?key[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]your[-_]?secret[-_]?key[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]your[-_]?api[-_]?key[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]your[-_]?password[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]your[-_]?token[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]xxx+[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]changeme[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]replace[-_]?me[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]insert[-_]?here[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]example[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]sample[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]test[-_]?key[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]fake[-_]?key[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]dummy[-_]?key[\x27\x22]"#).unwrap(),
-        Regex::new(r#"[:=]\s*[\x27\x22]placeholder[\x27\x22]"#).unwrap(),
-        // Also match unquoted but with word boundaries
-        Regex::new(r#"[:=]\s*\byour\b"#).unwrap(),
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]your[-_].*[\x27\x22]"#).unwrap(),  // your-*
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]insert[-_].*[\x27\x22]"#).unwrap(),  // insert-*
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]replace[-_].*[\x27\x22]"#).unwrap(),  // replace-*
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]change[-_].*[\x27\x22]"#).unwrap(),  // change-*
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]example[\x27\x22]"#).unwrap(),
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]sample[\x27\x22]"#).unwrap(),
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]test[-_].*[\x27\x22]"#).unwrap(),  // test-*
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]fake[-_].*[\x27\x22]"#).unwrap(),  // fake-*
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]dummy[-_].*[\x27\x22]"#).unwrap(),  // dummy-*
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]placeholder[\x27\x22]"#).unwrap(),
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]todo[\x27\x22]"#).unwrap(),
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]fixme[\x27\x22]"#).unwrap(),
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]none[\x27\x22]"#).unwrap(),
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]null[\x27\x22]"#).unwrap(),
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]changeme[\x27\x22]"#).unwrap(),
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]xxx+[\x27\x22]"#).unwrap(),
+        // Angle bracket placeholders
+        Regex::new(r#"(?i)[:,=]\s*[\x27\x22]<[^>]*>[\x27\x22]"#).unwrap(),  // <...> in quotes
+        Regex::new(r#"(?i)[:,=]\s*<[^>]*>"#).unwrap(),  // <...> without quotes
     ];
 
     // AWS example keys (from AWS documentation)
@@ -164,7 +167,7 @@ impl ExclusionPatterns {
             extensions: vec![
                 "lock".to_string(),
                 "sum".to_string(),
-                "map".to_string(),  // Source maps
+                "map".to_string(), // Source maps
             ],
             path_patterns: vec![
                 "**/test/**".to_string(),
@@ -310,7 +313,7 @@ impl ContextAnalyzer {
                 return false;
             }
         }
-        
+
         // Check file name patterns
         if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
             if TEST_FILE_PATTERNS.iter().any(|p| p.is_match(name)) {
@@ -322,14 +325,15 @@ impl ContextAnalyzer {
         if let Some(parent) = path.parent() {
             let path_str = parent.to_string_lossy();
             // Use word boundary checks to avoid matching /tmp/test*
-            if path_str.contains("/test/") ||
-               path_str.contains("/tests/") ||
-               path_str.contains("/__tests__/") ||
-               path_str.contains("/spec/") ||
-               path_str.contains("/fixtures/") ||
-               path_str.ends_with("/test") ||
-               path_str.ends_with("/tests") ||
-               path_str.ends_with("/spec") {
+            if path_str.contains("/test/")
+                || path_str.contains("/tests/")
+                || path_str.contains("/__tests__/")
+                || path_str.contains("/spec/")
+                || path_str.contains("/fixtures/")
+                || path_str.ends_with("/test")
+                || path_str.ends_with("/tests")
+                || path_str.ends_with("/spec")
+            {
                 return true;
             }
         }
@@ -346,7 +350,7 @@ impl ContextAnalyzer {
                 return false;
             }
         }
-        
+
         if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
             return DOC_EXTENSIONS.iter().any(|&e| e == ext);
         }
@@ -395,10 +399,10 @@ impl ContextAnalyzer {
 
     /// FP REDUCTION: Check if line is a code identifier (not a secret)
     pub fn is_code_identifier(&self, line: &str) -> bool {
-        self.is_function_definition(line) ||
-        self.is_function_call(line) ||
-        self.is_import_statement(line) ||
-        self.is_type_definition(line)
+        self.is_function_definition(line)
+            || self.is_function_call(line)
+            || self.is_import_statement(line)
+            || self.is_type_definition(line)
     }
 
     /// Adjust severity based on context
@@ -406,7 +410,8 @@ impl ContextAnalyzer {
         // FP REDUCTION: Check for code identifiers first
         if self.is_code_identifier(line) {
             context.adjusted_severity = Some("excluded".to_string());
-            context.note = Some("Code identifier (function, import, type), not a secret".to_string());
+            context.note =
+                Some("Code identifier (function, import, type), not a secret".to_string());
             return;
         }
 
@@ -506,7 +511,10 @@ pub fn extract_secret(line: &str, pattern_name: &str) -> Option<String> {
     }
 
     // For direct pattern matches (like AWS keys), return the matched portion
-    if pattern_name.contains("AWS") || pattern_name.contains("GITHUB") || pattern_name.contains("STRIPE") {
+    if pattern_name.contains("AWS")
+        || pattern_name.contains("GITHUB")
+        || pattern_name.contains("STRIPE")
+    {
         // Find the actual secret in the line
         for word in line.split_whitespace() {
             let clean = word.trim_matches(|c| c == '"' || c == '\'' || c == ',' || c == ';');
@@ -522,26 +530,39 @@ pub fn extract_secret(line: &str, pattern_name: &str) -> Option<String> {
 /// Check if a value is a placeholder
 fn is_placeholder_value(value: &str) -> bool {
     let lower = value.to_lowercase();
-    
+
     // Check for obvious placeholder patterns
     let obvious_placeholders = [
-        "your-", "your_", "xxx", "changeme", "placeholder",
-        "test-", "test_", "fake", "dummy", "sample",
+        "your-",
+        "your_",
+        "xxx",
+        "changeme",
+        "placeholder",
+        "test-",
+        "test_",
+        "fake",
+        "dummy",
+        "sample",
     ];
-    
+
     for placeholder in &obvious_placeholders {
         if lower.contains(placeholder) {
             return true;
         }
     }
-    
+
     // Special handling for "example" - only flag if it's clearly a placeholder
     // AWS uses EXAMPLE in documentation keys (AKIAIOSFODNN7EXAMPLE) which are real format
     // Only flag if "example" appears with other placeholder indicators
     if lower.contains("example") {
         // Check if it looks like a real credential pattern (AWS, etc.)
         // AWS Access Key IDs are 20 chars starting with AKIA, ABIA, ACCA, or ASIA
-        if value.len() == 20 && (value.starts_with("AKIA") || value.starts_with("ABIA") || value.starts_with("ACCA") || value.starts_with("ASIA")) {
+        if value.len() == 20
+            && (value.starts_with("AKIA")
+                || value.starts_with("ABIA")
+                || value.starts_with("ACCA")
+                || value.starts_with("ASIA"))
+        {
             return false; // Likely AWS key format, not a placeholder
         }
         // Check for other example patterns that are legitimate
@@ -549,7 +570,11 @@ fn is_placeholder_value(value: &str) -> bool {
             return false; // AWS documentation format
         }
         // If "example" appears with other placeholder indicators, flag it
-        if lower.contains("example-") || lower.contains("example_") || lower.contains("-example") || lower.contains("_example") {
+        if lower.contains("example-")
+            || lower.contains("example_")
+            || lower.contains("-example")
+            || lower.contains("_example")
+        {
             return true; // Hyphenated/underscored example is likely placeholder
         }
         // Standalone "example" in a long string is suspicious
@@ -557,7 +582,7 @@ fn is_placeholder_value(value: &str) -> bool {
             return true;
         }
     }
-    
+
     false
 }
 
@@ -574,7 +599,12 @@ pub fn mask_secret(secret: &str) -> String {
     let masked_len = secret.len() - visible_start - visible_end;
     let masked = "*".repeat(masked_len);
 
-    format!("{}{}{}", &secret[..visible_start], masked, &secret[secret.len() - visible_end..])
+    format!(
+        "{}{}{}",
+        &secret[..visible_start],
+        masked,
+        &secret[secret.len() - visible_end..]
+    )
 }
 
 #[cfg(test)]
@@ -619,7 +649,9 @@ mod tests {
         assert!(analyzer.is_constant_key_name(r#"SESSION_KEY = "ov_console_api_key""#));
         assert!(analyzer.is_constant_key_name(r#"THEME_MODE_KEY = "ov_console_theme_mode""#));
         assert!(analyzer.is_constant_key_name(r#"NAV_COLLAPSED_KEY = "ov_console_nav_collapsed""#));
-        assert!(!analyzer.is_constant_key_name(r#"AWS_SECRET_KEY = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY""#));
+        assert!(!analyzer.is_constant_key_name(
+            r#"AWS_SECRET_KEY = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY""#
+        ));
     }
 
     #[test]
@@ -652,11 +684,11 @@ mod tests {
         assert!(masked.starts_with("AKIA"));
         assert!(masked.ends_with("E123"));
         assert!(masked.contains('*'));
-        
+
         let masked = mask_secret("ghp_1234567890abcdefghij1234567890abcdefghij");
         assert!(masked.starts_with("ghp_"));
         assert!(masked.ends_with("ghij"));
-        
+
         assert_eq!(mask_secret("short"), "short");
     }
 
@@ -669,8 +701,11 @@ mod tests {
         let masked = result.unwrap();
         assert!(masked.starts_with("AKIA"));
         assert!(masked.contains('*'));
-        
-        let result = extract_secret(r#"api_key=sk_live_1234567890abcdefghij1234567890realkey"#, "STRIPE_SECRET_KEY");
+
+        let result = extract_secret(
+            r#"api_key=sk_live_1234567890abcdefghij1234567890realkey"#,
+            "STRIPE_SECRET_KEY",
+        );
         assert!(result.is_some());
         let masked = result.unwrap();
         assert!(masked.starts_with("sk_l"));
@@ -703,16 +738,16 @@ mod tests {
         assert!(exclusions.should_exclude(Path::new("node_modules")));
         assert!(exclusions.should_exclude(Path::new("target")));
         assert!(exclusions.should_exclude(Path::new("vendor")));
-        
+
         // Test file patterns (exact file name matches)
         assert!(exclusions.should_exclude(Path::new("Cargo.lock")));
         assert!(exclusions.should_exclude(Path::new("package-lock.json")));
         assert!(exclusions.should_exclude(Path::new("Gemfile.lock")));
-        
+
         // Test extension patterns
         assert!(exclusions.should_exclude(Path::new("bundle.lock")));
         assert!(exclusions.should_exclude(Path::new("app.min.js")));
-        
+
         // Test that normal source files are NOT excluded
         assert!(!exclusions.should_exclude(Path::new("src/main.py")));
         assert!(!exclusions.should_exclude(Path::new("lib/utils.rs")));

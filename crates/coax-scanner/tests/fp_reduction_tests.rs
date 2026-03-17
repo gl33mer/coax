@@ -11,9 +11,9 @@ fn create_fp_reduced_scanner() -> Scanner {
     Scanner::with_config(
         ScannerConfig::default()
             .with_context_detection(true)
-            .with_token_efficiency(false)  // Disable for more predictable testing
-            .with_word_filter(false)       // Disable for more predictable testing
-            .with_external_patterns(false)
+            .with_token_efficiency(false) // Disable for more predictable testing
+            .with_word_filter(false) // Disable for more predictable testing
+            .with_external_patterns(false),
     )
 }
 
@@ -21,10 +21,10 @@ fn create_fp_reduced_scanner() -> Scanner {
 fn create_tp_scanner() -> Scanner {
     Scanner::with_config(
         ScannerConfig::default()
-            .with_context_detection(false)  // Disable context for TP tests
+            .with_context_detection(false) // Disable context for TP tests
             .with_token_efficiency(false)
             .with_word_filter(false)
-            .with_external_patterns(false)
+            .with_external_patterns(false),
     )
 }
 
@@ -73,7 +73,11 @@ const img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJA
 const svg = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48L3N2Zz4=";
 "#;
     let results = scan_content_fp(code);
-    assert_eq!(results.len(), 0, "Base64 encoded images should not be flagged");
+    assert_eq!(
+        results.len(),
+        0,
+        "Base64 encoded images should not be flagged"
+    );
 }
 
 #[test]
@@ -91,7 +95,11 @@ api_key = get_api_key()
 token = generate_token()
 "#;
     let results = scan_content_fp(code);
-    assert_eq!(results.len(), 0, "Function call assignments should not be flagged");
+    assert_eq!(
+        results.len(),
+        0,
+        "Function call assignments should not be flagged"
+    );
 }
 
 #[test]
@@ -191,11 +199,11 @@ fn test_comments_not_flagged() {
 fn test_test_files_not_flagged() {
     // FP REDUCTION: Test file patterns should be excluded
     let scanner = create_fp_reduced_scanner();
-    
+
     let code = r#"
 const apiKey = "sk_live_1234567890abcdefghij1234567890abcdefghij";
 "#;
-    
+
     // Scan as test file
     let results = scanner.scan_content(code, "test_file.test.js");
     assert_eq!(results.len(), 0, "Test files should not be flagged");
@@ -205,15 +213,19 @@ const apiKey = "sk_live_1234567890abcdefghij1234567890abcdefghij";
 fn test_documentation_files_not_flagged() {
     // FP REDUCTION: Documentation files should be excluded
     let scanner = create_fp_reduced_scanner();
-    
+
     let code = r#"
 # Example usage:
 API_KEY = "sk_live_1234567890abcdefghij1234567890abcdefghij"
 "#;
-    
+
     // Scan as markdown file
     let results = scanner.scan_content(code, "README.md");
-    assert_eq!(results.len(), 0, "Documentation files should not be flagged");
+    assert_eq!(
+        results.len(),
+        0,
+        "Documentation files should not be flagged"
+    );
 }
 
 #[test]
@@ -225,7 +237,10 @@ const data = "example_test_sample_value_here";
 "#;
     let results = scan_content_fp(code);
     // These should be filtered by context detection (look like code identifiers)
-    assert!(results.len() == 0, "Strings with common words should not be flagged");
+    assert!(
+        results.len() == 0,
+        "Strings with common words should not be flagged"
+    );
 }
 
 #[test]
@@ -236,7 +251,10 @@ const MY_CONSTANT_VALUE = "some_string_here";
 const config_data_test = "value";
 "#;
     let results = scan_content_fp(code);
-    assert!(results.len() == 0, "Code identifiers with underscores should not be flagged");
+    assert!(
+        results.len() == 0,
+        "Code identifiers with underscores should not be flagged"
+    );
 }
 
 // ============================================================================
@@ -252,7 +270,10 @@ aws_access_key_id = "AKIA1234567890ABCDEF"
 "#;
     let results = scan_content_tp(code);
     assert!(results.len() > 0, "Real AWS keys should be flagged");
-    assert!(results.iter().any(|r| r.pattern.contains("AWS")), "Should detect AWS pattern");
+    assert!(
+        results.iter().any(|r| r.pattern.contains("AWS")),
+        "Should detect AWS pattern"
+    );
 }
 
 #[test]
@@ -263,7 +284,10 @@ const GITHUB_TOKEN = "ghp_1234567890abcdefghij1234567890abcdefghij";
 "#;
     let results = scan_content_tp(code);
     assert!(results.len() > 0, "Real GitHub tokens should be flagged");
-    assert!(results.iter().any(|r| r.pattern.contains("GITHUB")), "Should detect GitHub pattern");
+    assert!(
+        results.iter().any(|r| r.pattern.contains("GITHUB")),
+        "Should detect GitHub pattern"
+    );
 }
 
 #[test]
@@ -275,7 +299,10 @@ const STRIPE_TEST = "sk_test_1234567890abcdefghij1234567890abcdefghij";
 "#;
     let results = scan_content_tp(code);
     assert!(results.len() > 0, "Real Stripe keys should be flagged");
-    assert!(results.iter().any(|r| r.pattern.contains("STRIPE")), "Should detect Stripe pattern");
+    assert!(
+        results.iter().any(|r| r.pattern.contains("STRIPE")),
+        "Should detect Stripe pattern"
+    );
 }
 
 #[test]
@@ -287,7 +314,12 @@ let db_password = "MyS3cur3P@ssw0rd!";
 "#;
     let results = scan_content_tp(code);
     assert!(results.len() > 0, "Real passwords should be flagged");
-    assert!(results.iter().any(|r| r.pattern.contains("PASSWORD") || r.pattern.contains("GENERIC")), "Should detect password pattern");
+    assert!(
+        results
+            .iter()
+            .any(|r| r.pattern.contains("PASSWORD") || r.pattern.contains("GENERIC")),
+        "Should detect password pattern"
+    );
 }
 
 #[test]
@@ -311,7 +343,10 @@ MIIEpAIBAAKCAQEA0Z3VS5JJcds3xfn/ygWyF8PbnGy0AHB7MxUK
 "#;
     let results = scan_content_tp(code);
     assert!(results.len() > 0, "Private keys should be flagged");
-    assert!(results.iter().any(|r| r.pattern.contains("PRIVATE_KEY")), "Should detect private key pattern");
+    assert!(
+        results.iter().any(|r| r.pattern.contains("PRIVATE_KEY")),
+        "Should detect private key pattern"
+    );
 }
 
 #[test]
@@ -322,7 +357,10 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwi
 "#;
     let results = scan_content_tp(code);
     assert!(results.len() > 0, "JWT tokens should be flagged");
-    assert!(results.iter().any(|r| r.pattern.contains("JWT")), "Should detect JWT pattern");
+    assert!(
+        results.iter().any(|r| r.pattern.contains("JWT")),
+        "Should detect JWT pattern"
+    );
 }
 
 // ============================================================================
@@ -341,11 +379,19 @@ const placeholder = "your-password-here";
 const api_key = "sk_live_1234567890abcdefghij1234567890abcdefghij";
 "#;
     let results = scan_content_tp(code);
-    
+
     // Should flag real secrets but not comments, functions, or placeholders
     assert!(results.len() >= 2, "Should flag at least 2 real secrets");
-    assert!(results.iter().any(|r| r.pattern.contains("AWS")), "Should detect AWS key");
-    assert!(results.iter().any(|r| r.pattern.contains("STRIPE") || r.pattern.contains("GENERIC")), "Should detect API key");
+    assert!(
+        results.iter().any(|r| r.pattern.contains("AWS")),
+        "Should detect AWS key"
+    );
+    assert!(
+        results
+            .iter()
+            .any(|r| r.pattern.contains("STRIPE") || r.pattern.contains("GENERIC")),
+        "Should detect API key"
+    );
 }
 
 #[test]
@@ -359,9 +405,12 @@ STRIPE_SECRET_KEY=sk_live_1234567890abcdefghij1234567890abcdefghij
 API_KEY=your-api-key-here
 "#;
     let results = scan_content_tp(code);
-    
+
     // Should flag real secrets but not placeholder
-    assert!(results.len() >= 3, "Should flag at least 3 real secrets in .env format");
+    assert!(
+        results.len() >= 3,
+        "Should flag at least 3 real secrets in .env format"
+    );
 }
 
 #[test]
@@ -376,9 +425,12 @@ fn test_json_config_format() {
 }
 "#;
     let results = scan_content_tp(code);
-    
+
     // Should flag real secrets but not placeholder
-    assert!(results.len() >= 3, "Should flag at least 3 real secrets in JSON format");
+    assert!(
+        results.len() >= 3,
+        "Should flag at least 3 real secrets in JSON format"
+    );
 }
 
 #[test]
@@ -389,7 +441,10 @@ const key = "AKIAIOSFODNN7EXAMPLE1";
 const short = "ghp_1234567890abcdefghij1234567890abcdefghij";
 "#;
     let results = scan_content_tp(code);
-    assert!(results.len() > 0, "Short real secrets should still be flagged");
+    assert!(
+        results.len() > 0,
+        "Short real secrets should still be flagged"
+    );
 }
 
 // ============================================================================
@@ -432,7 +487,10 @@ sq0atp-1234567890abcdefghij12
 access_token$production$12345678$abcdef1234567890abcdef1234567890
 "#;
     let results = scan_content_tp(code);
-    assert!(results.len() > 0, "Should detect payment processor patterns");
+    assert!(
+        results.len() > 0,
+        "Should detect payment processor patterns"
+    );
 }
 
 #[test]
@@ -447,7 +505,10 @@ MTIzNDU2Nzg5MDEyMzQ1Njc4.abcdef.1234567890abcdefghijklmnopqrstuv
 123456789:ABCdefGHIjklMNOpqrsTUVwxyz123456789
 "#;
     let results = scan_content_tp(code);
-    assert!(results.len() > 0, "Should detect communication API patterns");
+    assert!(
+        results.len() > 0,
+        "Should detect communication API patterns"
+    );
 }
 
 #[test]
@@ -461,7 +522,10 @@ redis://:password@localhost:6379
 Server=localhost;Database=mydb;User Id=admin;Password=secret123;
 "#;
     let results = scan_content_tp(code);
-    assert!(results.len() > 0, "Should detect database connection patterns");
+    assert!(
+        results.len() > 0,
+        "Should detect database connection patterns"
+    );
 }
 
 #[test]
@@ -486,18 +550,22 @@ fn test_all_private_key_patterns() {
 fn test_scanning_performance_with_filters() {
     // Test that FP reduction doesn't significantly impact scanning speed
     use std::time::Instant;
-    
+
     let large_codebase = r#"
 fn function1() { let x = "test"; }
 fn function2() { let y = "value"; }
 fn function3() { let z = "data"; }
 // Repeat many times to simulate large file
-"#.repeat(1000);
-    
+"#
+    .repeat(1000);
+
     let start = Instant::now();
     let _results = scan_content_fp(&large_codebase);
     let duration = start.elapsed();
-    
+
     // Should complete in reasonable time (< 5 seconds for large file)
-    assert!(duration.as_secs() < 5, "Scanning with FP reduction should be performant");
+    assert!(
+        duration.as_secs() < 5,
+        "Scanning with FP reduction should be performant"
+    );
 }

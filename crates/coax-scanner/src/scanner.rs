@@ -9,17 +9,16 @@
 //! - Word filter using Aho-Corasick (Betterleaks algorithm)
 //! - Source Provider abstraction for scanning multiple content sources
 
-use crate::pattern_cache::{PatternCache, PatternConfig};
-use crate::result::{ScanResult, ScanSummary, SeverityCounts, FindingContext};
-use crate::secrets;
 use crate::context::ContextAnalyzer;
-use crate::token_efficiency::TokenEfficiencyConfig;
-use crate::word_filter::{WordFilter, WordFilterConfig};
-use crate::unicode::{UnicodeConfig, UnicodeScanner};
+use crate::pattern_cache::{PatternCache, PatternConfig};
+use crate::result::{FindingContext, ScanResult, ScanSummary, SeverityCounts};
+use crate::secrets;
 use crate::source_provider::{
-    SourceProvider, ContentLoader, ScanTarget, ContentType,
-    SourceProviderError, FileSystemProvider,
+    ContentLoader, ContentType, FileSystemProvider, ScanTarget, SourceProvider, SourceProviderError,
 };
+use crate::token_efficiency::TokenEfficiencyConfig;
+use crate::unicode::{UnicodeConfig, UnicodeScanner};
+use crate::word_filter::{WordFilter, WordFilterConfig};
 use rayon::prelude::*;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -209,7 +208,6 @@ impl ScannerConfig {
         self
     }
 
-
     /// Enable secrets-patterns-db patterns
     pub fn with_secrets_patterns_db(mut self, enabled: bool) -> Self {
         self.enable_secrets_patterns_db = enabled;
@@ -223,12 +221,14 @@ impl ScannerConfig {
     }
 
     /// Set Unicode sensitivity level
-    pub fn with_unicode_sensitivity(mut self, sensitivity: crate::unicode::SensitivityLevel) -> Self {
+    pub fn with_unicode_sensitivity(
+        mut self,
+        sensitivity: crate::unicode::SensitivityLevel,
+    ) -> Self {
         self.unicode.sensitivity = sensitivity;
         self
     }
 }
-
 
 /// High-performance security scanner
 ///
@@ -278,7 +278,9 @@ impl Scanner {
         let mut final_config = config.clone();
         if config.load_external_patterns {
             if let Some(ref pattern_dir) = config.pattern_directory {
-                if let Ok(loader) = Self::load_patterns_from_directory(pattern_dir, &config.min_confidence) {
+                if let Ok(loader) =
+                    Self::load_patterns_from_directory(pattern_dir, &config.min_confidence)
+                {
                     // Merge with existing patterns
                     let mut all_patterns = final_config.patterns.clone();
                     all_patterns.extend(loader.into_patterns());
@@ -314,7 +316,8 @@ impl Scanner {
     fn load_patterns_from_directory(
         dir: &Path,
         min_confidence: &str,
-    ) -> Result<crate::pattern_loader::PatternLoader, crate::pattern_loader::PatternLoaderError> {
+    ) -> Result<crate::pattern_loader::PatternLoader, crate::pattern_loader::PatternLoaderError>
+    {
         use crate::pattern_loader::PatternLoader;
 
         let mut loader = PatternLoader::new();
@@ -344,7 +347,12 @@ impl Scanner {
 
     /// Scan a single file
     pub fn scan_file(&self, path: &Path) -> Vec<ScanResult> {
-        scan_file_internal(path, &self.pattern_cache, &self.config, self.unicode_scanner.as_ref())
+        scan_file_internal(
+            path,
+            &self.pattern_cache,
+            &self.config,
+            self.unicode_scanner.as_ref(),
+        )
     }
 
     /// Scan content directly (for testing or custom use cases)
@@ -366,9 +374,7 @@ impl Scanner {
 
         files
             .par_iter()
-            .flat_map(move |path| {
-                scan_file_internal(path, &cache, &config, unicode_scanner)
-            })
+            .flat_map(move |path| scan_file_internal(path, &cache, &config, unicode_scanner))
             .collect()
     }
 
@@ -383,7 +389,7 @@ impl Scanner {
                 if self.should_exclude(e.path()) {
                     return false;
                 }
-                
+
                 // Then check hidden files (but only for the root directory itself)
                 if !self.config.scan_hidden && e.path() != root {
                     if let Some(name) = e.file_name().to_str() {
@@ -392,7 +398,7 @@ impl Scanner {
                         }
                     }
                 }
-                
+
                 true
             })
             .filter_map(|e| e.ok())
@@ -401,10 +407,17 @@ impl Scanner {
             if path.is_file() {
                 if let Ok(metadata) = path.metadata() {
                     if metadata.len() <= self.config.max_file_size {
-                        if let Some(ext) = path.extension() {
-                            if should_scan_extension(ext) {
-                                files.push(path.to_path_buf());
-                            }
+                        // Check if file should be scanned
+                        let should_scan = if let Some(ext) = path.extension() {
+                            // File has extension - check allowlist
+                            should_scan_extension(ext)
+                        } else {
+                            // File has no extension - check known names or binary check
+                            should_scan_extensionless_file(&path)
+                        };
+
+                        if should_scan {
+                            files.push(path.to_path_buf());
                         }
                     }
                 }
@@ -526,7 +539,10 @@ impl Scanner {
     /// Scan using a SourceProvider with summary
     ///
     /// Similar to `scan_source_provider` but also returns a summary with metrics.
-    pub fn scan_source_provider_with_summary<P>(&self, provider: &P) -> (Vec<ScanResult>, ScanSummary)
+    pub fn scan_source_provider_with_summary<P>(
+        &self,
+        provider: &P,
+    ) -> (Vec<ScanResult>, ScanSummary)
     where
         P: SourceProvider + ContentLoader,
     {
@@ -563,10 +579,7 @@ impl Scanner {
                 // Skip binary content if configured
                 if provider.skip_binary() {
                     if let Some(ContentType::Binary) = target.content_type {
-                        tracing::debug!(
-                            "Skipping binary target: {}",
-                            target.display_path()
-                        );
+                        tracing::debug!("Skipping binary target: {}", target.display_path());
                         return Vec::new();
                     }
                 }
@@ -655,20 +668,102 @@ fn should_scan_extension(ext: &std::ffi::OsStr) -> bool {
     matches!(
         ext.to_str(),
         Some(
-            "yml" | "yaml" | "json" | "env" | "js" | "py" | "rs" | "toml" | "xml" |
-            "properties" | "conf" | "config" | "ini" | "sh" | "bash" | "zsh" |
-            "tf" | "terraform" | "md" | "txt" | "ts" | "tsx" | "jsx" | "go" |
-            "rb" | "php" | "java" | "cs" | "cpp" | "c" | "h" | "hpp" | "sql" |
-            "graphql" | "proto" | "dockerfile" | "pem" | "key" | "cert" |
-            "html" | "css" | "scss" | "less" | "vue" | "svelte" | "dart" |
-            "kt" | "kts" | "swift" | "m" | "mm" | "r" | "R" | "jl" | "scala" |
-            "sbt" | "ex" | "exs" | "erl" | "hrl" | "clj" | "cljs" | "edn" |
-            "hs" | "lhs" | "fs" | "fsi" | "fsx" | "elm" |
-            "ps1" | "psm1" | "psd1" | "bat" | "cmd" | "vbs" | "vb" | "lua" |
-            "pl" | "pm" | "t" | "raku" | "rakumod" | "rakutest" | "nim" |
-            "nix" | "re" | "rei" | "gql" | "lock" | "sum"
+            // Core programming languages
+            "js" | "ts" | "tsx" | "jsx" | "py" | "rs" | "go" | "rb" | "php" |
+            "java" | "cs" | "cpp" | "c" | "h" | "hpp" | "kt" | "kts" | "swift" |
+            "scala" | "sbt" | "dart" | "r" | "R" | "jl" | "nim" | "hs" | "lhs" |
+            "fs" | "fsi" | "fsx" | "elm" | "vue" | "svelte" |
+            // Web technologies
+            "html" | "css" | "scss" | "less" | "graphql" | "gql" |
+            // Config files
+            "yml" | "yaml" | "json" | "toml" | "xml" | "ini" | "conf" | "config" |
+            "properties" | "plist" | "cfg" | "hcl" | "tf" | "tfvars" | "terraform" |
+            "env" | "envrc" | "htaccess" | "htpasswd" |
+            // Build/CI files
+            "gradle" | "cmake" | "mk" | "bzl" | "bazel" | "makefile" |
+            // Data files
+            "csv" | "tsv" | "sql" | "sqlite" |
+            // Package manager configs
+            "npmrc" | "pypirc" | "gemrc" | "yarnrc" | "lock" | "sum" |
+            // Notebooks
+            "ipynb" | "rmd" |
+            // IaC / Config management
+            "pp" | "sls" | "erb" |
+            // Shell scripts
+            "sh" | "bash" | "zsh" | "ps1" | "psm1" | "psd1" | "bat" | "cmd" | "vbs" | "vb" | "lua" |
+            // Perl/Raku
+            "pl" | "pm" | "t" | "raku" | "rakumod" | "rakutest" |
+            // Erlang/Elixir
+            "erl" | "hrl" | "ex" | "exs" |
+            // Clojure
+            "clj" | "cljs" | "edn" |
+            // Other
+            "md" | "txt" | "proto" | "dockerfile" | "pem" | "key" | "cert" |
+            "m" | "mm" | "nix" | "re" | "rei"
         )
     )
+}
+
+/// Check if an extensionless file should be scanned
+/// Known text-based files without extensions are scanned
+/// Unknown extensionless files are checked for binary content
+fn should_scan_extensionless_file(path: &Path) -> bool {
+    // Known text-based filenames without extensions
+    const KNOWN_TEXT_FILES: &[&str] = &[
+        "Jenkinsfile",
+        "Makefile",
+        "Vagrantfile",
+        "Dockerfile",
+        "Gemfile",
+        "Rakefile",
+        "Procfile",
+        "Brewfile",
+        "Berksfile",
+        "Podfile",
+        ".env",
+        ".envrc",
+        ".gitignore",
+        ".dockerignore",
+        ".npmignore",
+        ".pypirc",
+        "README",
+        "LICENSE",
+        "CHANGELOG",
+        "INSTALL",
+        "TODO",
+        "NOTICE",
+        "AUTHORS",
+        "CONTRIBUTORS",
+    ];
+
+    // Check if filename matches known text files
+    if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
+        if KNOWN_TEXT_FILES.contains(&name) {
+            return true;
+        }
+    }
+
+    // For unknown extensionless files, do a quick binary check
+    // Read first 512 bytes - if null bytes present, it's binary
+    if let Ok(mut file) = std::fs::File::open(path) {
+        use std::io::Read;
+        let mut buffer = [0u8; 512];
+        if let Ok(bytes_read) = file.read(&mut buffer) {
+            if bytes_read == 0 {
+                return true; // Empty file, treat as text
+            }
+            // Check for null bytes (binary indicator)
+            for &byte in &buffer[..bytes_read] {
+                if byte == 0 {
+                    return false; // Binary file
+                }
+            }
+            return true; // No null bytes, treat as text
+        }
+    }
+
+    // Can't read file, default to scanning
+    true
 }
 
 /// Internal file scanning function
@@ -682,6 +777,11 @@ fn scan_file_internal(
         Ok(c) => c,
         Err(_) => return Vec::new(),
     };
+
+    // 4A: Binary file detection - skip files with null bytes
+    if content.contains('\0') {
+        return Vec::new();
+    }
 
     scan_content_internal(content, path.to_path_buf(), cache, config, unicode_scanner)
 }
@@ -726,11 +826,17 @@ fn is_known_secret_pattern(pattern_name: &str) -> bool {
         return true;
     }
     // Private keys
-    if pattern_name.contains("PRIVATE_KEY") || pattern_name.contains("RSA_") || pattern_name.contains("SSH_") {
+    if pattern_name.contains("PRIVATE_KEY")
+        || pattern_name.contains("RSA_")
+        || pattern_name.contains("SSH_")
+    {
         return true;
     }
     // Database connection strings
-    if pattern_name.contains("CONNECTION") || pattern_name.contains("MONGO") || pattern_name.contains("POSTGRES") {
+    if pattern_name.contains("CONNECTION")
+        || pattern_name.contains("MONGO")
+        || pattern_name.contains("POSTGRES")
+    {
         return true;
     }
     // Payment processors
@@ -749,12 +855,166 @@ fn is_known_secret_pattern(pattern_name: &str) -> bool {
     if pattern_name.starts_with("OPENAI_") || pattern_name.starts_with("ANTHROPIC_") {
         return true;
     }
-    
+
     // Generic patterns should go through filters
     false
 }
 
+/// 4B: Check if a value appears to be a placeholder rather than a real secret
+fn is_placeholder_value(value: &str) -> bool {
+    let lower = value.to_lowercase();
+
+    // Exact placeholder matches
+    const PLACEHOLDERS: &[&str] = &[
+        "example",
+        "test",
+        "sample",
+        "dummy",
+        "fake",
+        "placeholder",
+        "changeme",
+        "change_me",
+        "replace_me",
+        "your_key_here",
+        "your-key-here",
+        "xxx",
+        "todo",
+        "fixme",
+        "insert",
+        "redacted",
+        "none",
+        "null",
+        "your_api_key",
+        "your_secret",
+        "your_token",
+        "your_password",
+        "your_access_key",
+        "your_secret_key",
+        "insert_here",
+        "insert-here",
+    ];
+
+    for placeholder in PLACEHOLDERS {
+        if lower.contains(placeholder) {
+            return true;
+        }
+    }
+
+    // Check for all same character (e.g., "AAAAAAA", "0000000")
+    if value.len() > 3 {
+        let first_char = value.chars().next();
+        if let Some(first) = first_char {
+            if value.chars().all(|c| c == first) {
+                return true;
+            }
+        }
+    }
+
+    // Check for sequential characters (e.g., "1234567890", "abcdefgh")
+    if value.len() > 5 {
+        let is_sequential = value
+            .chars()
+            .zip(value.chars().skip(1))
+            .all(|(a, b)| (a as u8 + 1 == b as u8) || (a as u8 == b as u8));
+        if is_sequential {
+            return true;
+        }
+    }
+
+    false
+}
+
+/// 4C/4D/4E: Check if content appears to be non-secret data (PEM certs, encrypted vaults, hashes)
+fn is_non_secret_content(value: &str, line: &str) -> bool {
+    let lower_line = line.to_lowercase();
+    let lower_value = value.to_lowercase();
+
+    // 4C: PEM certificate markers - public certs are not secrets
+    // Note: Private keys (BEGIN RSA PRIVATE KEY, BEGIN PRIVATE KEY) should still be flagged
+    if lower_line.contains("-----begin certificate-----")
+        || lower_line.contains("-----begin public key-----")
+    {
+        return true;
+    }
+
+    // 4D: Encrypted vault formats
+    if value.starts_with("ENC[") ||  // Ansible Vault, SOPS
+       lower_value.starts_with("$ansible_vault") ||
+       lower_value.starts_with("vault:")
+    {
+        return true;
+    }
+
+    // 4E: Hash values with context indicators
+    // Only suppress if BOTH conditions are true:
+    // 1. Value is hex string (optionally with hash algorithm prefix like sha256:)
+    // 2. Context indicates it's a hash (key name contains hash-related words)
+
+    // Check if line contains hash algorithm markers
+    let hash_markers: &[&str] = &["sha256:", "sha512:", "sha384:", "sha1:", "md5:"];
+    let has_hash_marker = hash_markers
+        .iter()
+        .any(|m| lower_value.contains(*m) || lower_line.contains(*m));
+
+    if has_hash_marker {
+        // Extract hex portion after hash marker
+        let hex_value = if let Some(marker) = hash_markers.iter().find(|m| lower_value.contains(*m))
+        {
+            let idx = lower_value.find(*marker).unwrap() + marker.len();
+            &value[idx..]
+        } else if let Some(marker) = hash_markers.iter().find(|m| lower_line.contains(*m)) {
+            let idx = lower_line.find(*marker).unwrap() + marker.len();
+            &line[idx..]
+        } else {
+            value
+        };
+
+        // Remove quotes and whitespace
+        let clean_hex =
+            hex_value.trim_matches(|c: char| c == '"' || c == '\'' || c.is_whitespace());
+
+        if clean_hex.chars().all(|c| c.is_ascii_hexdigit()) && clean_hex.len() >= 32 {
+            const HASH_CONTEXTS: &[&str] = &[
+                "hash",
+                "digest",
+                "checksum",
+                "sha256",
+                "sha512",
+                "sha384",
+                "sha1",
+                "md5",
+                "fingerprint",
+                "signature",
+                "hmac",
+                "integrity",
+                "etag",
+            ];
+
+            for context in HASH_CONTEXTS {
+                if lower_line.contains(context) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    false
+}
+
 /// Internal content scanning function with context detection and Betterleaks filters
+///
+/// # SCAN PIPELINE — FILTER HIERARCHY
+///
+/// 1. Extension filter — skips binary/irrelevant file types
+/// 2. Binary check — skips files with null bytes in first 512 bytes
+/// 3. Pattern matching — ALL known patterns run against content
+/// 4. Heuristic filters — entropy, word filter, token efficiency
+///    CRITICAL: Known pattern matches BYPASS all heuristic filters.
+/// 5. FP suppression — placeholder, hash context, PEM certs, vault encryption
+/// 6. File-type context — test/doc exclusion for non-pattern matches only
+///
+/// Known patterns are PRIVILEGED — they bypass steps 4 and 6.
+/// This prevents recall regressions from heuristic filtering.
 fn scan_content_internal(
     content: String,
     file: PathBuf,
@@ -773,7 +1033,9 @@ fn scan_content_internal(
 
     // Initialize Betterleaks filters if enabled
     let word_filter = if config.enable_word_filter {
-        Some(WordFilter::with_min_length(config.word_filter_config.min_word_length))
+        Some(WordFilter::with_min_length(
+            config.word_filter_config.min_word_length,
+        ))
     } else {
         None
     };
@@ -789,13 +1051,18 @@ fn scan_content_internal(
         // CRITICAL FIX: Known secret patterns should NEVER be suppressed by file-type heuristics.
         // A secret is a secret whether it's in a test file, documentation, or /tmp.
         // We check if ANY known pattern matches this line BEFORE deciding to skip.
-        let has_known_pattern_match = cache.patterns().iter()
+        let has_known_pattern_match = cache
+            .patterns()
+            .iter()
             .filter(|p| is_known_secret_pattern(&p.name))
             .any(|p| p.is_match(line));
-        
+
         // FP REDUCTION: Skip excluded findings EARLY (before pattern matching)
         // BUT: Never skip if a known secret pattern matches this line
-        if !has_known_pattern_match && config.enable_context_detection && context_analyzer.should_exclude(&context) {
+        if !has_known_pattern_match
+            && config.enable_context_detection
+            && context_analyzer.should_exclude(&context)
+        {
             continue;
         }
 
@@ -813,6 +1080,18 @@ fn scan_content_internal(
                 // it should NOT be discarded by generic heuristic filters.
                 // Heuristic filters are for GENERIC/UNKNOWN strings only.
                 let is_known_pattern = is_known_secret_pattern(&pattern.name);
+
+                // CRITICAL: AWS examples and placeholders should ALWAYS be excluded,
+                // even for known patterns. These are documentation/examples, not real secrets.
+                if context.is_aws_example || context.is_placeholder {
+                    tracing::debug!(
+                        "Filtered by context (AWS example/placeholder): {} in {}:{}",
+                        pattern.name,
+                        file.display(),
+                        line_num + 1
+                    );
+                    continue;
+                }
 
                 // FP REDUCTION: Apply entropy pre-filter ONLY for unknown patterns
                 if !is_known_pattern {
@@ -859,6 +1138,45 @@ fn scan_content_internal(
                             }
                         }
                     }
+                }
+
+                // 4B: Placeholder detection - suppress findings with placeholder values
+                // This runs for ALL patterns (known and unknown)
+                // Check both extracted secret value AND the full line content
+                let should_filter_placeholder = if let Some(ref secret_value) = secret {
+                    is_placeholder_value(secret_value)
+                } else {
+                    // If no secret was extracted, check the line content itself
+                    is_placeholder_value(line)
+                };
+
+                if should_filter_placeholder {
+                    tracing::debug!(
+                        "Filtered by placeholder detection: {} in {}:{}",
+                        pattern.name,
+                        file.display(),
+                        line_num + 1
+                    );
+                    continue;
+                }
+
+                // 4C/4D/4E: Non-secret content detection (PEM certs, encrypted vaults, hashes)
+                // This runs for ALL patterns (known and unknown)
+                let should_filter_non_secret = if let Some(ref secret_value) = secret {
+                    is_non_secret_content(secret_value, line)
+                } else {
+                    // If no secret was extracted, check the line content itself
+                    is_non_secret_content(line, line)
+                };
+
+                if should_filter_non_secret {
+                    tracing::debug!(
+                        "Filtered by non-secret content detection: {} in {}:{}",
+                        pattern.name,
+                        file.display(),
+                        line_num + 1
+                    );
+                    continue;
                 }
 
                 let mut result = ScanResult::new(
@@ -949,12 +1267,7 @@ mod tests {
 
     #[test]
     fn test_scanner_with_custom_patterns() {
-        let patterns = vec![PatternConfig::new(
-            "TEST",
-            r"test\d+",
-            "low",
-            "Test",
-        )];
+        let patterns = vec![PatternConfig::new("TEST", r"test\d+", "low", "Test")];
 
         let scanner = Scanner::with_patterns(patterns);
         assert_eq!(scanner.pattern_count(), 1);
@@ -968,7 +1281,7 @@ mod tests {
             ScannerConfig::default()
                 .with_token_efficiency(false)
                 .with_word_filter(false)
-                .with_context_detection(false)
+                .with_context_detection(false),
         );
 
         // Create test files
@@ -990,7 +1303,7 @@ mod tests {
             ScannerConfig::default()
                 .with_token_efficiency(false)
                 .with_word_filter(false)
-                .with_context_detection(false)
+                .with_context_detection(false),
         );
         let content = "AWS_KEY=AKIAIOSFODNN7EXAMPLE";
         let results = scanner.scan_content(content, "test.txt");
@@ -1007,7 +1320,7 @@ mod tests {
             ScannerConfig::default()
                 .with_token_efficiency(false)
                 .with_word_filter(false)
-                .with_context_detection(false)
+                .with_context_detection(false),
         );
 
         // Create 100 test files
@@ -1044,7 +1357,7 @@ mod tests {
             ScannerConfig::default()
                 .with_token_efficiency(false)
                 .with_word_filter(false)
-                .with_context_detection(false)
+                .with_context_detection(false),
         );
 
         // Create test files
@@ -1092,5 +1405,65 @@ mod tests {
 
         let results = scanner.scan_directory(temp_dir.path());
         assert!(results.is_empty()); // Large file should be skipped
+    }
+
+    #[test]
+    fn test_should_scan_extension() {
+        // Test newly added extensions
+        assert!(should_scan_extension(std::ffi::OsStr::new("csv")));
+        assert!(should_scan_extension(std::ffi::OsStr::new("gradle")));
+        assert!(should_scan_extension(std::ffi::OsStr::new("ipynb")));
+        assert!(should_scan_extension(std::ffi::OsStr::new("npmrc")));
+        assert!(should_scan_extension(std::ffi::OsStr::new("pp")));
+        assert!(should_scan_extension(std::ffi::OsStr::new("sls")));
+
+        // Test existing extensions still work
+        assert!(should_scan_extension(std::ffi::OsStr::new("py")));
+        assert!(should_scan_extension(std::ffi::OsStr::new("js")));
+        assert!(should_scan_extension(std::ffi::OsStr::new("json")));
+        assert!(should_scan_extension(std::ffi::OsStr::new("yml")));
+
+        // Test binary extensions are still rejected
+        assert!(!should_scan_extension(std::ffi::OsStr::new("jpg")));
+        assert!(!should_scan_extension(std::ffi::OsStr::new("png")));
+        assert!(!should_scan_extension(std::ffi::OsStr::new("exe")));
+        assert!(!should_scan_extension(std::ffi::OsStr::new("zip")));
+        assert!(!should_scan_extension(std::ffi::OsStr::new("wasm")));
+        assert!(!should_scan_extension(std::ffi::OsStr::new("bin")));
+    }
+
+    #[test]
+    fn test_should_scan_extensionless_file() {
+        use std::io::Write;
+
+        let temp_dir = TempDir::new().unwrap();
+
+        // Test known text files
+        let jenkinsfile = temp_dir.path().join("Jenkinsfile");
+        let mut f = std::fs::File::create(&jenkinsfile).unwrap();
+        writeln!(f, "pipeline {{ }}").unwrap();
+        assert!(should_scan_extensionless_file(&jenkinsfile));
+
+        let makefile = temp_dir.path().join("Makefile");
+        let mut f = std::fs::File::create(&makefile).unwrap();
+        writeln!(f, "all: build").unwrap();
+        assert!(should_scan_extensionless_file(&makefile));
+
+        let vagrantfile = temp_dir.path().join("Vagrantfile");
+        let mut f = std::fs::File::create(&vagrantfile).unwrap();
+        writeln!(f, "Vagrant.configure").unwrap();
+        assert!(should_scan_extensionless_file(&vagrantfile));
+
+        // Test binary file detection
+        let binary_file = temp_dir.path().join("binary_no_ext");
+        let mut f = std::fs::File::create(&binary_file).unwrap();
+        f.write_all(&[0x00, 0x01, 0x02, 0x03]).unwrap(); // Null bytes = binary
+        assert!(!should_scan_extensionless_file(&binary_file));
+
+        // Test text file without extension
+        let text_file = temp_dir.path().join("text_no_ext");
+        let mut f = std::fs::File::create(&text_file).unwrap();
+        writeln!(f, "This is plain text").unwrap();
+        assert!(should_scan_extensionless_file(&text_file));
     }
 }

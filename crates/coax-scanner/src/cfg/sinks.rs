@@ -9,70 +9,70 @@
 //! - Deserialization
 //! - Path traversal
 
+use super::types::{BasicBlock, SinkPoint, CFG};
 use petgraph::graph::NodeIndex;
-use super::types::{SinkPoint, CFG, BasicBlock};
 
 /// Detect all sink points in a CFG
 pub fn detect_all(cfg: &CFG) -> Vec<SinkPoint> {
     let mut sinks = Vec::new();
-    
+
     for node in cfg.graph.node_indices() {
         let block = &cfg.graph[node];
         let block_sinks = detect_from_block(block, node);
         sinks.extend(block_sinks);
     }
-    
+
     sinks
 }
 
 /// Detect sink points from a basic block
 pub fn detect_from_block(block: &BasicBlock, node: NodeIndex) -> Vec<SinkPoint> {
     let mut sinks = Vec::new();
-    
+
     for stmt in &block.statements {
         // SQL sinks
         if let Some(sink) = detect_sql_sink(&stmt.text, node) {
             sinks.push(sink);
         }
-        
+
         // Command execution sinks
         if let Some(sink) = detect_command_sink(&stmt.text, node) {
             sinks.push(sink);
         }
-        
+
         // File I/O sinks
         if let Some(sink) = detect_file_sink(&stmt.text, node) {
             sinks.push(sink);
         }
-        
+
         // Network sinks
         if let Some(sink) = detect_network_sink(&stmt.text, node) {
             sinks.push(sink);
         }
-        
+
         // Secret usage sinks
         if let Some(sink) = detect_secret_sink(&stmt.text, node) {
             sinks.push(sink);
         }
-        
+
         // Deserialization sinks
         if let Some(sink) = detect_deserialization_sink(&stmt.text, node) {
             sinks.push(sink);
         }
-        
+
         // Path traversal sinks
         if let Some(sink) = detect_path_traversal_sink(&stmt.text, node) {
             sinks.push(sink);
         }
     }
-    
+
     sinks
 }
 
 /// Detect SQL execution sinks
 fn detect_sql_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
     let text_lower = text.to_lowercase();
-    
+
     // SQL execution patterns
     let sql_patterns = [
         (".execute(", "execute"),
@@ -92,7 +92,7 @@ fn detect_sql_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
         ("cursor.execute(", "execute"),
         ("conn.execute(", "execute"),
     ];
-    
+
     for (pattern, method) in sql_patterns {
         if text_lower.contains(pattern) {
             // Try to extract query
@@ -103,7 +103,7 @@ fn detect_sql_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
             });
         }
     }
-    
+
     // SQLAlchemy patterns
     if text_lower.contains("session.query(") || text_lower.contains("db.session.execute(") {
         let query = extract_string_argument(text).unwrap_or_else(|| "unknown".to_string());
@@ -112,16 +112,18 @@ fn detect_sql_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
             method: "sqlalchemy".to_string(),
         });
     }
-    
+
     // Prisma patterns
-    if text_lower.contains("prisma.") && (text_lower.contains("queryraw(") || text_lower.contains("executeraw(")) {
+    if text_lower.contains("prisma.")
+        && (text_lower.contains("queryraw(") || text_lower.contains("executeraw("))
+    {
         let query = extract_string_argument(text).unwrap_or_else(|| "unknown".to_string());
         return Some(SinkPoint::SqlExecution {
             query,
             method: "prisma_raw".to_string(),
         });
     }
-    
+
     // TypeORM patterns
     if text_lower.contains(".query(") && text_lower.contains("repository") {
         let query = extract_string_argument(text).unwrap_or_else(|| "unknown".to_string());
@@ -130,14 +132,14 @@ fn detect_sql_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
             method: "typeorm".to_string(),
         });
     }
-    
+
     None
 }
 
 /// Detect command execution sinks
 fn detect_command_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
     let text_lower = text.to_lowercase();
-    
+
     // Command execution patterns
     let cmd_patterns = [
         (".exec(", "exec"),
@@ -159,9 +161,9 @@ fn detect_command_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
         ("runtime.exec(", "runtime.exec"),
         ("processbuilder(", "ProcessBuilder"),
         ("runtime.getruntime().exec(", "Runtime.exec"),
-        (".start(", "start"),  // Process.start
+        (".start(", "start"), // Process.start
     ];
-    
+
     for (pattern, method) in cmd_patterns {
         if text_lower.contains(pattern) {
             let command = extract_string_argument(text).unwrap_or_else(|| "unknown".to_string());
@@ -171,7 +173,7 @@ fn detect_command_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
             });
         }
     }
-    
+
     // Shell execution
     if text_lower.contains("shell_exec(") || text_lower.contains("sh -c") {
         let command = extract_string_argument(text).unwrap_or_else(|| "unknown".to_string());
@@ -180,7 +182,7 @@ fn detect_command_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
             method: "shell_exec".to_string(),
         });
     }
-    
+
     // Backtick execution (shell)
     if text.contains("`") && text.contains("$") {
         return Some(SinkPoint::CommandExecution {
@@ -188,14 +190,14 @@ fn detect_command_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
             method: "backtick".to_string(),
         });
     }
-    
+
     None
 }
 
 /// Detect file I/O sinks
 fn detect_file_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
     let text_lower = text.to_lowercase();
-    
+
     // File operation patterns
     let file_patterns = [
         (".open(", "open"),
@@ -236,7 +238,7 @@ fn detect_file_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
         ("Files.copy(", "Files.copy"),
         ("Files.move(", "Files.move"),
     ];
-    
+
     for (pattern, method) in file_patterns {
         if text_lower.contains(pattern) {
             let path = extract_string_argument(text).unwrap_or_else(|| "unknown".to_string());
@@ -248,30 +250,30 @@ fn detect_file_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
             });
         }
     }
-    
+
     None
 }
 
 /// Detect file mode from text
 fn detect_file_mode(text: &str) -> String {
     let text_lower = text.to_lowercase();
-    
-    if text_lower.contains("\"w\"") || text_lower.contains("'w'") || 
-       text_lower.contains("write") {
+
+    if text_lower.contains("\"w\"") || text_lower.contains("'w'") || text_lower.contains("write") {
         return "write".to_string();
     }
-    if text_lower.contains("\"a\"") || text_lower.contains("'a'") || 
-       text_lower.contains("append") {
+    if text_lower.contains("\"a\"") || text_lower.contains("'a'") || text_lower.contains("append") {
         return "append".to_string();
     }
-    if text_lower.contains("\"r+\"") || text_lower.contains("'r+'") || 
-       text_lower.contains("readwrite") {
+    if text_lower.contains("\"r+\"")
+        || text_lower.contains("'r+'")
+        || text_lower.contains("readwrite")
+    {
         return "readwrite".to_string();
     }
     if text_lower.contains("\"w+\"") || text_lower.contains("'w+'") {
         return "write+".to_string();
     }
-    
+
     // Default is read
     "read".to_string()
 }
@@ -279,7 +281,7 @@ fn detect_file_mode(text: &str) -> String {
 /// Detect network request sinks
 fn detect_network_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
     let text_lower = text.to_lowercase();
-    
+
     // Network request patterns
     let net_patterns = [
         (".fetch(", "fetch"),
@@ -320,7 +322,7 @@ fn detect_network_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
         (".patch(", "patch"),
         (".options(", "options"),
     ];
-    
+
     for (pattern, method) in net_patterns {
         if text_lower.contains(pattern) {
             let url = extract_string_argument(text).unwrap_or_else(|| "unknown".to_string());
@@ -330,24 +332,26 @@ fn detect_network_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
             });
         }
     }
-    
+
     // WebSocket
-    if text_lower.contains("websocket(") || text_lower.contains("ws(") || 
-       text_lower.contains("wss(") {
+    if text_lower.contains("websocket(")
+        || text_lower.contains("ws(")
+        || text_lower.contains("wss(")
+    {
         let url = extract_string_argument(text).unwrap_or_else(|| "ws://unknown".to_string());
         return Some(SinkPoint::NetworkRequest {
             url,
             method: "websocket".to_string(),
         });
     }
-    
+
     None
 }
 
 /// Detect secret usage sinks
 fn detect_secret_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
     let text_lower = text.to_lowercase();
-    
+
     // Secret/crypto operations
     let secret_patterns = [
         (".decrypt(", "decrypt"),
@@ -376,7 +380,7 @@ fn detect_secret_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
         ("jwt.sign(", "jwt.sign"),
         ("jwt.decode(", "jwt.decode"),
     ];
-    
+
     for (pattern, operation) in secret_patterns {
         if text_lower.contains(pattern) {
             let secret_type = detect_secret_type(text);
@@ -386,32 +390,36 @@ fn detect_secret_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
             });
         }
     }
-    
+
     // API key usage
-    if text_lower.contains("api_key") || text_lower.contains("apikey") ||
-       text_lower.contains("api-key") {
+    if text_lower.contains("api_key")
+        || text_lower.contains("apikey")
+        || text_lower.contains("api-key")
+    {
         return Some(SinkPoint::SecretUsage {
             secret_type: "api_key".to_string(),
             operation: "usage".to_string(),
         });
     }
-    
+
     // Token usage
-    if text_lower.contains("access_token") || text_lower.contains("auth_token") ||
-       text_lower.contains("bearer") {
+    if text_lower.contains("access_token")
+        || text_lower.contains("auth_token")
+        || text_lower.contains("bearer")
+    {
         return Some(SinkPoint::SecretUsage {
             secret_type: "token".to_string(),
             operation: "usage".to_string(),
         });
     }
-    
+
     None
 }
 
 /// Detect secret type from text
 fn detect_secret_type(text: &str) -> String {
     let text_lower = text.to_lowercase();
-    
+
     if text_lower.contains("password") || text_lower.contains("passwd") {
         return "password".to_string();
     }
@@ -433,14 +441,14 @@ fn detect_secret_type(text: &str) -> String {
     if text_lower.contains("aes") || text_lower.contains("cipher") {
         return "encryption_key".to_string();
     }
-    
+
     "unknown".to_string()
 }
 
 /// Detect deserialization sinks
 fn detect_deserialization_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
     let text_lower = text.to_lowercase();
-    
+
     // Deserialization patterns
     let deser_patterns = [
         (".deserialize(", "deserialize"),
@@ -455,9 +463,18 @@ fn detect_deserialization_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint
         ("xml.parse(", "xml.parse"),
         ("xml.read(", "xml.read"),
         ("xmlserializer.deserialize(", "XmlSerializer.Deserialize"),
-        ("javascriptserializer.deserialize(", "JavaScriptSerializer.Deserialize"),
-        ("binaryformatter.deserialize(", "BinaryFormatter.Deserialize"),
-        ("netdatacontractserializer.readobject(", "DataContractSerializer.ReadObject"),
+        (
+            "javascriptserializer.deserialize(",
+            "JavaScriptSerializer.Deserialize",
+        ),
+        (
+            "binaryformatter.deserialize(",
+            "BinaryFormatter.Deserialize",
+        ),
+        (
+            "netdatacontractserializer.readobject(",
+            "DataContractSerializer.ReadObject",
+        ),
         ("gson.fromjson(", "Gson.fromJson"),
         ("jackson.readvalue(", "Jackson.readValue"),
         ("objectmapper.readvalue(", "ObjectMapper.readValue"),
@@ -472,7 +489,7 @@ fn detect_deserialization_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint
         ("gob.decode(", "gob.Decode"),
         ("bson.decode(", "bson.Decode"),
     ];
-    
+
     for (pattern, method) in deser_patterns {
         if text_lower.contains(pattern) {
             let source = extract_string_argument(text).unwrap_or_else(|| "unknown".to_string());
@@ -482,14 +499,14 @@ fn detect_deserialization_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint
             });
         }
     }
-    
+
     None
 }
 
 /// Detect path traversal sinks
 fn detect_path_traversal_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint> {
     let text_lower = text.to_lowercase();
-    
+
     // Path traversal patterns - file operations with user input
     let path_patterns = [
         (".join(", "path.join"),
@@ -500,15 +517,19 @@ fn detect_path_traversal_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint>
         ("path.resolve(", "path.resolve"),
         ("path.combine(", "Path.Combine"),
     ];
-    
+
     // Check if path operation contains user input indicators
     let user_input_indicators = ["request.", "params", "query", "body", "input", "user_input"];
-    
+
     for (pattern, method) in path_patterns {
         if text_lower.contains(pattern) {
             // Check if there's user input involved
-            if user_input_indicators.iter().any(|ind| text_lower.contains(ind)) {
-                let path = extract_string_argument(text).unwrap_or_else(|| "user_input".to_string());
+            if user_input_indicators
+                .iter()
+                .any(|ind| text_lower.contains(ind))
+            {
+                let path =
+                    extract_string_argument(text).unwrap_or_else(|| "user_input".to_string());
                 return Some(SinkPoint::PathTraversal {
                     path,
                     method: method.to_string(),
@@ -516,18 +537,23 @@ fn detect_path_traversal_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint>
             }
         }
     }
-    
+
     // Direct file access with user input
-    if text_lower.contains("request.") && (text_lower.contains("param") || text_lower.contains("query")) {
-        if text_lower.contains("open(") || text_lower.contains("readfile(") || 
-           text_lower.contains("include(") || text_lower.contains("require(") {
+    if text_lower.contains("request.")
+        && (text_lower.contains("param") || text_lower.contains("query"))
+    {
+        if text_lower.contains("open(")
+            || text_lower.contains("readfile(")
+            || text_lower.contains("include(")
+            || text_lower.contains("require(")
+        {
             return Some(SinkPoint::PathTraversal {
                 path: "request_input".to_string(),
                 method: "direct".to_string(),
             });
         }
     }
-    
+
     None
 }
 
@@ -535,19 +561,19 @@ fn detect_path_traversal_sink(text: &str, _node: NodeIndex) -> Option<SinkPoint>
 fn extract_string_argument(text: &str) -> Option<String> {
     // Find first quoted string
     if let Some(start) = text.find('"') {
-        if let Some(end) = text[start+1..].find('"') {
-            return Some(text[start+1..start+1+end].to_string());
+        if let Some(end) = text[start + 1..].find('"') {
+            return Some(text[start + 1..start + 1 + end].to_string());
         }
     }
     if let Some(start) = text.find('\'') {
-        if let Some(end) = text[start+1..].find('\'') {
-            return Some(text[start+1..start+1+end].to_string());
+        if let Some(end) = text[start + 1..].find('\'') {
+            return Some(text[start + 1..start + 1 + end].to_string());
         }
     }
-    
+
     // Find variable name
     if let Some(paren) = text.find('(') {
-        let args = &text[paren+1..];
+        let args = &text[paren + 1..];
         if let Some(end) = args.find(|c: char| c == ')' || c == ',') {
             let arg = args[..end].trim();
             if !arg.is_empty() && !arg.starts_with('"') && !arg.starts_with('\'') {
@@ -555,25 +581,30 @@ fn extract_string_argument(text: &str) -> Option<String> {
             }
         }
     }
-    
+
     None
 }
 
 /// Detect sinks from specific pattern match
 pub fn detect_sinks_for_pattern(cfg: &CFG, pattern: &str) -> Vec<SinkPoint> {
     let all_sinks = detect_all(cfg);
-    
+
     // Filter sinks based on pattern
-    all_sinks.into_iter().filter(|sink| {
-        match pattern.to_lowercase().as_str() {
+    all_sinks
+        .into_iter()
+        .filter(|sink| match pattern.to_lowercase().as_str() {
             p if p.contains("sql") => matches!(sink, SinkPoint::SqlExecution { .. }),
-            p if p.contains("command") || p.contains("exec") => matches!(sink, SinkPoint::CommandExecution { .. }),
+            p if p.contains("command") || p.contains("exec") => {
+                matches!(sink, SinkPoint::CommandExecution { .. })
+            }
             p if p.contains("file") => matches!(sink, SinkPoint::FileOperation { .. }),
-            p if p.contains("network") || p.contains("http") => matches!(sink, SinkPoint::NetworkRequest { .. }),
+            p if p.contains("network") || p.contains("http") => {
+                matches!(sink, SinkPoint::NetworkRequest { .. })
+            }
             p if p.contains("secret") => matches!(sink, SinkPoint::SecretUsage { .. }),
             p if p.contains("deserial") => matches!(sink, SinkPoint::Deserialization { .. }),
             p if p.contains("path") => matches!(sink, SinkPoint::PathTraversal { .. }),
             _ => true,
-        }
-    }).collect()
+        })
+        .collect()
 }

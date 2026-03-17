@@ -1,9 +1,9 @@
 //! Unicode Attack Detection Module
 //!
 //! This module provides comprehensive Unicode attack detection for the Coax security scanner.
-//! 
+//!
 //! ## Features
-//! 
+//!
 //! - **Invisible Character Detection**: Detects zero-width characters, variation selectors,
 //!   and other invisible Unicode used in Glassworm-style attacks
 //! - **Homoglyph Detection**: Identifies confusable characters from Cyrillic, Greek, and
@@ -58,78 +58,41 @@
 //! - Allowlist for legitimate i18n usage
 
 pub mod config;
-pub mod findings;
-pub mod ranges;
 pub mod confusables;
 pub mod detectors;
-pub mod script_detector;
+pub mod findings;
+pub mod ranges;
 pub mod scanner;
+pub mod script_detector;
 
 pub use config::{
-    UnicodeConfig,
-    DetectorConfig,
-    AllowlistConfig,
-    PerformanceConfig,
-    SensitivityLevel,
+    AllowlistConfig, DetectorConfig, PerformanceConfig, SensitivityLevel, UnicodeConfig,
 };
 
-pub use findings::{
-    UnicodeFinding,
-    UnicodeCategory,
-    Severity,
-    SourceLocation,
-    UnicodeScanStats,
-};
+pub use findings::{Severity, SourceLocation, UnicodeCategory, UnicodeFinding, UnicodeScanStats};
 
 pub use ranges::{
-    UnicodeRange,
-    INVISIBLE_RANGES,
-    CRITICAL_RANGES,
-    is_in_invisible_range,
-    is_in_critical_range,
-    is_variation_selector,
-    get_bidi_name,
-    get_zero_width_name,
+    get_bidi_name, get_zero_width_name, is_in_critical_range, is_in_invisible_range,
+    is_variation_selector, UnicodeRange, CRITICAL_RANGES, INVISIBLE_RANGES,
 };
 
 pub use confusables::data::{
-    ConfusableEntry,
-    CONFUSABLES_DB,
-    REVERSE_CONFUSABLES,
-    ALL_CONFUSABLES,
-    get_confusables,
-    get_base_char,
-    is_confusable,
-    get_confusable_script,
-    get_similarity,
+    get_base_char, get_confusable_script, get_confusables, get_similarity, is_confusable,
+    ConfusableEntry, ALL_CONFUSABLES, CONFUSABLES_DB, REVERSE_CONFUSABLES,
 };
 
 // Script detection utilities
 pub use script_detector::{
-    get_script,
-    has_mixed_scripts,
-    is_pure_non_latin,
-    is_pure_latin,
-    get_scripts_in_identifier,
-    is_high_risk_script,
-    script_to_string,
+    get_script, get_scripts_in_identifier, has_mixed_scripts, is_high_risk_script, is_pure_latin,
+    is_pure_non_latin, script_to_string,
 };
 
 pub use detectors::{
-    InvisibleCharDetector,
-    HomoglyphDetector,
-    BidiDetector,
-    GlasswormDetector,
-    UnicodeTagDetector,
-    GlasswormIndicator,
-    ConfusableMatch,
-    UnicodeDetector,
+    BidiDetector, ConfusableMatch, GlasswormDetector, GlasswormIndicator, HomoglyphDetector,
+    InvisibleCharDetector, UnicodeDetector, UnicodeTagDetector,
 };
 
-pub use scanner::{
-    UnicodeScanner,
-    ScanSessionStats,
-};
+pub use scanner::{ScanSessionStats, UnicodeScanner};
 
 /// Module version
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -144,9 +107,15 @@ mod tests {
         let _config = UnicodeConfig::default();
         let _scanner = UnicodeScanner::with_default_config();
         let _finding = UnicodeFinding::new(
-            "test", 1, 1, 0, 'a',
-            UnicodeCategory::Unknown, Severity::Low,
-            "test", "test"
+            "test",
+            1,
+            1,
+            0,
+            'a',
+            UnicodeCategory::Unknown,
+            Severity::Low,
+            "test",
+            "test",
         );
     }
 }

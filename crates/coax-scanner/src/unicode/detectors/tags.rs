@@ -6,7 +6,7 @@
 //! - U+E0000-U+E007F: Tags (language tags, etc.)
 
 use crate::unicode::config::UnicodeConfig;
-use crate::unicode::findings::{UnicodeFinding, UnicodeCategory, Severity};
+use crate::unicode::findings::{Severity, UnicodeCategory, UnicodeFinding};
 
 /// Detector for Unicode tag attacks
 pub struct UnicodeTagDetector {
@@ -31,7 +31,7 @@ impl UnicodeTagDetector {
         for (line_num, line) in content.lines().enumerate() {
             for (col_num, ch) in line.chars().enumerate() {
                 let code_point = ch as u32;
-                
+
                 // Check if this is in the tags range (U+E0000-U+E007F)
                 if code_point >= 0xE0000 && code_point <= 0xE007F {
                     let severity = Severity::Medium;
@@ -46,7 +46,11 @@ impl UnicodeTagDetector {
                         ch,
                         UnicodeCategory::UnicodeTag,
                         severity,
-                        format!("Unicode tag character detected: {} (U+{:04X})", tag_name, code_point).as_str(),
+                        format!(
+                            "Unicode tag character detected: {} (U+{:04X})",
+                            tag_name, code_point
+                        )
+                        .as_str(),
                         "Remove the Unicode tag character. These are rarely used in legitimate \
                          code and can be used to inject hidden metadata or bypass security checks. \
                          If this appears in a string literal, it may be an attempt to hide data.",
@@ -94,7 +98,6 @@ impl UnicodeTagDetector {
         let context: String = chars[start..end].iter().collect();
         format!("{}{}{}", prefix, context, suffix)
     }
-
 }
 
 /// Trait implementation for UnicodeDetector
@@ -125,11 +128,11 @@ mod tests {
     #[test]
     fn test_language_tag_detection() {
         let detector = UnicodeTagDetector::with_default_config();
-        
+
         // Language tag character
         let content = "const text = \"hello\u{E0001}world\";";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].category, UnicodeCategory::UnicodeTag);
         assert_eq!(findings[0].code_point, 0xE0001);
@@ -138,11 +141,11 @@ mod tests {
     #[test]
     fn test_cancel_tag_detection() {
         let detector = UnicodeTagDetector::with_default_config();
-        
+
         // Cancel tag
         let content = "const text = \"hello\u{E007F}world\";";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert_eq!(findings[0].code_point, 0xE007F);
     }
@@ -150,11 +153,11 @@ mod tests {
     #[test]
     fn test_tag_ascii_detection() {
         let detector = UnicodeTagDetector::with_default_config();
-        
+
         // Tag character representing 'A'
         let content = "const text = \"hello\u{E0041}world\";";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(!findings.is_empty());
         assert!(findings[0].description.contains("Tag: A"));
     }
@@ -162,10 +165,10 @@ mod tests {
     #[test]
     fn test_clean_content() {
         let detector = UnicodeTagDetector::with_default_config();
-        
+
         let content = "const normal = 'hello world';";
         let findings = detector.detect(content, "test.js");
-        
+
         assert!(findings.is_empty());
     }
 }

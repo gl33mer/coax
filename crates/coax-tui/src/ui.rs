@@ -15,14 +15,14 @@ use crate::views;
 /// Render the complete UI
 pub fn render(frame: &mut Frame, app: &mut App) {
     let area = frame.area();
-    
+
     // Create main layout
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),  // Header
-            Constraint::Min(20),    // Main content
-            Constraint::Length(3),  // Footer
+            Constraint::Length(3), // Header
+            Constraint::Min(20),   // Main content
+            Constraint::Length(3), // Footer
         ])
         .split(area);
 
@@ -68,23 +68,35 @@ fn render_help_popup(frame: &mut Frame, area: Rect) {
             Style::default().add_modifier(Modifier::BOLD),
         )),
         Line::from(""),
-        Line::from(Span::styled("Global", Style::default().add_modifier(Modifier::BOLD))),
+        Line::from(Span::styled(
+            "Global",
+            Style::default().add_modifier(Modifier::BOLD),
+        )),
         Line::from("  q / Ctrl+C  - Quit application"),
         Line::from("  ?           - Toggle this help"),
         Line::from(""),
-        Line::from(Span::styled("Navigation", Style::default().add_modifier(Modifier::BOLD))),
+        Line::from(Span::styled(
+            "Navigation",
+            Style::default().add_modifier(Modifier::BOLD),
+        )),
         Line::from("  ↑ / k       - Move up"),
         Line::from("  ↓ / j       - Move down"),
         Line::from("  Enter       - Select / View detail"),
         Line::from("  ← / h       - Go back"),
         Line::from(""),
-        Line::from(Span::styled("Dashboard View", Style::default().add_modifier(Modifier::BOLD))),
+        Line::from(Span::styled(
+            "Dashboard View",
+            Style::default().add_modifier(Modifier::BOLD),
+        )),
         Line::from("  R           - Rescan"),
         Line::from("  L           - Go to list view"),
         Line::from("  S           - Go to settings"),
         Line::from("  /           - Search"),
         Line::from(""),
-        Line::from(Span::styled("List View", Style::default().add_modifier(Modifier::BOLD))),
+        Line::from(Span::styled(
+            "List View",
+            Style::default().add_modifier(Modifier::BOLD),
+        )),
         Line::from("  1           - Show all findings"),
         Line::from("  2           - Filter: Critical"),
         Line::from("  3           - Filter: High"),
@@ -96,13 +108,19 @@ fn render_help_popup(frame: &mut Frame, area: Rect) {
         Line::from("  p           - Sort by pattern"),
         Line::from("  D           - Go to dashboard"),
         Line::from(""),
-        Line::from(Span::styled("Detail View", Style::default().add_modifier(Modifier::BOLD))),
+        Line::from(Span::styled(
+            "Detail View",
+            Style::default().add_modifier(Modifier::BOLD),
+        )),
         Line::from("  I           - Ignore finding"),
         Line::from("  F           - Mark as false positive"),
         Line::from("  R           - Show rotate instructions"),
         Line::from("  C           - Clear status"),
         Line::from(""),
-        Line::from(Span::styled("Search", Style::default().add_modifier(Modifier::BOLD))),
+        Line::from(Span::styled(
+            "Search",
+            Style::default().add_modifier(Modifier::BOLD),
+        )),
         Line::from("  /           - Enter search mode"),
         Line::from("  Esc         - Exit search / Clear search"),
         Line::from("  Backspace   - Delete character"),
@@ -155,7 +173,7 @@ mod tests {
     fn test_centered_rect() {
         let area = Rect::new(0, 0, 100, 50);
         let popup = centered_rect(60, 70, area);
-        
+
         assert_eq!(popup.width, 60);
         assert_eq!(popup.height, 35);
         assert_eq!(popup.x, 20);

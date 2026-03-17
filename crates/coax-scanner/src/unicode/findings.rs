@@ -168,8 +168,8 @@ impl UnicodeFinding {
 
     /// Convert UnicodeFinding to ScanResult for integration with main scanner
     pub fn to_scan_result(&self) -> crate::ScanResult {
+        use crate::result::{FindingContext, ScanResult};
         use std::path::PathBuf;
-        use crate::result::{ScanResult, FindingContext};
 
         let mut note = format!("Unicode attack: {}", self.description);
         if let Some(ref cwe) = self.cwe_id {
@@ -226,10 +226,16 @@ impl UnicodeScanStats {
     }
 
     pub fn increment_category(&mut self, category: &UnicodeCategory) {
-        *self.findings_by_category.entry(category.as_str().to_string()).or_insert(0) += 1;
+        *self
+            .findings_by_category
+            .entry(category.as_str().to_string())
+            .or_insert(0) += 1;
     }
 
     pub fn increment_severity(&mut self, severity: &Severity) {
-        *self.findings_by_severity.entry(severity.as_str().to_string()).or_insert(0) += 1;
+        *self
+            .findings_by_severity
+            .entry(severity.as_str().to_string())
+            .or_insert(0) += 1;
     }
 }
