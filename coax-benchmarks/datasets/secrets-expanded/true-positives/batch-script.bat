@@ -1,0 +1,10 @@
+@echo off
+REM Batch script with credentials
+REM WARNING: Test secrets only
+
+set AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE34
+set AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY34
+set GITHUB_TOKEN=ghp_1234567890abcdefghij1234567890ABCDEF
+set DB_PASSWORD=BatchPassword123!
+
+echo Configured with AWS key: %AWS_ACCESS_KEY_ID%

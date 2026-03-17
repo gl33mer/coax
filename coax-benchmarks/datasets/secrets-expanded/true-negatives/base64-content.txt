@@ -1,0 +1,11 @@
+# Base64 encoded content (not secrets)
+# These are encoded images/data, not credentials
+
+Image data:
+iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==
+
+Binary data:
+SGVsbG8gV29ybGQhIFRoaXMgaXMgYmFzZTY0IGVuY29kZWQgdGV4dC4=
+
+More encoded content:
+VGhpcyBpcyBub3QgYSBzZWNyZXQsIGp1c3QgYmFzZTY0IGVuY29kZWQgZGF0YS4=

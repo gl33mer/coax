@@ -1,0 +1,18 @@
+{
+  "errors": {
+    "auth_failed": "Authentication failed. Please check your credentials.",
+    "token_expired": "Your session has expired. Please log in again.",
+    "permission_denied": "You don't have permission to access this resource.",
+    "rate_limited": "Too many requests. Please try again later.",
+    "not_found": "The requested resource was not found.",
+    "internal_error": "An internal error occurred. Please try again later."
+  },
+  "error_codes": [
+    "ERR_AUTH_001",
+    "ERR_AUTH_002",
+    "ERR_PERM_001",
+    "ERR_RATE_001",
+    "ERR_404_001",
+    "ERR_500_001"
+  ]
+}

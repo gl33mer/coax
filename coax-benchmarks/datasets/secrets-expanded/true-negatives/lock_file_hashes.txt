@@ -1,0 +1,27 @@
+# Lock File Hashes - True Negatives
+# These are hashes from lock files that should NOT be flagged
+
+# package-lock.json style integrity hashes
+"integrity": "sha512-3bLa+9DF8n7Z6qKoYf3Q/y4N+4yY/K9x5Y5+5Q7e"
+"integrity": "sha384-o2bQWxwWpD8g8x9S8S8S8S8S8S8S8S8S8S8S8S8S8S"
+"integrity": "sha1-abcdef1234567890abcdef1234567890abcdef12="
+
+# Cargo.lock style hashes
+checksum = "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+checksum = "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+
+# yarn.lock style
+resolved "https://registry.yarnpkg.com/package/-/package-1.0.0.tgz#integrity-hash-here"
+  integrity sha512-abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOP=
+
+# go.sum style
+github.com/example/package v1.0.0 h1:abcdefghijklmnopqrstuvwxyz1234567890ABCDEF=
+github.com/example/package v1.0.0/go.mod h1:abcdefghijklmnopqrstuvwxyz1234567890ABCDEF=
+
+# pip freeze with hashes
+package-name==1.0.0 \
+    --hash=sha256:abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOP \
+    --hash=sha256:zyxwvutsrqponmlkjihgfdsaqwertyuiopasdfghjklzxcvbnm
+
+# Maven/Gradle hashes
+<checksum>sha256:abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOP</checksum>

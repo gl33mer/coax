@@ -1,0 +1,19 @@
+{
+  "application": {
+    "name": "MyApp",
+    "version": "1.0.0"
+  },
+  "credentials": {
+    "aws": {
+      "accessKeyId": "AKIAIOSFODNN7EXAMPLE10",
+      "secretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY10"
+    },
+    "github": {
+      "token": "ghp_1234567890abcdefghij1234567890ABCDEF"
+    },
+    "datadog": {
+      "apiKey": "1234567890abcdef1234567890abcdef",
+      "appKey": "abcdef1234567890abcdef1234567890abcdef12"
+    }
+  }
+}

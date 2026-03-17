@@ -1,0 +1,21 @@
+// Jenkins pipeline with credentials
+// WARNING: Test secrets only
+
+pipeline {
+    agent any
+    
+    environment {
+        AWS_ACCESS_KEY_ID = 'AKIAIOSFODNN7EXAMPLE42'
+        AWS_SECRET_ACCESS_KEY = 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY42'
+        GITHUB_TOKEN = 'ghp_1234567890abcdefghij1234567890ABCDEF'
+        DATABASE_PASSWORD = 'JenkinsPassword123!'
+    }
+    
+    stages {
+        stage('Deploy') {
+            steps {
+                sh 'aws s3 sync ./dist s3://my-bucket/'
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+# GitLab CI configuration with secrets
+# WARNING: Test secrets only
+
+variables:
+  AWS_ACCESS_KEY_ID: "AKIAIOSFODNN7EXAMPLE41"
+  AWS_SECRET_ACCESS_KEY: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY41"
+  GITHUB_TOKEN: "ghp_1234567890abcdefghij1234567890ABCDEF"
+  DATABASE_PASSWORD: "GitLabCIPassword123!"
+
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying with AWS credentials"
+    - aws s3 sync ./dist s3://my-bucket/

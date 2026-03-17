@@ -1,0 +1,22 @@
+# Travis CI configuration with secrets
+# WARNING: Test secrets only
+
+language: node_js
+node_js:
+  - "18"
+
+env:
+  global:
+    - AWS_ACCESS_KEY_ID="AKIAIOSFODNN7EXAMPLE44"
+    - AWS_SECRET_ACCESS_KEY="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY44"
+    - GITHUB_TOKEN="ghp_1234567890abcdefghij1234567890ABCDEF"
+    - DATABASE_PASSWORD="TravisCIPassword123!"
+
+script:
+  - npm test
+
+deploy:
+  provider: s3
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  bucket: my-bucket

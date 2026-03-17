@@ -1,0 +1,31 @@
+# Git Commit SHAs and References - True Negatives
+# These are git references that should NOT be flagged as secrets
+
+# Full commit SHAs
+COMMIT_SHA=a1b2c3d4e5f6789012345678901234567890abcd
+PARENT_COMMIT=1234567890abcdef1234567890abcdef12345678
+MERGE_COMMIT=abcdef1234567890abcdef1234567890abcdef12
+
+# Short SHAs
+SHORT_SHA=a1b2c3d
+HEAD_COMMIT=1234567
+
+# Git references in code
+const COMMIT_HASH = "a1b2c3d4e5f6789012345678901234567890abcd";
+const GIT_REF = "refs/heads/main";
+
+# In configuration files
+git:
+  commit: a1b2c3d4e5f6789012345678901234567890abcd
+  branch: main
+  tag: v1.0.0
+
+# Tree hashes
+TREE_HASH=1234567890abcdef1234567890abcdef12345678
+BLOB_HASH=abcdef1234567890abcdef1234567890abcdef12
+
+# Git submodule references
+[submodule "vendor/lib"]
+	path = vendor/lib
+	url = https://github.com/example/lib.git
+	commit = a1b2c3d4e5f6789012345678901234567890abcd

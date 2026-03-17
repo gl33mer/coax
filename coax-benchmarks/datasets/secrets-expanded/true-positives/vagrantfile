@@ -1,0 +1,13 @@
+# Vagrant configuration with secrets
+# WARNING: Test secrets only
+
+Vagrant.configure("2") do |config|
+  config.vm.define "app" do |app|
+    app.vm.provision "shell", inline: <<-SHELL
+      export AWS_ACCESS_KEY_ID="AKIAIOSFODNN7EXAMPLE39"
+      export AWS_SECRET_ACCESS_KEY="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY39"
+      export GITHUB_TOKEN="ghp_1234567890abcdefghij1234567890ABCDEF"
+      export DB_PASSWORD="VagrantPassword123!"
+    SHELL
+  end
+end

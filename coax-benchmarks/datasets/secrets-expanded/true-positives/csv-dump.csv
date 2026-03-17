@@ -1,0 +1,5 @@
+user_id,email,api_key,created_at
+1,user1@example.com,AKIAIOSFODNN7EXAMPLE13,2024-01-01
+2,user2@example.com,ghp_1234567890abcdefghij1234567890ABCDEF,2024-01-02
+3,user3@example.com,sk_live_1234567890abcdefghijklmnopqrstuv,2024-01-03
+4,admin@example.com,wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY13,2024-01-04

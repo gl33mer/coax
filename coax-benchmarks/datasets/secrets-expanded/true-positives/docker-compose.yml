@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  app:
+    image: myapp:latest
+    environment:
+      - AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE3
+      - AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY3
+      - DATABASE_PASSWORD=SuperSecretDbPassword123
+      - REDIS_PASSWORD=RedisSecretPass456
+      - JWT_SECRET=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.secret
+      - SLACK_BOT_TOKEN=xoxb-123456789012-1234567890123-AbCdEfGhIjKlMnOpQrStUvWx
+  
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: SuperSecretPostgresPassword789

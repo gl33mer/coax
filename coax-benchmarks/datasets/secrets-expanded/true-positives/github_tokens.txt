@@ -1,0 +1,21 @@
+# GitHub Tokens - True Positives
+# These are example GitHub tokens that should be detected
+
+# GitHub Personal Access Token (classic)
+GITHUB_TOKEN=ghp_1234567890abcdefghij1234567890ABCDEF
+
+# GitHub Personal Access Token (fine-grained)
+github_pat_1234567890abcdefghij1234567890ABCDEFGHIJ1234567890abcdefghij1234567890ABCDEFGHIJ
+
+# GitHub OAuth Access Token
+oauth_token=gho_1234567890abcdefghij1234567890ABCDEF
+
+# GitHub App Installation Access Token
+ghu_1234567890abcdefghij1234567890ABCDEF
+
+# GitHub Refresh Token
+ghr_1234567890abcdefghij1234567890ABCDEF
+
+# In config file
+env:
+  GITHUB_TOKEN: "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"

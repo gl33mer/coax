@@ -1,0 +1,38 @@
+# Placeholder and Example Values - True Negatives
+# These are documentation placeholders that should NOT be flagged
+
+# Common placeholder patterns
+API_KEY_HERE = "YOUR_API_KEY_HERE"
+TOKEN_GOES_HERE = "<YOUR_TOKEN_HERE>"
+SECRET_VALUE = "INSERT_SECRET_VALUE"
+PASSWORD_PLACEHOLDER = "********"
+
+# Documentation examples with obvious placeholders
+EXAMPLE_CREDENTIALS = {
+    "api_key": "your_api_key",
+    "secret": "your_secret_key",
+    "token": "your_token",
+    "password": "your_password"
+}
+
+# Template strings
+TEMPLATE = "api_key={{API_KEY}}"
+CONFIG_TEMPLATE = "password=${PASSWORD}"
+
+# RFC and specification examples
+# From RFC 6749 (OAuth 2.0)
+client_secret = "client_secret_value"
+access_token = "access_token_value"
+
+# From OpenAPI spec examples
+apiKey: "api_key_value"
+bearerToken: "bearer_token_value"
+
+# Code comments with examples
+# Set API_KEY to your actual API key
+# Example: API_KEY = "sk-xxxxxxxxxxxxxxxxxxxxxxxx"
+API_KEY = "example_key_not_for_production"
+
+# Test data generators
+fake_api_key = Faker.generate_api_key()
+mock_token = generate_mock_token()

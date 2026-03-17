@@ -1,0 +1,6 @@
+# Version strings and build IDs (not secrets)
+
+Application version: 1.2.3-build.456+abcdef123456
+Build ID: sha256-abc123def456ghi789jkl012mno345pqr678stu901vwx234yz
+Commit hash: abc123def456ghi789jkl012mno345pqr678stu901
+Release tag: v2.0.0-beta.1+build.789

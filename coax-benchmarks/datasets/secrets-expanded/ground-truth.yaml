@@ -1,0 +1,458 @@
+true_negatives:
+  Dockerfile:
+    description: Documentation with example formats only
+    expected_finding_count: 0
+    should_detect: false
+  analytics-ids.js:
+    description: Analytics tracking IDs, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  api-response.json:
+    description: API response data, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  application.log:
+    description: Contains URL parameters or log entries, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  base64-content.txt:
+    description: Contains Base64-encoded non-secret data
+    expected_finding_count: 0
+    should_detect: false
+  base64_non_secrets.txt:
+    description: Contains Base64-encoded non-secret data
+    expected_finding_count: 0
+    should_detect: false
+  binary-signature.bin:
+    description: Binary file signatures, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  css-hex-colors.css:
+    description: Contains CSS hex colors, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  encrypted-values.env:
+    description: Contains encrypted vault values
+    expected_finding_count: 0
+    should_detect: false
+  error-messages.json:
+    description: Error messages, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  example-docs.md:
+    description: Contains placeholder/example values, not real secrets
+    expected_finding_count: 0
+    should_detect: false
+  fake-ssh-key.pub:
+    description: Fake SSH key for testing, not real key
+    expected_finding_count: 0
+    should_detect: false
+  fake-ssl-cert.pem:
+    description: Fake SSL certificate for testing
+    expected_finding_count: 0
+    should_detect: false
+  feature-flags.json:
+    description: Feature flags, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  git_shas.txt:
+    description: Does not contain actual secrets
+    expected_finding_count: 0
+    should_detect: false
+  hash-values.json:
+    description: Contains hash/checksum values, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  hashes_checksums.txt:
+    description: Contains hash/checksum values, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  jwt-documentation.md:
+    description: Documentation with example formats only
+    expected_finding_count: 0
+    should_detect: false
+  lock_file_hashes.txt:
+    description: Contains hash/checksum values, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  minified-code.min.js:
+    description: Minified code with high entropy, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  openapi-spec.yaml:
+    description: API specification, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  package.json:
+    description: Package manifest, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  placeholder-config.py:
+    description: Contains placeholder/example values, not real secrets
+    expected_finding_count: 0
+    should_detect: false
+  placeholders.txt:
+    description: Contains placeholder/example values, not real secrets
+    expected_finding_count: 0
+    should_detect: false
+  random-test-data.py:
+    description: Random test data generation, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  requirements.txt:
+    description: Python dependencies, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  url-parameters.log:
+    description: Contains URL parameters or log entries, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  uuid-config.yaml:
+    description: Contains UUIDs, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  uuids.txt:
+    description: Contains UUIDs, not secrets
+    expected_finding_count: 0
+    should_detect: false
+  version-strings.txt:
+    description: Version strings and build IDs, not secrets
+    expected_finding_count: 0
+    should_detect: false
+true_positives:
+  Jenkinsfile:
+    description: Test file containing unknown
+    expected_finding_count: 4
+    secret_types:
+    - unknown
+    should_detect: true
+  Makefile:
+    description: Test file containing unknown
+    expected_finding_count: 1
+    secret_types:
+    - unknown
+    should_detect: true
+  ansible-playbook.yml:
+    description: Test file containing config_secrets
+    expected_finding_count: 1
+    secret_types:
+    - config_secrets
+    should_detect: true
+  aws_credentials.txt:
+    description: Test file containing aws_credentials
+    expected_finding_count: 4
+    secret_types:
+    - aws_credentials
+    should_detect: true
+  azure_credentials.txt:
+    description: Test file containing azure_credentials
+    expected_finding_count: 4
+    secret_types:
+    - azure_credentials
+    should_detect: true
+  batch-script.bat:
+    description: Test file containing script_secrets
+    expected_finding_count: 1
+    secret_types:
+    - script_secrets
+    should_detect: true
+  chef-recipe.rb:
+    description: Test file containing code_secrets
+    expected_finding_count: 4
+    secret_types:
+    - code_secrets
+    should_detect: true
+  circleci-config.yml:
+    description: Test file containing config_secrets
+    expected_finding_count: 4
+    secret_types:
+    - config_secrets
+    should_detect: true
+  csharp-config.cs:
+    description: Test file containing code_secrets
+    expected_finding_count: 4
+    secret_types:
+    - code_secrets
+    should_detect: true
+  csv-dump.csv:
+    description: Test file containing data_dump_secrets
+    expected_finding_count: 1
+    secret_types:
+    - data_dump_secrets
+    should_detect: true
+  datadog_keys.txt:
+    description: Test file containing datadog_keys
+    expected_finding_count: 1
+    secret_types:
+    - datadog_keys
+    should_detect: true
+  db_passwords.txt:
+    description: Test file containing unknown
+    expected_finding_count: 1
+    secret_types:
+    - unknown
+    should_detect: true
+  docker-compose.yml:
+    description: Test file containing config_secrets
+    expected_finding_count: 4
+    secret_types:
+    - config_secrets
+    should_detect: true
+  dotenv-file.env:
+    description: Test file containing environment_secrets
+    expected_finding_count: 4
+    secret_types:
+    - environment_secrets
+    should_detect: true
+  elixir-config.exs:
+    description: Test file containing config_secrets
+    expected_finding_count: 4
+    secret_types:
+    - config_secrets
+    should_detect: true
+  erlang-config.config:
+    description: Test file containing config_secrets
+    expected_finding_count: 4
+    secret_types:
+    - config_secrets
+    should_detect: true
+  github-actions.yml:
+    description: Test file containing github_tokens
+    expected_finding_count: 2
+    secret_types:
+    - github_tokens
+    should_detect: true
+  github_tokens.txt:
+    description: Test file containing github_tokens
+    expected_finding_count: 2
+    secret_types:
+    - github_tokens
+    should_detect: true
+  gitlab-ci.yml:
+    description: Test file containing config_secrets
+    expected_finding_count: 4
+    secret_types:
+    - config_secrets
+    should_detect: true
+  go-config.go:
+    description: Test file containing code_secrets
+    expected_finding_count: 4
+    secret_types:
+    - code_secrets
+    should_detect: true
+  google_api_keys.txt:
+    description: Test file containing gcp_credentials
+    expected_finding_count: 1
+    secret_types:
+    - gcp_credentials
+    should_detect: true
+  gradle-properties.gradle:
+    description: Test file containing build_secrets
+    expected_finding_count: 1
+    secret_types:
+    - build_secrets
+    should_detect: true
+  haskell-config.yaml:
+    description: Test file containing config_secrets
+    expected_finding_count: 4
+    secret_types:
+    - config_secrets
+    should_detect: true
+  java-properties.properties:
+    description: Test file containing build_secrets
+    expected_finding_count: 1
+    secret_types:
+    - build_secrets
+    should_detect: true
+  javascript-env.js:
+    description: Test file containing code_secrets
+    expected_finding_count: 4
+    secret_types:
+    - code_secrets
+    should_detect: true
+  json-config.json:
+    description: Test file containing config_secrets
+    expected_finding_count: 4
+    secret_types:
+    - config_secrets
+    should_detect: true
+  jupyter-notebook.ipynb:
+    description: Test file containing notebook_secrets
+    expected_finding_count: 1
+    secret_types:
+    - notebook_secrets
+    should_detect: true
+  kotlin-config.kt:
+    description: Test file containing unknown
+    expected_finding_count: 4
+    secret_types:
+    - unknown
+    should_detect: true
+  kubernetes-secret.yaml:
+    description: Test file containing config_secrets
+    expected_finding_count: 1
+    secret_types:
+    - config_secrets
+    should_detect: true
+  lua-config.lua:
+    description: Test file containing config_secrets
+    expected_finding_count: 4
+    secret_types:
+    - config_secrets
+    should_detect: true
+  mailgun_keys.txt:
+    description: Test file containing mailgun_api_key
+    expected_finding_count: 1
+    secret_types:
+    - mailgun_api_key
+    should_detect: true
+  markdown-doc.md:
+    description: Test file containing documentation_secrets
+    expected_finding_count: 1
+    secret_types:
+    - documentation_secrets
+    should_detect: true
+  matlab-script.m:
+    description: Test file containing code_secrets
+    expected_finding_count: 1
+    secret_types:
+    - code_secrets
+    should_detect: true
+  npm-rc.npmrc:
+    description: Test file containing npm_token
+    expected_finding_count: 1
+    secret_types:
+    - npm_token
+    should_detect: true
+  npm_tokens.txt:
+    description: Test file containing npm_token
+    expected_finding_count: 1
+    secret_types:
+    - npm_token
+    should_detect: true
+  perl-script.pl:
+    description: Test file containing script_secrets
+    expected_finding_count: 1
+    secret_types:
+    - script_secrets
+    should_detect: true
+  php-config.php:
+    description: Test file containing code_secrets
+    expected_finding_count: 4
+    secret_types:
+    - code_secrets
+    should_detect: true
+  powershell-script.ps1:
+    description: Test file containing script_secrets
+    expected_finding_count: 1
+    secret_types:
+    - script_secrets
+    should_detect: true
+  private_keys.txt:
+    description: Test file containing private_key
+    expected_finding_count: 1
+    secret_types:
+    - private_key
+    should_detect: true
+  puppet-manifest.pp:
+    description: Test file containing config_secrets
+    expected_finding_count: 1
+    secret_types:
+    - config_secrets
+    should_detect: true
+  python-config.py:
+    description: Test file containing code_secrets
+    expected_finding_count: 4
+    secret_types:
+    - code_secrets
+    should_detect: true
+  r-script.R:
+    description: Test file containing code_secrets
+    expected_finding_count: 1
+    secret_types:
+    - code_secrets
+    should_detect: true
+  ruby-initializer.rb:
+    description: Test file containing code_secrets
+    expected_finding_count: 1
+    secret_types:
+    - code_secrets
+    should_detect: true
+  rust-config.rs:
+    description: Test file containing code_secrets
+    expected_finding_count: 4
+    secret_types:
+    - code_secrets
+    should_detect: true
+  salt-state.sls:
+    description: Test file containing config_secrets
+    expected_finding_count: 1
+    secret_types:
+    - config_secrets
+    should_detect: true
+  scala-config.scala:
+    description: Test file containing unknown
+    expected_finding_count: 4
+    secret_types:
+    - unknown
+    should_detect: true
+  shell-script.sh:
+    description: Test file containing script_secrets
+    expected_finding_count: 1
+    secret_types:
+    - script_secrets
+    should_detect: true
+  slack_tokens.txt:
+    description: Test file containing slack_tokens
+    expected_finding_count: 1
+    secret_types:
+    - slack_tokens
+    should_detect: true
+  sql-migration.sql:
+    description: Test file containing database_secrets
+    expected_finding_count: 1
+    secret_types:
+    - database_secrets
+    should_detect: true
+  stripe_keys.txt:
+    description: Test file containing stripe_keys
+    expected_finding_count: 2
+    secret_types:
+    - stripe_keys
+    should_detect: true
+  terraform-vars.tf:
+    description: Test file containing infrastructure_secrets
+    expected_finding_count: 1
+    secret_types:
+    - infrastructure_secrets
+    should_detect: true
+  toml-config.toml:
+    description: Test file containing config_secrets
+    expected_finding_count: 4
+    secret_types:
+    - config_secrets
+    should_detect: true
+  travis-ci.yml:
+    description: Test file containing config_secrets
+    expected_finding_count: 4
+    secret_types:
+    - config_secrets
+    should_detect: true
+  twilio_keys.txt:
+    description: Test file containing twilio_credentials
+    expected_finding_count: 1
+    secret_types:
+    - twilio_credentials
+    should_detect: true
+  vagrantfile:
+    description: Test file containing unknown
+    expected_finding_count: 1
+    secret_types:
+    - unknown
+    should_detect: true
+  xml-config.xml:
+    description: Test file containing config_secrets
+    expected_finding_count: 4
+    secret_types:
+    - config_secrets
+    should_detect: true

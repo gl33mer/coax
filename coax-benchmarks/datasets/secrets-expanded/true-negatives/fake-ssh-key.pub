@@ -1,0 +1,4 @@
+# This is a FAKE SSH public key for testing
+# NOT a real key - just test data
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7fake1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789fake== test@example.com

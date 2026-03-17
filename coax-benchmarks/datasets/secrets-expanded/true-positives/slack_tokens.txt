@@ -1,0 +1,19 @@
+# Slack Tokens and Webhooks - True Positives
+# These should be detected as secrets
+
+# Slack Bot Token (FAKE - for testing)
+SLACK_BOT_TOKEN=xoxb-FakeSlackBotToken-NotReal
+
+# Slack User Token (FAKE - for testing)
+SLACK_USER_TOKEN=xoxp-FakeSlackUserToken-NotReal
+
+# Slack App Token (FAKE - for testing)
+SLACK_APP_TOKEN=xapp-FakeSlackAppToken-NotReal
+
+# Slack Webhook URL (FAKE - for testing)
+SLACK_WEBHOOK=https://hooks.slack.com/services/FAKE/NOT/REAL
+
+# In configuration
+slack:
+  bot_token: "xoxb-FakeToken-ForTestingOnly"
+  webhook_url: "https://hooks.slack.com/services/FAKE/NOT/REAL"

@@ -1,0 +1,15 @@
+---
+# Ansible playbook with secrets
+# WARNING: Test secrets only
+
+- hosts: all
+  vars:
+    aws_access_key: "AKIAIOSFODNN7EXAMPLE35"
+    aws_secret_key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY35"
+    github_token: "ghp_1234567890abcdefghij1234567890ABCDEF"
+    database_password: "AnsiblePassword123!"
+  
+  tasks:
+    - name: Configure AWS
+      debug:
+        msg: "Configuring AWS with key {{ aws_access_key }}"

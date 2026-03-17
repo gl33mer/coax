@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans">
+    
+    <bean id="awsConfig" class="com.example.AwsConfig">
+        <property name="accessKey" value="AKIAIOSFODNN7EXAMPLE11"/>
+        <property name="secretKey" value="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY11"/>
+    </bean>
+    
+    <bean id="databaseConfig" class="com.example.DatabaseConfig">
+        <property name="password" value="SpringXmlPassword123!"/>
+    </bean>
+    
+</beans>

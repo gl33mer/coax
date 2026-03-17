@@ -1,0 +1,19 @@
+{
+  "features": {
+    "new_dashboard": true,
+    "dark_mode": false,
+    "beta_features": true,
+    "analytics_v2": false,
+    "experimental_api": true
+  },
+  "rollout_percentages": {
+    "new_dashboard": 50,
+    "dark_mode": 25,
+    "beta_features": 100
+  },
+  "ab_test_ids": [
+    "test_1234567890abcdef",
+    "test_0987654321fedcba",
+    "test_abcdef1234567890"
+  ]
+}

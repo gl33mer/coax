@@ -1,0 +1,21 @@
+{
+  "name": "example-app",
+  "version": "1.0.0",
+  "description": "Example application (no secrets)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest",
+    "build": "webpack --mode production"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "webpack": "^5.88.0"
+  },
+  "author": "Example Author",
+  "license": "MIT"
+}

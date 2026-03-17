@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "data": {
+    "user_id": "usr_1234567890abcdef",
+    "session_id": "ses_abcdef1234567890",
+    "request_id": "req_0987654321fedcba",
+    "timestamp": "2024-01-15T10:00:00Z"
+  },
+  "meta": {
+    "page": 1,
+    "per_page": 20,
+    "total": 100,
+    "total_pages": 5
+  }
+}

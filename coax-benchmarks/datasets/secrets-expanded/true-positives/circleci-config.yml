@@ -1,0 +1,22 @@
+# CircleCI configuration with secrets
+# WARNING: Test secrets only
+
+version: 2.1
+
+jobs:
+  deploy:
+    docker:
+      - image: cimg/base:2023.01
+    environment:
+      AWS_ACCESS_KEY_ID: "AKIAIOSFODNN7EXAMPLE43"
+      AWS_SECRET_ACCESS_KEY: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY43"
+      GITHUB_TOKEN: "ghp_1234567890abcdefghij1234567890ABCDEF"
+      DATABASE_PASSWORD: "CircleCIPassword123!"
+    steps:
+      - checkout
+      - run: aws s3 sync ./dist s3://my-bucket/
+
+workflows:
+  deploy:
+    jobs:
+      - deploy

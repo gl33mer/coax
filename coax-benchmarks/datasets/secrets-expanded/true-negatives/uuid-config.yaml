@@ -1,0 +1,8 @@
+# Configuration with UUIDs (not secrets)
+application:
+  id: 550e8400-e29b-41d4-a716-446655440000
+  session_id: 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+  request_id: 6ba7b812-9dad-11d1-80b4-00c04fd430c8
+  trace_id: f47ac10b-58cc-4372-a567-0e02b2c3d479
+  correlation_id: 123e4567-e89b-12d3-a456-426614174000
+  deployment_id: 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d

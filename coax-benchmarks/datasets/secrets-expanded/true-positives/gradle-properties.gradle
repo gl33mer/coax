@@ -1,0 +1,9 @@
+// Gradle build configuration with secrets
+// WARNING: Test secrets only
+
+ext {
+    awsAccessKey = 'AKIAIOSFODNN7EXAMPLE6'
+    awsSecretKey = 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY6'
+    pypiApiToken = 'pypi-AgEIcHlwaS5vcmcAAABC1234567890abcdefghijklmnop'
+    rubyGemsToken = 'rubygems_1234567890abcdefghijklmnopqrstuvwx'
+}

@@ -1,0 +1,12 @@
+# Python dependencies (no secrets)
+# These are package names and versions, not credentials
+
+requests==2.31.0
+flask==2.3.3
+django==4.2.4
+numpy==1.25.2
+pandas==2.0.3
+pytest==7.4.0
+black==23.7.0
+flake8==6.1.0
+mypy==1.5.0

@@ -1,0 +1,8 @@
+# Fake binary file signature
+# NOT real binary data - just test patterns
+
+PKfake1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV
+WXYZfake0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRS
+TUVWXYZfake0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQ
+RSTUVWXYZfake0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNO
+PQRSTUVWXYZfake0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM
