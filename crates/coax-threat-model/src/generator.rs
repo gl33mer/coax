@@ -769,7 +769,7 @@ impl Default for ThreatModelGenerator {
 mod tests {
     use super::*;
     use crate::model::StrideCategory;
-    use coax_scanner::FindingContext;
+    use coax_scanner::{FindingContext, VerificationStatus};
     use std::fs;
     use std::path::PathBuf;
     use tempfile::TempDir;
@@ -855,6 +855,9 @@ mod tests {
             detected_secret: Some("AKIAIOSFODNN7EXAMPLE".to_string()),
             line_content: None,
             context: FindingContext::default(),
+            verification: VerificationStatus::Unverified,
+            description: None,
+            cwe_id: None,
         }];
 
         let entry_points = vec![];

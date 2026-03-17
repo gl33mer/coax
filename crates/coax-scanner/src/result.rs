@@ -5,6 +5,34 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
+/// Verification status for a detected credential
+///
+/// This enum represents the result of live credential verification.
+/// Default state is `Unverified` for all findings until verification is attempted.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash, Default)]
+pub enum VerificationStatus {
+    /// No verification attempted (unsupported, disabled, or not yet run)
+    #[default]
+    Unverified,
+    /// Credential confirmed active against live service
+    Verified,
+    /// Credential confirmed revoked/expired/invalid
+    Invalid,
+    /// Verification attempted but inconclusive (rate limit, network error, timeout)
+    Error(String),
+}
+
+impl std::fmt::Display for VerificationStatus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Unverified => write!(f, "Unverified"),
+            Self::Verified => write!(f, "Verified"),
+            Self::Invalid => write!(f, "Invalid"),
+            Self::Error(reason) => write!(f, "Error: {}", reason),
+        }
+    }
+}
+
 /// A single finding from the security scan
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct ScanResult {
@@ -26,6 +54,15 @@ pub struct ScanResult {
     pub line_content: Option<String>,
     /// Context information about the finding
     pub context: FindingContext,
+    /// Verification status of the detected credential
+    #[serde(default)]
+    pub verification: VerificationStatus,
+    /// Optional description of the pattern/finding
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    /// Optional CWE ID
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cwe_id: Option<String>,
 }
 
 /// Context information about a finding
@@ -66,6 +103,9 @@ impl ScanResult {
             detected_secret: None,
             line_content: None,
             context: FindingContext::default(),
+            verification: VerificationStatus::default(),
+            description: None,
+            cwe_id: None,
         }
     }
 
@@ -90,6 +130,18 @@ impl ScanResult {
     /// Create a scan result with context
     pub fn with_context(mut self, context: FindingContext) -> Self {
         self.context = context;
+        self
+    }
+
+    /// Create a scan result with description
+    pub fn with_description(mut self, description: impl Into<String>) -> Self {
+        self.description = Some(description.into());
+        self
+    }
+
+    /// Create a scan result with CWE ID
+    pub fn with_cwe_id(mut self, cwe_id: impl Into<String>) -> Self {
+        self.cwe_id = Some(cwe_id.into());
         self
     }
 

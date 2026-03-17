@@ -56,6 +56,9 @@ aho-corasick = "1.1.4"
 # Git support (for GitHistoryProvider)
 git2 = "0.18"
 
+# Async support for detector verification
+async-trait = "0.1"
+
 [dev-dependencies]
 # Benchmarking
 criterion = "0.5"

@@ -68,6 +68,23 @@ pub struct SarifResult {
     pub level: String,
     pub message: SarifMessage,
     pub locations: Vec<SarifLocation>,
+    /// Additional properties for the finding
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub properties: Option<SarifFindingProperties>,
+}
+
+/// Additional properties for a SARIF finding
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SarifFindingProperties {
+    /// Verification status of the credential
+    #[serde(rename = "verificationStatus", skip_serializing_if = "Option::is_none")]
+    pub verification_status: Option<String>,
+    /// Description of the finding
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+    /// CWE ID
+    #[serde(rename = "cweId", skip_serializing_if = "Option::is_none")]
+    pub cwe_id: Option<String>,
 }
 
 /// Message with text
@@ -215,29 +232,49 @@ pub fn generate_sarif(results: &[ScanResult], version: &str) -> SarifOutput {
     // Convert results to SARIF results
     let sarif_results: Vec<SarifResult> = results
         .iter()
-        .map(|result| SarifResult {
-            rule_id: result.pattern.clone(),
-            level: severity_to_level(&result.severity).to_string(),
-            message: SarifMessage {
-                text: format!("{} detected", result.pattern),
-            },
-            locations: vec![SarifLocation {
-                physical_location: SarifPhysicalLocation {
-                    artifact_location: SarifArtifactLocation {
-                        uri: result.file.to_string_lossy().to_string(),
+        .map(|result| {
+            // Include verification status, description, and CWE in properties
+            let properties = if result.verification != crate::VerificationStatus::Unverified
+                || result.description.is_some()
+                || result.cwe_id.is_some()
+            {
+                Some(SarifFindingProperties {
+                    verification_status: match &result.verification {
+                        crate::VerificationStatus::Unverified => None,
+                        _ => Some(result.verification.to_string()),
                     },
-                    region: Some(SarifRegion {
-                        start_line: result.line,
-                        start_column: result.column,
-                        end_line: None,
-                        end_column: None,
-                        snippet: result
-                            .line_content
-                            .clone()
-                            .map(|text| SarifSnippet { text }),
-                    }),
+                    description: result.description.clone(),
+                    cwe_id: result.cwe_id.clone(),
+                })
+            } else {
+                None
+            };
+
+            SarifResult {
+                rule_id: result.pattern.clone(),
+                level: severity_to_level(&result.severity).to_string(),
+                message: SarifMessage {
+                    text: format!("{} detected", result.pattern),
                 },
-            }],
+                locations: vec![SarifLocation {
+                    physical_location: SarifPhysicalLocation {
+                        artifact_location: SarifArtifactLocation {
+                            uri: result.file.to_string_lossy().to_string(),
+                        },
+                        region: Some(SarifRegion {
+                            start_line: result.line,
+                            start_column: result.column,
+                            end_line: None,
+                            end_column: None,
+                            snippet: result
+                                .line_content
+                                .clone()
+                                .map(|text| SarifSnippet { text }),
+                        }),
+                    },
+                }],
+                properties,
+            }
         })
         .collect();
 
@@ -267,7 +304,7 @@ pub fn generate_sarif_json(results: &[ScanResult], version: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{FindingContext, ScanResult};
+    use crate::{FindingContext, ScanResult, VerificationStatus};
     use std::path::PathBuf;
 
     fn create_test_result() -> ScanResult {
@@ -281,6 +318,9 @@ mod tests {
             detected_secret: Some("AKIAIOSFODNN7EXAMPLE".to_string()),
             line_content: Some("AWS_KEY=AKIAIOSFODNN7EXAMPLE".to_string()),
             context: FindingContext::default(),
+            verification: VerificationStatus::Unverified,
+            description: None,
+            cwe_id: None,
         }
     }
 

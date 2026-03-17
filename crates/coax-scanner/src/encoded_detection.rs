@@ -253,7 +253,7 @@ fn create_encoded_finding(
     severity: &str,
     recommendation: &str,
 ) -> ScanResult {
-    use crate::{FindingContext, ScanResult};
+    use crate::{FindingContext, ScanResult, VerificationStatus};
 
     ScanResult {
         file: PathBuf::from(file_path),
@@ -265,6 +265,9 @@ fn create_encoded_finding(
         detected_secret: Some(detected.to_string()),
         line_content: None,
         context: FindingContext::default(),
+        verification: VerificationStatus::Unverified,
+        description: None,
+        cwe_id: None,
     }
 }
 

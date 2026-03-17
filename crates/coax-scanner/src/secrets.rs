@@ -19,7 +19,14 @@ pub struct SecretPattern {
 impl SecretPattern {
     /// Convert to PatternConfig for scanner use
     pub fn to_config(&self) -> PatternConfig {
-        PatternConfig::new(self.name, self.pattern, self.severity, self.recommendation)
+        let mut config = PatternConfig::new(self.name, self.pattern, self.severity, self.recommendation)
+            .with_description(self.description);
+        
+        if let Some(cwe) = self.cwe_id {
+            config = config.with_cwe_id(cwe);
+        }
+        
+        config
     }
 }
 
@@ -203,7 +210,9 @@ pub mod categories {
     pub const COMMUNICATION: &[SecretPattern] = &[
         SecretPattern {
             name: "SLACK_TOKEN",
-            pattern: r"xox[baprs]-[0-9a-zA-Z]{10,48}",
+            // Updated to match Slack tokens with dashes/underscores in the body
+            // Format: xox[baprs]-[alphanumeric with optional dashes/underscores]
+            pattern: r"xox[baprs]-[0-9a-zA-Z_-]{10,64}",
             severity: "high",
             recommendation: "Remove and revoke the token in Slack Admin",
             description: "Slack Token",
@@ -219,7 +228,9 @@ pub mod categories {
         },
         SecretPattern {
             name: "TWILIO_API_KEY",
-            pattern: r"SK[0-9a-fA-F]{32}",
+            // Updated to match Twilio API keys with underscores and mixed characters
+            // Format: SK[alphanumeric with optional underscores]
+            pattern: r"SK[0-9a-zA-Z_]{10,48}",
             severity: "critical",
             recommendation: "Remove and revoke in Twilio Console",
             description: "Twilio API Key",
@@ -430,6 +441,16 @@ pub mod categories {
             severity: "medium", // FP REDUCTION: Reduced from high
             recommendation: "Use environment variables or secret manager",
             description: "Generic Password Assignment",
+            cwe_id: Some("CWE-798"),
+        },
+        SecretPattern {
+            name: "XML_PASSWORD_ATTR",
+            // Match password/secret values in XML attributes
+            // Handles both: password="value" and name="password" value="value"
+            pattern: r#"(?i)(?:password|passwd|pwd|secret|api_?key|access_?key|token)\s*=\s*[\x27\x22][^\x27\x22]{8,}[\x27\x22]|(?:name|key)\s*=\s*[\x27\x22](?:password|secret|api_?key|token)[\x27\x22].*?value\s*=\s*[\x27\x22][^\x27\x22]{8,}[\x27\x22]"#,
+            severity: "medium",
+            recommendation: "Use environment variables or secret manager for XML config values",
+            description: "XML Attribute Password/Secret",
             cwe_id: Some("CWE-798"),
         },
         SecretPattern {

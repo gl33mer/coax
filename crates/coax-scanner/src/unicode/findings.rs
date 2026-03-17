@@ -168,7 +168,7 @@ impl UnicodeFinding {
 
     /// Convert UnicodeFinding to ScanResult for integration with main scanner
     pub fn to_scan_result(&self) -> crate::ScanResult {
-        use crate::result::{FindingContext, ScanResult};
+        use crate::result::{FindingContext, ScanResult, VerificationStatus};
         use std::path::PathBuf;
 
         let mut note = format!("Unicode attack: {}", self.description);
@@ -189,6 +189,9 @@ impl UnicodeFinding {
                 note: Some(note),
                 ..Default::default()
             },
+            verification: VerificationStatus::Unverified,
+            description: None,
+            cwe_id: None,
         }
     }
 }

@@ -855,17 +855,23 @@ fn is_known_secret_pattern(pattern_name: &str) -> bool {
     if pattern_name.starts_with("OPENAI_") || pattern_name.starts_with("ANTHROPIC_") {
         return true;
     }
+    // XML-specific patterns
+    if pattern_name.starts_with("XML_") {
+        return true;
+    }
 
     // Generic patterns should go through filters
     false
 }
 
 /// 4B: Check if a value appears to be a placeholder rather than a real secret
-fn is_placeholder_value(value: &str) -> bool {
+/// For known secret patterns, only filter exact matches (not substrings)
+/// For generic patterns, filter more aggressively
+fn is_placeholder_value(value: &str, is_known_pattern: bool) -> bool {
     let lower = value.to_lowercase();
 
-    // Exact placeholder matches
-    const PLACEHOLDERS: &[&str] = &[
+    // Exact placeholder matches - these are always filtered
+    const EXACT_PLACEHOLDERS: &[&str] = &[
         "example",
         "test",
         "sample",
@@ -894,7 +900,18 @@ fn is_placeholder_value(value: &str) -> bool {
         "insert-here",
     ];
 
-    for placeholder in PLACEHOLDERS {
+    // For known patterns, only filter if the ENTIRE value is a placeholder
+    if is_known_pattern {
+        for placeholder in EXACT_PLACEHOLDERS {
+            if lower == *placeholder {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // For generic/unknown patterns, filter more aggressively (substring match)
+    for placeholder in EXACT_PLACEHOLDERS {
         if lower.contains(placeholder) {
             return true;
         }
@@ -1141,13 +1158,14 @@ fn scan_content_internal(
                 }
 
                 // 4B: Placeholder detection - suppress findings with placeholder values
-                // This runs for ALL patterns (known and unknown)
+                // For known patterns, only filter exact matches (not substrings)
+                // For generic patterns, filter more aggressively
                 // Check both extracted secret value AND the full line content
                 let should_filter_placeholder = if let Some(ref secret_value) = secret {
-                    is_placeholder_value(secret_value)
+                    is_placeholder_value(secret_value, is_known_pattern)
                 } else {
                     // If no secret was extracted, check the line content itself
-                    is_placeholder_value(line)
+                    is_placeholder_value(line, is_known_pattern)
                 };
 
                 if should_filter_placeholder {
@@ -1187,6 +1205,14 @@ fn scan_content_internal(
                     pattern.recommendation.to_string(),
                 );
 
+                // Add description and CWE ID from pattern metadata
+                if let Some(ref desc) = pattern.description {
+                    result = result.with_description(desc.as_ref());
+                }
+                if let Some(ref cwe) = pattern.cwe_id {
+                    result = result.with_cwe_id(cwe.as_ref());
+                }
+
                 // Add detected secret if pattern supports extraction
                 if pattern.extract_secret {
                     if let Some(secret_value) = &secret {
@@ -1199,8 +1225,22 @@ fn scan_content_internal(
                     result = result.with_line_content(line.trim().to_string());
                 }
 
+                // CRITICAL: Known secret patterns bypass documentation/test file exclusion
+                // A real secret pattern match is a finding regardless of file type
+                let mut final_context = context.clone();
+                if is_known_pattern {
+                    // Clear exclusion for known patterns
+                    if final_context.is_documentation || final_context.is_test_file {
+                        final_context.adjusted_severity = None;
+                        final_context.note = Some(format!(
+                            "Known pattern {} - bypasses file-type exclusion",
+                            pattern.name
+                        ));
+                    }
+                }
+
                 // Add context
-                result = result.with_context(context.clone());
+                result = result.with_context(final_context);
 
                 // Add Betterleaks filter metadata
                 if config.enable_token_efficiency || config.enable_word_filter {

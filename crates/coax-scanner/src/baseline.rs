@@ -276,6 +276,9 @@ mod tests {
             detected_secret: Some("AKIAIOSFODNN7EXAMPLE".to_string()),
             line_content: Some("AWS_KEY=AKIAIOSFODNN7EXAMPLE".to_string()),
             context: FindingContext::default(),
+            verification: crate::result::VerificationStatus::Unverified,
+            description: None,
+            cwe_id: None,
         }
     }
 
@@ -335,6 +338,9 @@ mod tests {
             detected_secret: None,
             line_content: None,
             context: FindingContext::default(),
+            verification: crate::result::VerificationStatus::Unverified,
+            description: None,
+            cwe_id: None,
         };
 
         // Create baseline with result1
@@ -360,6 +366,9 @@ mod tests {
             detected_secret: None,
             line_content: None,
             context: FindingContext::default(),
+            verification: crate::result::VerificationStatus::Unverified,
+            description: None,
+            cwe_id: None,
         };
 
         let mut baseline = BaselineFile::from_results(&[result1.clone()]);
@@ -382,6 +391,9 @@ mod tests {
             detected_secret: None,
             line_content: None,
             context: FindingContext::default(),
+            verification: crate::result::VerificationStatus::Unverified,
+            description: None,
+            cwe_id: None,
         };
 
         let baseline = BaselineFile::from_results(&[result1.clone()]);

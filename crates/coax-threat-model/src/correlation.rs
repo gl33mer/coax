@@ -280,7 +280,7 @@ pub fn get_priority_recommendations(threats: &[Threat]) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use coax_scanner::FindingContext;
+    use coax_scanner::{FindingContext, ScanResult, VerificationStatus};
     use std::path::PathBuf;
 
     #[test]
@@ -295,6 +295,9 @@ mod tests {
             detected_secret: Some("AKIAIOSFODNN7EXAMPLE".to_string()),
             line_content: None,
             context: FindingContext::default(),
+            verification: VerificationStatus::Unverified,
+            description: None,
+            cwe_id: None,
         }];
 
         let entry_points = vec![];
@@ -317,6 +320,9 @@ mod tests {
             detected_secret: None,
             line_content: None,
             context: FindingContext::default(),
+            verification: VerificationStatus::Unverified,
+            description: None,
+            cwe_id: None,
         };
 
         let entry_points = vec![

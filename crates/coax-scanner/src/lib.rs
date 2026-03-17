@@ -43,6 +43,7 @@
 pub mod baseline;
 pub mod cfg;
 mod context;
+pub mod detector;
 pub mod encoded_detection;
 pub mod entropy_filter;
 mod pattern_cache;
@@ -61,6 +62,7 @@ pub use cfg::{
     SliceIntersection, VulnerabilitySlice, CFG,
 };
 pub use context::{ContextAnalyzer, ExclusionPatterns};
+pub use detector::{Detector, DetectorRegistry, PatternDetector, VerifyResult};
 pub use entropy_filter::{EntropyFilter, EntropyFilterConfig, EntropyFilterResult};
 pub use pattern_cache::{CompiledPattern, PatternCache, PatternConfig};
 pub use pattern_loader::{
@@ -69,6 +71,7 @@ pub use pattern_loader::{
 };
 pub use result::{
     FindingContext, OutputFormat, PatternCount, ScanResult, ScanSummary, SeverityCounts,
+    VerificationStatus,
 };
 pub use scanner::{Scanner, ScannerConfig};
 pub use secrets::SecretPattern;
