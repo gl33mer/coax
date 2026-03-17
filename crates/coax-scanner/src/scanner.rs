@@ -713,6 +713,10 @@ fn is_known_secret_pattern(pattern_name: &str) -> bool {
     if pattern_name.starts_with("TWILIO_") {
         return true;
     }
+    // Datadog patterns
+    if pattern_name.starts_with("DATADOG_") || pattern_name.starts_with("DD_") {
+        return true;
+    }
     // SendGrid patterns
     if pattern_name.starts_with("SENDGRID_") {
         return true;
