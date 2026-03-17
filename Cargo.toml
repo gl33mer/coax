@@ -5,6 +5,8 @@ members = [
     "crates/coax-scanner",
     "crates/coax-cli",
     "crates/coax-threat-model",
+    "glassworm-core",
+    "glassworm-cli",
 ]
 
 [workspace.package]

@@ -755,6 +755,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "glassworm-cli"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "colored",
+ "glassworm-core",
+ "serde",
+ "serde_json",
+ "walkdir",
+]
+
+[[package]]
+name = "glassworm-core"
+version = "0.1.0"
+dependencies = [
+ "lazy_static",
+ "regex",
+ "serde",
+ "tempfile",
+ "unicode-script",
+]
+
+[[package]]
 name = "globset"
 version = "0.4.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
